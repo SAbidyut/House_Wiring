@@ -32,13 +32,35 @@ order *is* the book order — do not regroup chapters by theme.
 | 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 19 | ✅ delivered |
 | 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 29 | ✅ delivered |
 | 15 | সুইচ বোর্ড | 21 | ✅ delivered |
-| 16–28 | — | — | pending |
+| 16–17 | — | — | pending |
+| 18 | মোটর | 6 | ✅ delivered — condensed, out of sequence (see note below) |
+| 19–28 | — | — | pending |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 14/12 · `ch02` 15/9 · `ch03` 9/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 7/4 ·
 `ch07` 10/9 · `ch08` 11/8 · `ch09` 6/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 11/9 ·
-`ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 —
-no gap > 5 cm (ch03 has two ~4.6–4.8 cm gaps, see Open items).
+`ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 · `ch18` 3/5 (6 pages, condensed) —
+no gap > 5 cm (ch03 has two ~4.6–4.8 cm gaps, ch18 has one ~4.5 cm gap, see
+Open items).
+
+**Chapter 18 was delivered out of sequence, on the user's explicit request**
+(2026-08-15): "18 banaya daw, 6 page er pdf" — a condensed 6-page treatment
+of মোটর (motor main parts, AC/DC/universal + induction classification,
+single-phase capacitor-start/run connection with a worked capacitor-sizing
+example, three-phase star/delta connection), *not* the full ~22-page scope
+in `BOOK_INDEX.md`. Chapters 16–17 are still unwritten — the syllabus-order
+rule is otherwise unchanged, so the next chapter written in sequence should
+still be 16 unless the user again asks to jump ahead. Motor.docx's own
+images (stock photos with website watermarks / brand logos, e.g.
+`theengineeringprojects.com`) were not embeddable per the copyright/
+attribution rules below, and no source PPTX slide covers motors, so ch18's
+three diagrams are hand-drawn schematics in this book's own house style
+(verified topology against Motor.docx's text and worked formulas). If ch18
+is expanded to full length later, fold in: motor starter types (DOL, star-
+delta, soft starter), nameplate reading, overload/thermal protection, and
+an isolating-switch/wiring-safety section (no BNBC clause was cited for
+that last item — this session's network egress blocked verifying one, see
+`law.resource.org` in Workflow; verify before adding).
 
 Engine API (write a chapter without opening `bookkit.py`): `Book/build/README.md`
 Full chapter plan + numbering conventions: `Book/build/BOOK_INDEX.md`
@@ -109,6 +131,15 @@ External: **headless Google Chrome** (text measurement + SVG raster),
 ```bash
 python3 -m venv venv && ./venv/bin/pip install python-docx python-pptx pillow lxml pymupdf
 ```
+
+**Linux/cloud session setup (not needed on the author's Mac):** `CHROME` in
+`svgkit.py`/`render.py` is hardcoded to the Mac Chrome path but reads
+`BOOK_CHROME` first if set — `export BOOK_CHROME=/opt/pw-browsers/chromium-1194/chrome-linux/chrome`
+(or wherever headless Chromium lives) before running `dia_chNN.py`/`render.py`.
+`layout.py` needs `soffice` (LibreOffice) to convert DOCX→PDF; a bare
+`libreoffice-core` install fails every conversion with "source file could not
+be loaded" because it has no Writer filter — `apt-get install
+libreoffice-writer` first (discovered building ch18, 2026-08-15).
 
 `Book/build/.textcache.json` (≈2000 measured strings) makes diagram generation
 fast; keep it.

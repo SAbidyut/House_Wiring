@@ -8,7 +8,8 @@ shape Indic text correctly.
 """
 import os, re, subprocess, sys, glob, shutil
 
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CHROME = os.environ.get(
+    "BOOK_CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 SCALE = 3          # 3x → ~300 dpi at print size
 
 

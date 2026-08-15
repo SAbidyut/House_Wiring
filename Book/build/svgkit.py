@@ -11,7 +11,8 @@ overflowing their boxes or colliding with neighbours.
 import json, os, re, subprocess, hashlib, html, base64
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+CHROME = os.environ.get(
+    "BOOK_CHROME", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 CACHE_PATH = os.path.join(HERE, ".textcache.json")
 FAMILY = "Kalpurush"
 
