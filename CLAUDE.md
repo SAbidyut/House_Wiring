@@ -31,12 +31,13 @@ order *is* the book order — do not regroup chapters by theme.
 | 12 | ফ্যান ও ফ্যান রেগুলেটর | 22 | ✅ delivered |
 | 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 19 | ✅ delivered |
 | 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 29 | ✅ delivered |
-| 15–28 | — | — | pending |
+| 15 | সুইচ বোর্ড | 21 | ✅ delivered |
+| 16–28 | — | — | pending |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 14/12 · `ch02` 15/9 · `ch03` 9/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 7/4 ·
 `ch07` 10/9 · `ch08` 11/8 · `ch09` 6/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 11/9 ·
-`ch13` 9/7 · `ch14` 13/8 —
+`ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 —
 no gap > 5 cm (ch03 has two ~4.6–4.8 cm gaps, see Open items).
 
 Engine API (write a chapter without opening `bookkit.py`): `Book/build/README.md`
@@ -166,6 +167,26 @@ but only where they actually occur; do not hunt them at the cost of clarity:
 
 Numbers, standards, safety rules and the structural conventions below are
 unaffected — only the *prose voice* changes.
+
+**The voice pass stops at the edge of the artwork.** Ch14's diagrams caught
+the humanised register and it made them worse — panel headers became opinions
+("লুপ-ইন পদ্ধতি — এটিই করতে হবে"), sub-captions repeated the body text
+("গরম হলে বা আলগা হলে খুঁজে বের করা যায় না"), and note strips grew into
+two-line paragraphs with market commentary. The user flagged this on
+2026-08-15. From ch15 the diagram rules are:
+
+- **Panel/box headers are nouns.** "সার্কিট ডায়াগ্রাম", "পিয়ানো বোর্ড" —
+  no verbs, no judgements, no "…করতে হবে".
+- **Component labels are one or two words.** Keep the English trade term where
+  that is what the trade says (`L`, `N`, `E`, `DB`, `SPST`, `5A`, `1M`);
+  plain Bangla noun otherwise (সুইচ, বাতি, ফ্যান).
+- **One note strip per diagram, one line, a bare fact.** `note_strip()` in
+  `dia_ch15.py` raises if the text does not fit on one line — keep that guard
+  when copying the file forward.
+- **No sub-captions under panels**, and nothing in the artwork that repeats a
+  sentence from the body.
+- Every *why*, consequence, market habit and warning belongs in the prose. The
+  picture shows; the text explains.
 
 ## Conventions
 
@@ -316,17 +337,25 @@ Check these before rendering — each one shipped once and had to be fixed:
 
 ## Next step
 
-**Chapter 15 — সুইচ বোর্ড** (module lesson 15, ~16 pages). Scope in
-`BOOK_INDEX.md`. Ch14 §14.6 already fixes the mounting heights (BNBC 1.3.11.5 —
-1220 mm) and §14.6.3 the point-counting table; build on those instead of
-restating them. `HW Connection Diagram All.pptx` has piano/gang switchboard
-drawings (the two panels of ch14's চিত্র ১৪.৯ came from slides 34 and 36) —
-check the deck for a board-only slide before hand-drawing.
+**Chapter 16 — পাওয়ার ফর্মুলা ও ক্যালকুলেশন** (module lesson 16, ~18 pages).
+Scope in `BOOK_INDEX.md`: সিঙ্গেল ফেজ ও থ্রি-ফেজ · অ্যাম্পিয়ার, ভোল্টেজ ও
+পাওয়ারের সূত্র · ক্যালকুলেশন. A maths-heavy chapter, so `b.math()` and
+`worked_example()` do most of the work — re-read the OMML constraints below
+before writing (no Bangla inside `steps=`, Latin digits in equations, `cos φ`
+as upright text not `\cos\phi`). `Circuit Diagram.pptx` slides 25–26 have
+voltmeter/ammeter connection drawings; ch08 already used that material, so
+check before reusing. BNBC 1.3.7.4 (the 1.65 inductive-load factor, used in
+ch15's example ১৫.১) and Table 8.1.17 (minimum load densities) are both worth
+citing here.
 
-Reusable: `assets_chNN.py` (ch12/ch13/ch14) converts a source PPTX to PDF once
-into `.slidepdf/` and crops any slide at 300 dpi — point `SLIDES` at the new
-slide numbers and it just works. Verify the slide number from the PDF page text
-first; both decks have near-duplicate drawings a row apart.
+Reusable: `assets_chNN.py` (ch12/ch13/ch14/ch15) converts a source PPTX to PDF
+once into `.slidepdf/` and crops any slide at 300 dpi — point `SLIDES` at the
+new slide numbers and it just works. `assets_ch15.py` adds an `EXPECT` dict
+that asserts each slide's page text contains the expected words and dies if it
+does not; keep that, it catches an off-by-one slide before anything is cropped.
+It also shows how to crop *part* of a slide (fraction box) to lift one object
+out of a busy drawing — that is how ch15's piano/gang board photos were made
+from slides 34 and 35.
 
 Layout lesson from ch13: two `worked_example()` blocks back to back will not
 share a page — Word pushes the second one whole, opening an ~11 cm gap. Put
@@ -335,6 +364,18 @@ Ch14 added the corollary: a worked example that is a page-and-a-bit long
 strands a whole page. Merging its `steps=` onto fewer lines (`= 6460 W` on the
 same line as the expression) shrank example ১৪.২ enough to fit, closing a
 16.9 cm gap that no amount of reordering would.
+
+Ch15's two gaps (7.9 cm and 5.7 cm) both closed by moving the figure *later*
+within its own section — past the paragraph that explains it, and past a
+bullet list plus a safety box. Text ahead of a figure fills the page the
+figure could not fit on; the figure then starts the next page cleanly. Try
+this before anything else.
+
+Also from ch15: `given=`/`find=` go through `_rich`, so Bangla numerals appear
+there — and Kalpurush draws `৪` like a Latin `8`. Next to Latin values
+(`বাতি ৪ × 20 W`) it reads as eight lamps. Write the count as a word in those
+lines (`চারটি বাতি — প্রতিটি 20 W`), and keep `৪` out of MCQ option lists
+whose other options are also numbers.
 
 BNBC Part 8 Chapter 1 — the authority for every wiring rule in this book — is
 free at `law.resource.org/pub/bd/bnbc.2012/gov.bd.bnbc.2012.08.01.pdf`.

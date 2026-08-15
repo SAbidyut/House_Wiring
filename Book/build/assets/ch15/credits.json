@@ -1,0 +1,14 @@
+{
+  "rapti_slides": {
+    "files": [
+      "c22_board_schem",
+      "c23_socket_schem",
+      "h22_board_conn",
+      "h23_socket_conn",
+      "h34_piano_board",
+      "h35_gang_board"
+    ],
+    "source": "RAPTI — Circuit Diagram.pptx (slides 22, 23) and HW Connection Diagram All.pptx (slides 22, 23, 34, 35)",
+    "licence": "Institute's own material"
+  }
+}
