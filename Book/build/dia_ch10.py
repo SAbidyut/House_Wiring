@@ -1,0 +1,382 @@
+# -*- coding: utf-8 -*-
+"""অধ্যায় ১০ — সিরিজ বোর্ড : ডায়াগ্রাম।
+
+সার্কিট ও কানেকশন ডায়াগ্রাম RAPTI-র নিজস্ব সোর্স থেকে হুবহু বসানো —
+`Circuit Diagram.pptx` স্লাইড ১৬ (সার্কিট) এবং
+`HW Connection Diagram All.pptx` স্লাইড ১৬ ও ৪০ (কানেকশন)।
+বোর্ডের গঠন, প্রয়োজনীয়তা ও বাতির তিন অবস্থার চিত্র নতুন করে আঁকা।
+"""
+import os, math
+from svgkit import (SVG, NAVY, STEEL, LIGHT, RED, REDBG, GREEN, GREENBG,
+                    AMBER, AMBERBG, GREY, LINE, INK, wrap, tw)
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+OUT = os.path.join(HERE, "diagrams", "ch10")
+IMG = os.path.join(HERE, "assets", "ch10")
+
+T_TITLE = 34
+T_NODE = 28
+T_NAME = 24.5
+T_BODY = 21.5
+T_SMALL = 20
+T_CALL = 25
+LH = 1.42
+
+SYM = "#12324D"
+SW = 3.4
+LIVE = "#D42A1F"          # ফেজ তার — সোর্স ফাইলের মতো লাল
+NEUT = "#1F2933"          # নিউট্রাল তার — কালো
+PLATE = "#F2F5F8"
+PLATE_E = "#9AA6B2"
+METAL = "#8D9AA8"
+GLASS = "#FFF2C4"
+
+
+# ── shared helpers ──────────────────────────────────────────────────────
+def panel(s, x, y, w, h, title, col=STEEL):
+    s.rect(x, y, w, h, "#FCFDFE", LINE, 1.8, 13)
+    s.box_auto(x + w / 2, y + 12, title, T_BODY, fill=col, stroke=col,
+               tcolor="#FFFFFF", pad_x=22, pad_y=9)
+
+
+def note_strip(s, y, text, x=46, w=1148, fill="#EAF2FA", stroke=STEEL,
+               tcolor=NAVY, size=T_NAME):
+    s.rect(x, y, w, 58, fill, stroke, 2, 11)
+    s.text(x + w / 2, y + 36, text, size, tcolor, 700, "middle")
+    return y + 58
+
+
+def callout(s, x, y, text, tx, ty, anchor="end", size=T_CALL, col=NAVY):
+    """লেবেল ও তার লিডার লাইন — লেখা সবসময় ছবির বাইরে থাকে।"""
+    s.text(x, y + size * 0.32, text, size, col, 700, anchor)
+    x0 = x + 10 if anchor == "end" else x - 10
+    s.path(f"M {x0} {y} L {tx} {ty}", STEEL, 2.2)
+    s.circle(tx, ty, 5, STEEL)
+
+
+# ── circuit symbols ─────────────────────────────────────────────────────
+def ac_source(s, cx, cy, r=40):
+    s.circle(cx, cy, r, "#FFFFFF", SYM, SW)
+    k = r * 0.55
+    s.path(f"M {cx-2*k:.1f} {cy:.1f} q {k/2:.1f} {-k*1.1:.1f} {k:.1f} 0 "
+           f"q {k/2:.1f} {k*1.1:.1f} {k:.1f} 0", SYM, SW)
+    return r
+
+
+def lamp(s, cx, cy, r=34, state="off", col=SYM):
+    """বাতির প্রতীক — নিভন্ত, মৃদু বা পূর্ণ উজ্জ্বল।"""
+    fill = {"off": "#FFFFFF", "dim": "#FFEDB3", "bright": "#FFC400"}[state]
+    if state == "bright":
+        for i in range(8):
+            a = math.radians(i * 45 + 22.5)
+            s.line(cx + (r + 11) * math.cos(a), cy + (r + 11) * math.sin(a),
+                   cx + (r + 27) * math.cos(a), cy + (r + 27) * math.sin(a),
+                   "#F0A000", 4.2)
+    s.circle(cx, cy, r, fill, col, SW)
+    k = r * 0.70
+    s.path(f"M {cx-k:.1f} {cy-k:.1f} L {cx+k:.1f} {cy+k:.1f}", col, SW)
+    s.path(f"M {cx+k:.1f} {cy-k:.1f} L {cx-k:.1f} {cy+k:.1f}", col, SW)
+
+
+def fuse_sym(s, cx, cy, w=104, h=40, col=LIVE):
+    s.rect(cx - w / 2, cy - h / 2, w, h, "#FFFFFF", col, SW, 3)
+    s.line(cx - w / 2, cy, cx + w / 2, cy, col, SW)
+
+
+def socket_sym(s, cx, cy, r=36, col=SYM):
+    s.circle(cx, cy, r, "#FFFFFF", col, SW)
+    s.circle(cx, cy - 13, 7, col)
+    s.circle(cx, cy + 13, 7, col)
+
+
+def burst(s, cx, cy, r=34, col=RED):
+    """শর্ট-সার্কিটের স্ফুলিঙ্গ।"""
+    pts = []
+    for i in range(12):
+        a = math.radians(i * 30)
+        rr = r if i % 2 == 0 else r * 0.44
+        pts.append((cx + rr * math.cos(a), cy + rr * math.sin(a)))
+    s.poly(pts, "#FFD24A", col, 2.6)
+
+
+# ── board module faces ──────────────────────────────────────────────────
+def module_plate(s, cx, y, w=118, h=190):
+    s.rect(cx - w / 2, y, w, h, PLATE, PLATE_E, 2.4, 12)
+
+
+def face_fuse(s, cx, cy):
+    s.rect(cx - 26, cy - 44, 52, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
+    s.rect(cx - 17, cy - 26, 34, 52, "#FFF3C4", "#B08C00", 2, 4)
+    s.path(f"M {cx} {cy-26} L {cx} {cy+26}", "#8A6D00", 3)
+
+
+def face_indicator(s, cx, cy):
+    s.rect(cx - 26, cy - 44, 52, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
+    s.rect(cx - 18, cy - 34, 36, 68, "#E8483A", "#9C2B20", 2, 5)
+
+
+def face_switch(s, cx, cy, on=True):
+    s.rect(cx - 26, cy - 44, 52, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
+    s.rect(cx - 20, cy - 36, 40, 72, "#FAFBFC", "#C3CEDA", 1.6, 5)
+    s.rect(cx - 6, cy - 30, 12, 20, RED if on else "#D8DEE5", "#B0BAC5", 1.4, 2)
+
+
+def face_socket2(s, cx, cy):
+    s.rect(cx - 28, cy - 44, 56, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
+    for dy in (-18, 18):
+        s.rect(cx - 13, cy + dy - 9, 26, 18, "#3B4550", "#20272E", 1.4, 5)
+
+
+def face_holder(s, cx, cy):
+    """ব্যাটেন হোল্ডারে বসানো টেস্ট বাতি।"""
+    s.rect(cx - 30, cy + 12, 60, 30, "#FFFFFF", "#9AA6B2", 2.2, 6)
+    s.rect(cx - 15, cy - 2, 30, 16, METAL, "#6B7684", 1.8, 3)
+    for k in range(3):
+        s.line(cx - 15, cy + 2 + k * 5, cx + 15, cy + 2 + k * 5, "#6B7684", 1.2)
+    s.circle(cx, cy - 34, 30, GLASS, "#C79A1F", 2.4)
+    s.path(f"M {cx-9} {cy-24} L {cx-4} {cy-38} L {cx+4} {cy-30} "
+           f"L {cx+9} {cy-42}", "#B07C00", 2.4)
+
+
+def plug2(s, cx, cy, scale=1.0):
+    k = scale
+    s.rect(cx - 46 * k, cy - 34 * k, 92 * k, 68 * k, "#FFFFFF", "#7C8794", 2.6, 9)
+    for dx in (-19, 19):
+        s.rect(cx + dx * k - 5 * k, cy - 78 * k, 10 * k, 44 * k,
+               METAL, "#6B7684", 2, 3)
+
+
+def _sheet(fname, title, left_img, right_img, note, h=560):
+    """দুই প্যানেলের শিট — বাঁয়ে সার্কিট, ডানে কানেকশন ডায়াগ্রাম।"""
+    s = SVG(1240, h)
+    s.title(title, T_TITLE)
+    PW = 560
+    panel(s, 46, 96, PW, h - 230, "সার্কিট ডায়াগ্রাম", STEEL)
+    panel(s, 634, 96, PW, h - 230, "কানেকশন ডায়াগ্রাম", GREEN)
+    s.image_fit(46 + 14, 150, PW - 28, h - 306, f"{IMG}/{left_img}", 14)
+    s.image_fit(634 + 14, 150, PW - 28, h - 306, f"{IMG}/{right_img}", 14)
+    y = note_strip(s, h - 118, note)
+    s.fit(y, 22)
+    return s.save(f"{OUT}/{fname}.svg")
+
+
+# ═══════════════════════════════════════════════════════════════════════
+def d01_parts():
+    """সিরিজ বোর্ডের গঠন ও অংশ পরিচিতি।"""
+    s = SVG(1240, 900)
+    s.title("সিরিজ বোর্ডের গঠন ও অংশ পরিচিতি", T_TITLE)
+
+    BX, BY, BW, BH = 250, 250, 930, 262
+    s.rect(BX, BY, BW, BH, "#E7ECF1", "#7C8794", 3, 18)
+    s.rect(BX + 14, BY + 14, BW - 28, BH - 28, "#F7FAFC", "#B0BAC5", 1.8, 12)
+
+    mods = [("ফিউজ", face_fuse), ("ইন্ডিকেটর", face_indicator),
+            ("সুইচ", face_switch), ("টেস্ট বাতি", face_holder),
+            ("২-পিন সকেট", face_socket2)]
+    step = (BW - 80) / len(mods)
+    cy = BY + BH / 2
+    for i, (name, draw) in enumerate(mods):
+        cx = BX + 40 + step * (i + 0.5)
+        module_plate(s, cx, BY + 38, 122, BH - 76)
+        draw(s, cx, cy)
+        ly = 148 if i % 2 == 0 else 204
+        s.text(cx, ly, name, T_CALL, NAVY, 700, "middle")
+        s.path(f"M {cx} {ly+10} L {cx} {BY+32}", STEEL, 2.2)
+        s.circle(cx, BY + 32, 5, STEEL)
+
+    # সরবরাহ কর্ড ও ২-পিন প্লাগ
+    s.path(f"M {BX} {cy} L 150 {cy} L 150 646 L 232 646", "#3B4550", 9)
+    plug2(s, 274, 646, 0.9)
+
+    callout(s, 486, 560, "বোর্ড বডি (অগ্নিরোধী PVC)", BX + BW / 2, BY + BH, "start")
+    callout(s, 430, 612, "ফ্লেক্সিবল কর্ড", 160, 612, "start")
+    callout(s, 430, 690, "২-পিন প্লাগ", 322, 668, "start")
+
+    y = note_strip(s, 736,
+                   "ফিউজ, সুইচ, টেস্ট বাতি ও সকেট — সবই একই লাইনে সিরিজে; "
+                   "কেবল ইন্ডিকেটর বাতি ফেজ ও নিউট্রালের মাঝে প্যারালালে")
+    s.fit(y, 24)
+    return s.save(f"{OUT}/d01_parts.svg")
+
+
+def d02_why():
+    """সিরিজ বোর্ড কেন প্রয়োজন — সরাসরি সরবরাহ বনাম সিরিজ বোর্ড।"""
+    s = SVG(1240, 620)
+    s.title("সিরিজ বোর্ডের প্রয়োজনীয়তা", T_TITLE)
+    PW = 560
+    panel(s, 46, 96, PW, 420, "সরাসরি সরবরাহ দিলে", RED)
+    panel(s, 634, 96, PW, 420, "সিরিজ বোর্ডের মাধ্যমে দিলে", GREEN)
+
+    for k, PX in enumerate((46, 634)):
+        L, R, TOP, BOT = PX + 96, PX + 430, 210, 356
+        scy = 283
+        ac_source(s, L, scy, 38)
+        s.path(f"M {L} {TOP} L {L} {scy-38}", LIVE, SW)
+        s.path(f"M {L} {scy+38} L {L} {BOT}", NEUT, SW)
+        s.path(f"M {L} {BOT} L {R} {BOT}", NEUT, SW)
+        s.text(L, 400, "AC সরবরাহ", T_SMALL, GREY, 600, "middle")
+
+        # ডান পাশের উল্লম্ব তারে পরীক্ষাধীন সার্কিট
+        bw, bh = 172, 88
+        s.rect(R - bw / 2, scy - bh / 2, bw, bh, "#FFFFFF", NAVY, 2.6, 10)
+        s.path(f"M {R} {TOP} L {R} {scy-bh/2}", LIVE, SW)
+        s.path(f"M {R} {scy+bh/2} L {R} {BOT}", NEUT, SW)
+        s.text(R, scy - 6, "ত্রুটিপূর্ণ", T_SMALL, NAVY, 700, "middle")
+        s.text(R, scy + 22, "সার্কিট (শর্ট)", T_SMALL, NAVY, 700, "middle")
+
+        if k == 0:
+            s.path(f"M {L} {TOP} L {R} {TOP}", LIVE, SW)
+            burst(s, PX + 262, TOP, 32)
+            s.text(PX + 228, 296, "বড় শর্ট-সার্কিট", T_SMALL, RED, 700, "middle")
+            s.text(PX + 228, 324, "কারেন্ট বয়ে যায়", T_SMALL, RED, 700, "middle")
+        else:
+            lamp(s, PX + 262, TOP, 34, "bright")
+            s.path(f"M {L} {TOP} L {PX+262-61} {TOP}", LIVE, SW)
+            s.path(f"M {PX+262+61} {TOP} L {R} {TOP}", LIVE, SW)
+            s.text(PX + 228, 296, "সিরিজে বসানো", T_SMALL, GREEN, 700, "middle")
+            s.text(PX + 228, 324, "টেস্ট বাতি", T_SMALL, GREEN, 700, "middle")
+
+    for PX, col, bg, t1, t2 in (
+            (46, RED, REDBG,
+             "ফিউজ উড়ে যায়, তার ও যন্ত্র পুড়ে যায়",
+             "স্ফুলিঙ্গ ও অগ্নিকাণ্ডের ঝুঁকি থাকে"),
+            (634, GREEN, GREENBG,
+             "বাতি পূর্ণ উজ্জ্বল জ্বলে — ত্রুটি ধরা পড়ে",
+             "বাতিই কারেন্ট সীমিত রাখে, কিছুই নষ্ট হয় না")):
+        s.rect(PX + 20, 424, PW - 40, 78, bg, col, 2, 11)
+        s.text(PX + PW / 2, 456, t1, T_SMALL, col, 700, "middle")
+        s.text(PX + PW / 2, 486, t2, T_SMALL, "#39434D", 400, "middle")
+
+    y = note_strip(s, 534,
+                   "নতুন বা মেরামত করা যেকোনো সার্কিট সরাসরি লাইনে না দিয়ে "
+                   "আগে সিরিজ বোর্ডে পরীক্ষা করে নেওয়াই নিয়ম")
+    s.fit(y, 24)
+    return s.save(f"{OUT}/d02_why.svg")
+
+
+def d03_circuit():
+    return _sheet("d03_circuit", "সিরিজ বোর্ডের সার্কিট ও কানেকশন ডায়াগ্রাম",
+                  "d03_sb_schem.png", "d03_sb_conn.png",
+                  "ফিউজ → সুইচ → টেস্ট বাতি → সকেট সবই সিরিজে; "
+                  "ইন্ডিকেটর বাতি ফেজ ও নিউট্রালের মাঝে প্যারালালে", 620)
+
+
+def d04_states():
+    """সকেটে যন্ত্র লাগানোর পর টেস্ট বাতির তিন অবস্থা ও তার অর্থ।"""
+    s = SVG(1240, 640)
+    s.title("টেস্ট বাতির তিন অবস্থা ও তার অর্থ", T_TITLE)
+
+    PW, GAP = 365, 26
+    x0 = 46
+    cases = [
+        ("বাতি একেবারে জ্বলে না", "off", RED, REDBG,
+         "ওপেন সার্কিট", "সংযোগ ছিঁড়েছে, ফিউজ কাটা বা সুইচ বন্ধ"),
+        ("বাতি মৃদু আলোয় জ্বলে", "dim", GREEN, GREENBG,
+         "সার্কিট ঠিক আছে", "যন্ত্র স্বাভাবিক কারেন্ট নিচ্ছে"),
+        ("বাতি পূর্ণ উজ্জ্বল জ্বলে", "bright", RED, REDBG,
+         "শর্ট সার্কিট", "ফেজ ও নিউট্রাল কোথাও লেগে গেছে"),
+    ]
+    for i, (head, state, col, bg, verdict, why) in enumerate(cases):
+        PX = x0 + i * (PW + GAP)
+        panel(s, PX, 96, PW, 434, head, col)
+
+        L, R, TOP, BOT = PX + 74, PX + 292, 218, 344
+        scy = 281
+        ac_source(s, L, scy, 32)
+        s.path(f"M {L} {TOP} L {L} {scy-32}", LIVE, SW)
+        s.path(f"M {L} {scy+32} L {L} {BOT}", NEUT, SW)
+        s.path(f"M {L} {BOT} L {R} {BOT}", NEUT, SW)
+        lamp(s, PX + 183, TOP, 30, state)
+        s.path(f"M {L} {TOP} L {PX+183-(57 if state=='bright' else 32)} {TOP}",
+               LIVE, SW)
+        s.path(f"M {PX+183+(57 if state=='bright' else 32)} {TOP} L {R} {TOP}",
+               LIVE, SW)
+        socket_sym(s, R, scy, 30)
+        s.path(f"M {R} {TOP} L {R} {scy-30}", LIVE, SW)
+        s.path(f"M {R} {scy+30} L {R} {BOT}", NEUT, SW)
+        s.text(R, 384, "সকেট", T_SMALL, GREY, 600, "middle")
+
+        s.rect(PX + 18, 400, PW - 36, 116, bg, col, 2, 11)
+        s.text(PX + PW / 2, 436, verdict, T_NAME, col, 700, "middle")
+        for j, ln in enumerate(wrap(why, PW - 72, T_SMALL, 400)):
+            s.text(PX + PW / 2, 470 + j * T_SMALL * 1.34, ln, T_SMALL,
+                   "#39434D", 400, "middle")
+
+    y = note_strip(s, 562,
+                   "টেস্ট বাতির ক্ষমতা লোডের চেয়ে কম হলে বাতি বেশি জ্বলে — "
+                   "তাই পরীক্ষার আগে উপযুক্ত ওয়াটের বাতি বেছে নিতে হয়")
+    s.fit(y, 24)
+    return s.save(f"{OUT}/d04_states.svg")
+
+
+def d05_steps():
+    """সিরিজ বোর্ড দিয়ে পরীক্ষার ছয়টি ধাপ।"""
+    s = SVG(1240, 620)
+    s.title("সিরিজ বোর্ড দিয়ে সার্কিট পরীক্ষার ধাপ", T_TITLE)
+    ar = s.arrow_defs(STEEL, "ar", 15)
+
+    steps = [
+        ("বোর্ড পরীক্ষা", "ফিউজ, বাতি ও সকেট ঠিক আছে কি না দেখে নাও"),
+        ("সরবরাহ বন্ধ রাখো", "পরীক্ষাধীন সার্কিটের সুইচ অফ রাখো"),
+        ("সংযোগ দাও", "পরীক্ষাধীন সার্কিটের প্লাগ বোর্ডের সকেটে লাগাও"),
+        ("বোর্ডে সরবরাহ দাও", "বোর্ডের প্লাগ দেয়াল-সকেটে লাগাও"),
+        ("ইন্ডিকেটর দেখো", "ইন্ডিকেটর জ্বললে বোর্ডে সরবরাহ এসেছে"),
+        ("বাতি লক্ষ করো", "উজ্জ্বলতা দেখে সার্কিটের অবস্থা সিদ্ধান্ত নাও"),
+    ]
+    BW, BH, GX, GY = 356, 168, 30, 34
+    x0 = (1240 - (3 * BW + 2 * GX)) / 2
+    for i, (t, d) in enumerate(steps):
+        x = x0 + (i % 3) * (BW + GX)
+        y = 130 + (i // 3) * (BH + GY)
+        s.rect(x, y, BW, BH, "#F5F9FC", STEEL, 2, 13)
+        s.circle(x + 44, y + 42, 26, NAVY)
+        s.text(x + 44, y + 52, ["১", "২", "৩", "৪", "৫", "৬"][i], T_NODE,
+               "#FFFFFF", 700, "middle")
+        s.text(x + 84, y + 52, t, T_NAME, NAVY, 700)
+        for j, ln in enumerate(wrap(d, BW - 60, T_SMALL, 400)):
+            s.text(x + 30, y + 100 + j * T_SMALL * 1.36, ln, T_SMALL,
+                   "#39434D", 400)
+        if i % 3 < 2:
+            s.path(f"M {x+BW+4} {y+BH/2} L {x+BW+GX-8} {y+BH/2}", STEEL, 2.8,
+                   marker=ar)
+    # প্রথম সারি থেকে দ্বিতীয় সারিতে
+    ry = 130 + BH
+    s.path(f"M {x0+2*(BW+GX)+BW/2} {ry+6} L {x0+2*(BW+GX)+BW/2} {ry+GY/2} "
+           f"L {x0+BW/2} {ry+GY/2} L {x0+BW/2} {ry+GY-6}", STEEL, 2.8, marker=ar)
+
+    y = note_strip(s, 130 + 2 * BH + GY + 30,
+                   "পরীক্ষার সময় খালি হাতে সার্কিটের কোনো অংশ স্পর্শ করা যাবে না — "
+                   "বাতি নিভন্ত থাকলেও তারে ফেজ থাকতে পারে",
+                   fill=REDBG, stroke=RED, tcolor="#7A1810")
+    s.fit(y, 24)
+    return s.save(f"{OUT}/d05_steps.svg")
+
+
+def d06_socket():
+    """সিরিজ বোর্ডের সকেট অংশের কানেকশন ডায়াগ্রাম।"""
+    s = SVG(1240, 800)
+    s.title("ফিউজ ও সুইচসহ ২-পিন সকেটের কানেকশন ডায়াগ্রাম", T_TITLE)
+    panel(s, 46, 96, 1148, 568, "কানেকশন ডায়াগ্রাম", GREEN)
+    s.image_fit(70, 158, 1100, 488, f"{IMG}/d06_socket_conn.png", 8)
+    y = note_strip(s, 692,
+                   "ফেজ তার ফিউজ ও সুইচ হয়ে সকেটে যায়, নিউট্রাল তার সরাসরি — "
+                   "সিরিজ বোর্ডে এই সকেটেই পরীক্ষাধীন যন্ত্রের প্লাগ লাগে")
+    s.fit(y, 24)
+    return s.save(f"{OUT}/d06_socket.svg")
+
+
+ALL = [d01_parts, d02_why, d03_circuit, d04_states, d05_steps, d06_socket]
+
+if __name__ == "__main__":
+    import svgkit as K
+    os.makedirs(OUT, exist_ok=True)
+    K.COLLECT = True
+    for f in ALL:
+        try:
+            f()
+        except Exception as e:
+            print("  (collect)", f.__name__, e)
+    K.COLLECT = False
+    K.flush()
+    for f in ALL:
+        print("✓", os.path.relpath(f()))

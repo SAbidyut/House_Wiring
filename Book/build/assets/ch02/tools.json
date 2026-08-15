@@ -1,0 +1,207 @@
+[
+ {
+  "name": "screwdriver_star",
+  "bn": "স্টার স্ক্রু ড্রাইভার",
+  "file": "book/assets/ch02/screwdriver_star.png"
+ },
+ {
+  "name": "screwdriver_flat",
+  "bn": "ফ্ল্যাট স্ক্রু ড্রাইভার",
+  "file": "book/assets/ch02/screwdriver_flat.png"
+ },
+ {
+  "name": "line_tester",
+  "bn": "লাইন টেস্টার",
+  "file": "book/assets/ch02/line_tester.png"
+ },
+ {
+  "name": "screwdriver_set",
+  "bn": "কানেক্টিং স্ক্রু ড্রাইভার সেট",
+  "file": "book/assets/ch02/screwdriver_set.png"
+ },
+ {
+  "name": "pliers_combination",
+  "bn": "কম্বিনেশন প্লায়ার্স",
+  "file": "book/assets/ch02/pliers_combination.png"
+ },
+ {
+  "name": "pliers_diagonal",
+  "bn": "ডায়াগোনাল কাটিং প্লায়ার্স",
+  "file": "book/assets/ch02/pliers_diagonal.png"
+ },
+ {
+  "name": "pliers_nose",
+  "bn": "নোজ প্লায়ার্স",
+  "file": "book/assets/ch02/pliers_nose.png"
+ },
+ {
+  "name": "wire_stripper",
+  "bn": "ওয়্যার স্ট্রিপার",
+  "file": "book/assets/ch02/wire_stripper.png"
+ },
+ {
+  "name": "pliers_crimping",
+  "bn": "ক্রিম্পিং প্লায়ার্স",
+  "file": "book/assets/ch02/pliers_crimping.png"
+ },
+ {
+  "name": "wrench_adjustable",
+  "bn": "অ্যাডজাস্টেবল রেঞ্চ",
+  "file": "book/assets/ch02/wrench_adjustable.png"
+ },
+ {
+  "name": "hammer_ballpin",
+  "bn": "বল পিন হ্যামার",
+  "file": "book/assets/ch02/hammer_ballpin.png"
+ },
+ {
+  "name": "hammer_claw",
+  "bn": "ক্ল হ্যামার",
+  "file": "book/assets/ch02/hammer_claw.png"
+ },
+ {
+  "name": "hammer_crosspein",
+  "bn": "ক্রস পিন হ্যামার",
+  "file": "book/assets/ch02/hammer_crosspein.png"
+ },
+ {
+  "name": "hammer_mallet",
+  "bn": "ম্যালেট হ্যামার",
+  "file": "book/assets/ch02/hammer_mallet.png"
+ },
+ {
+  "name": "allen_keys",
+  "bn": "অ্যালেন কি সেট",
+  "file": "book/assets/ch02/allen_keys.png"
+ },
+ {
+  "name": "cutter_knife",
+  "bn": "অ্যান্টি কাটার",
+  "file": "book/assets/ch02/cutter_knife.png"
+ },
+ {
+  "name": "chisel_cold",
+  "bn": "কোল্ড চিজেল",
+  "file": "book/assets/ch02/chisel_cold.png"
+ },
+ {
+  "name": "plumb_bob",
+  "bn": "প্লাম্ব বব",
+  "file": "book/assets/ch02/plumb_bob.png"
+ },
+ {
+  "name": "measuring_tape",
+  "bn": "মেজারিং টেপ",
+  "file": "book/assets/ch02/measuring_tape.png"
+ },
+ {
+  "name": "spirit_level",
+  "bn": "স্পিরিট লেভেল",
+  "file": "book/assets/ch02/spirit_level.png"
+ },
+ {
+  "name": "hacksaw_frame",
+  "bn": "হ্যাকস ফ্রেম",
+  "file": "book/assets/ch02/hacksaw_frame.png"
+ },
+ {
+  "name": "hacksaw_junior",
+  "bn": "জুনিয়র হ্যাকস",
+  "file": "book/assets/ch02/hacksaw_junior.png"
+ },
+ {
+  "name": "try_square",
+  "bn": "ট্রাই স্কয়ার",
+  "file": "book/assets/ch02/try_square.png"
+ },
+ {
+  "name": "file_set",
+  "bn": "ফাইল সেট",
+  "file": "book/assets/ch02/file_set.png"
+ },
+ {
+  "name": "fish_wire",
+  "bn": "ফিশ ওয়্যার",
+  "file": "book/assets/ch02/fish_wire.png"
+ },
+ {
+  "name": "spring_wire",
+  "bn": "স্প্রিং ওয়্যার",
+  "file": "book/assets/ch02/spring_wire.png"
+ },
+ {
+  "name": "bench_vice",
+  "bn": "বেঞ্চ ভাইস",
+  "file": "book/assets/ch02/bench_vice.png"
+ },
+ {
+  "name": "wire_gauge",
+  "bn": "ওয়্যার গেজ",
+  "file": "book/assets/ch02/wire_gauge.png"
+ },
+ {
+  "name": "hand_saw",
+  "bn": "হ্যান্ড স",
+  "file": "book/assets/ch02/hand_saw.png"
+ },
+ {
+  "name": "tool_box",
+  "bn": "টুল বক্স",
+  "file": "book/assets/ch02/tool_box.png"
+ },
+ {
+  "name": "ladder",
+  "bn": "মই",
+  "file": "book/assets/ch02/ladder.png"
+ },
+ {
+  "name": "drill_electric",
+  "bn": "ইলেকট্রিক ড্রিল",
+  "file": "book/assets/ch02/drill_electric.png"
+ },
+ {
+  "name": "rotary_hammer",
+  "bn": "রোটারি হ্যামার",
+  "file": "book/assets/ch02/rotary_hammer.png"
+ },
+ {
+  "name": "angle_grinder",
+  "bn": "অ্যাঙ্গেল গ্রাইন্ডার",
+  "file": "book/assets/ch02/angle_grinder.png"
+ },
+ {
+  "name": "wall_chaser",
+  "bn": "ওয়াল চেজার",
+  "file": "book/assets/ch02/wall_chaser.png"
+ },
+ {
+  "name": "cordless_driver",
+  "bn": "কর্ডলেস স্ক্রু ড্রাইভার",
+  "file": "book/assets/ch02/cordless_driver.png"
+ },
+ {
+  "name": "heat_gun",
+  "bn": "হিট গান",
+  "file": "book/assets/ch02/heat_gun.png"
+ },
+ {
+  "name": "blower",
+  "bn": "ইলেকট্রিক ব্লোয়ার",
+  "file": "book/assets/ch02/blower.png"
+ },
+ {
+  "name": "vacuum_cleaner",
+  "bn": "ভ্যাকুয়াম ক্লিনার",
+  "file": "book/assets/ch02/vacuum_cleaner.png"
+ },
+ {
+  "name": "voltage_detector",
+  "bn": "নন-কন্টাক্ট ভোল্টেজ ডিটেক্টর",
+  "file": "book/assets/ch02/voltage_detector.png"
+ },
+ {
+  "name": "work_light",
+  "bn": "পোর্টেবল ওয়ার্ক লাইট",
+  "file": "book/assets/ch02/work_light.png"
+ }
+]

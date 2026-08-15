@@ -1,0 +1,31 @@
+{
+  "rapti_slides": {
+    "files": [
+      "c21_reg_schem",
+      "c22_board_schem",
+      "h21_reg_conn"
+    ],
+    "source": "RAPTI — Circuit Diagram.pptx (slides 21, 22) and HW Connection Diagram All.pptx (slide 21)",
+    "licence": "Institute's own material"
+  },
+  "ph_fan": {
+    "source": "Wikimedia Commons — 'An Old model three blade ceiling fan'",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_cap_run / ph_cap_run2": {
+    "source": "Wikimedia Commons — 'Ceiling fan capacitor'",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_cap_start": {
+    "source": "Wikimedia Commons — 'Motor-Start-Capacitor'",
+    "licence": "CC0"
+  },
+  "ph_reg_elec": {
+    "source": "Wikimedia Commons — 'Fan electronic regulator'",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_board_reg": {
+    "source": "Wikimedia Commons — 'Switch box with fan regulator'",
+    "licence": "CC0"
+  }
+}

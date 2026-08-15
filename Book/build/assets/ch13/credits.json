@@ -1,0 +1,12 @@
+{
+  "rapti_slides": {
+    "files": [
+      "c17_2way_schem",
+      "c18_tunnel_schem",
+      "h17_2way_conn",
+      "h18_tunnel_conn"
+    ],
+    "source": "RAPTI — Circuit Diagram.pptx (slides 17, 18) and HW Connection Diagram All.pptx (slides 17, 18)",
+    "licence": "Institute's own material"
+  }
+}

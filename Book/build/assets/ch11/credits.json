@@ -1,0 +1,38 @@
+{
+  "sharp1916": {
+    "files": [
+      "f01a_skin_ok",
+      "f01b_skin_bad",
+      "f02_wu_steps",
+      "f03_wu_ties",
+      "f04a_tee",
+      "f04c_cross1",
+      "f04d_cross2",
+      "f05a_rattail",
+      "f05b_rattail",
+      "f06a_fixture",
+      "f06b_fixture",
+      "f07a_britannia",
+      "f07b_britannia",
+      "f08a_married",
+      "f08b_married",
+      "f09a_tee_str",
+      "f09b_tee_str",
+      "f10_duplex"
+    ],
+    "source": "John M. Sharp, Practical Electric Wiring, D. Appleton & Co., New York, 1916, ch. II — archive.org/details/practicalelectr00shargoog",
+    "licence": "Public domain (US, published before 1931)"
+  },
+  "ph_solder_iron": {
+    "source": "Wikimedia Commons — 'Solderin Iron, Tin-Solder and wires', Flickr user Ruocaled",
+    "licence": "CC BY 2.0"
+  },
+  "ph_wire_nuts": {
+    "source": "Wikimedia Commons — 'Array of twist-on wire connectors aka wire nuts in different sizes'",
+    "licence": "CC0"
+  },
+  "ph_lever_conn": {
+    "source": "Wikimedia Commons — 'Wago 221-413 splicing connector with stranded wire'",
+    "licence": "CC BY-SA 4.0"
+  }
+}

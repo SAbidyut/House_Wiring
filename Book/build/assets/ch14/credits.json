@@ -1,0 +1,30 @@
+{
+  "rapti_slides": {
+    "files": [
+      "h30_service_to_sdb",
+      "h34_house_conduit",
+      "h35_house_casing",
+      "h36_house_both"
+    ],
+    "source": "RAPTI — HW Connection Diagram All.pptx (slides 30, 34, 35, 36)",
+    "licence": "Institute's own material"
+  },
+  "rapti_photos": {
+    "files": [
+      "p_batten",
+      "p_cable_in_pipe",
+      "p_casing_goods",
+      "p_cleat",
+      "p_conceal_slab",
+      "p_conceal_wall",
+      "p_internal",
+      "p_overhead",
+      "p_surface_ceil",
+      "p_surface_pipe",
+      "p_trunking",
+      "p_underground"
+    ],
+    "source": "RAPTI — Electrical House Wiring book.docx (word/media)",
+    "licence": "Institute's own material"
+  }
+}
