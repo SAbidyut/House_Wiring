@@ -111,7 +111,8 @@ b.math(r"V = I \times R")
 b.math(r"I = \frac{V}{R}")
 ```
 
-DSL: `\frac{a}{b}` real fraction · `^{x}` superscript · `_{x}` subscript
+DSL: `\frac{a}{b}` real fraction · `\sqrt{a}` square root (a real OMML `m:rad`,
+not a `√` character — Kalpurush has no U+221A) · `^{x}` superscript · `_{x}` subscript
 (always brace it — `R_{T}`, `V_{AB}`) · `` `text` `` upright
 (units, Bangla words) · commands `\times \cdot \approx \pm \leq \geq \rho \mu
 \Omega \pi \Delta \to \quad \qquad`. Bare Latin letters come out italic, as

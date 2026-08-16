@@ -1,0 +1,56 @@
+{
+  "ph_cut": {
+    "files": [
+      "ph_cut_off",
+      "ph_cut_on"
+    ],
+    "title": "Float switch off / Float switch on",
+    "author": "Martin Meise",
+    "licence": "CC BY 3.0"
+  },
+  "ph_cable": {
+    "files": [
+      "ph_cable",
+      "ph_cone",
+      "ph_arm"
+    ],
+    "title": "Float switch for open tanks · Floating level switch · Magnetic level switch",
+    "author": "S.J. de Waard",
+    "licence": "CC BY 2.5"
+  },
+  "ph_vert": {
+    "title": "Float switches",
+    "author": "Honmingjun",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_ballvalve": {
+    "title": "Mechanical float switch waterpool",
+    "author": "Hp.Baumeler",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_barrel": {
+    "title": "Schwimmerschalter fass",
+    "author": "Stefan Riepl (Quark48)",
+    "licence": "পাবলিক ডোমেইন"
+  },
+  "ph_contactor": {
+    "title": "JLC1-D09-10 (ম্যাগনেটিক কন্টাক্টর)",
+    "author": "Редактор1511",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_panel": {
+    "title": "An electrical setup featuring circuit breakers and a water level controller",
+    "author": "ShriniwasGajare",
+    "licence": "CC BY-SA 4.0"
+  },
+  "rapti_slides": {
+    "files": [
+      "h25_single_schem",
+      "h26_single_conn",
+      "h27_double_schem",
+      "h28_double_conn"
+    ],
+    "source": "RAPTI — HW Connection Diagram All.pptx (slides 25–28)",
+    "licence": "ইনস্টিটিউটের নিজস্ব উপকরণ"
+  }
+}

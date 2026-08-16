@@ -1160,6 +1160,7 @@ def _math_tokens(expr, size=None):
     r"""Small DSL → OMML.
 
       \frac{a}{b}   real stacked fraction
+      \sqrt{a}      square root
       ^{x}          superscript
       _{x}          subscript  (R_{T}, V_{AB} — always brace the index)
       `text`        upright (units, words) — everything else that is a bare
@@ -1181,6 +1182,16 @@ def _math_tokens(expr, size=None):
                        "</m:eqArr></m:num>"
                        f"<m:den><m:eqArr><m:e>{_math_tokens(den, size)}</m:e>"
                        "</m:eqArr></m:den></m:f>")
+            i = j
+        elif expr.startswith(r"\sqrt{", i):
+            rad, j = _brace(expr, i + 5)
+            # A real <m:rad>, not a "√" character: Kalpurush has no U+221A
+            # (verified against the font's cmap), so a literal radical sign
+            # would fall off the font.  degHide draws the plain square-root
+            # sign with no index, in both Word and LibreOffice.
+            out.append("<m:rad><m:radPr><m:degHide m:val=\"1\"/></m:radPr>"
+                       "<m:deg/>"
+                       f"<m:e>{_math_tokens(rad, size)}</m:e></m:rad>")
             i = j
         elif expr.startswith("^{", i):
             sup, j = _brace(expr, i + 1)

@@ -1,0 +1,56 @@
+{
+  "ph_home_ips": {
+    "files": [
+      "ph_home_ips",
+      "ph_tubular"
+    ],
+    "title": "Inverter & Battery — The power cut fighter",
+    "author": "Deepanshu.sr9",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_ups_desk": {
+    "title": "APC Back-UPS ES525",
+    "author": "MSDN.WhiteKnight",
+    "licence": "CC0 (পাবলিক ডোমেইন)"
+  },
+  "ph_ups_tower": {
+    "title": "Uninterruptible power supply",
+    "author": "Tahir mq",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_ups_big": {
+    "title": "MGE Uninterruptible Power Supply at NERSC",
+    "author": "Derrick Coetzee",
+    "licence": "CC0 (পাবলিক ডোমেইন)"
+  },
+  "ph_ups_rear": {
+    "title": "UPSRearView (Scott Power SDL 500)",
+    "author": "Amakuru",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_ups_rear2": {
+    "files": [
+      "ph_ups_rear2",
+      "ph_leds",
+      "ph_batt_drawer"
+    ],
+    "title": "APC Back-UPS RS 500 (BR500I) — ছবি ০১, ০৪, ০৯",
+    "author": "Hundehalter",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_batt_label": {
+    "title": "12V VRLA Battery (RITAR RT1245)",
+    "author": "Dudinyúl",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_batt_smf": {
+    "title": "VRLA Valve-Regulated Lead-Acid Batteries (DB12-100)",
+    "author": "Emilian Robert Vicol",
+    "licence": "CC BY 2.0"
+  },
+  "ph_scope": {
+    "title": "APC Back-UPS 550 Uninterruptible Power Supply Output Waveform",
+    "author": "Timothy Quill",
+    "licence": "CC BY-SA 4.0"
+  }
+}

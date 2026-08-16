@@ -1,0 +1,25 @@
+{
+  "rapti_motor_docx": {
+    "files": [
+      "m05_run_cap",
+      "m06_dp_pump",
+      "m07_start_run",
+      "m10_star_term",
+      "m12_delta_term"
+    ],
+    "source": "RAPTI — Motor.docx (word/media images 5, 6, 7, 10, 12)",
+    "licence": "Institute's own material"
+  },
+  "ph_cutaway": {
+    "source": "Wikimedia Commons — 'TMW 50906 Schnittmodell einer Drehstrommaschine (Asynchronmaschine)', Technisches Museum Wien",
+    "licence": "Public domain"
+  },
+  "ph_rotor": {
+    "source": "Wikimedia Commons — 'Wirnik by Zureks', by User:Zureks",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_stator": {
+    "source": "Wikimedia Commons — 'Stator of a 3-phase induction motor'",
+    "licence": "CC BY-SA 4.0"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "ph_panel": {
+    "title": "Busbar in an LT panel",
+    "author": "Goldflakes",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_earth": {
+    "title": "Dornbirn — modern main earthing busbar (copper)",
+    "author": "Asurnipal",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_trunk": {
+    "title": "Sample busbar trunking system",
+    "author": "Blacky-CS",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_raw": {
+    "title": "Picture of busbar2010126a",
+    "author": "Motimachine",
+    "licence": "CC BY-SA 4.0"
+  },
+  "rapti_bb": {
+    "files": [
+      "b_al",
+      "b_cu",
+      "b_taps",
+      "b_wires"
+    ],
+    "source": "RAPTI — Busbar All.pptx (slides 1–2)",
+    "licence": "ইনস্টিটিউটের নিজস্ব উপকরণ"
+  },
+  "rapti_slides": {
+    "files": [
+      "h29_main",
+      "h31_submeter",
+      "h32_3p1p",
+      "h33_sdb"
+    ],
+    "source": "RAPTI — HW Connection Diagram All.pptx (slides 29, 31, 32, 33)",
+    "licence": "ইনস্টিটিউটের নিজস্ব উপকরণ"
+  }
+}

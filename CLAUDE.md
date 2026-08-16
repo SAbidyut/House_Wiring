@@ -32,13 +32,22 @@ order *is* the book order — do not regroup chapters by theme.
 | 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 19 | ✅ delivered |
 | 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 29 | ✅ delivered |
 | 15 | সুইচ বোর্ড | 21 | ✅ delivered |
-| 16–28 | — | — | pending |
+| 16 | পাওয়ার ফর্মুলা ও ক্যালকুলেশন | 19 | ✅ delivered |
+| 17 | বিদ্যুৎ বিল | 19 | ✅ delivered |
+| 18 | মোটর | 26 | ✅ delivered |
+| 19 | আইপিএস ও ইউপিএস | 36 | ✅ delivered |
+| 20 | ফ্লোট সুইচ | 25 | ✅ delivered |
+| 21 | বাসবার ও বাসবার ক্যালকুলেশন | 30 | ✅ delivered |
+| 22–28 | — | — | pending |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 14/12 · `ch02` 15/9 · `ch03` 9/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 7/4 ·
 `ch07` 10/9 · `ch08` 11/8 · `ch09` 6/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 11/9 ·
-`ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 —
-no gap > 5 cm (ch03 has two ~4.6–4.8 cm gaps, see Open items).
+`ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 · `ch16` 6/7 · `ch17` 5/8 ·
+`ch18` 9/10 · `ch19` 15/19 · `ch20` 13/10 · `ch21` 14/6 — no gap > 5 cm
+(ch03 has two ~4.6–4.8 cm gaps, ch16 one 4.56 cm, ch18 gaps of
+4.93/4.56/4.55 cm and ch19 one 4.80 cm, see Open items; ch20 has none
+above 4.0 cm, ch21 one 4.12 cm).
 
 Engine API (write a chapter without opening `bookkit.py`): `Book/build/README.md`
 Full chapter plan + numbering conventions: `Book/build/BOOK_INDEX.md`
@@ -296,6 +305,12 @@ two-line paragraphs with market commentary. The user flagged this on
 7. Read the produced PDF page by page before delivering.
 8. Copy the `.docx`, preview PDF and SVGs into `Book/`, update the status table
    here and in `Book/পড়ুন — বই তৈরির নির্দেশিকা.md`.
+9. After the user approves the chapter, back the whole project up to GitHub —
+   `git add -A && git commit -m "Chapter NN" && git push`. The remote is the
+   private repo `SAbidyut/House_Wiring` (`origin/main`); `gh` is installed and
+   authenticated, so no credentials are needed. Do this *after* approval, not
+   before — an unapproved chapter should not land in the backup. Ask the user
+   before pushing; publishing is theirs to confirm each time.
 
 ## Drawing bugs that keep recurring
 
@@ -309,6 +324,11 @@ Check these before rendering — each one shipped once and had to be fixed:
 - **A stroke through a label** is a defect `qc.py` now catches; a *curve* through
   a label was missed until `_path_points` learned Q/C endpoints.
 - Bengali `৪` renders like a Latin `8` in Kalpurush — that is correct, not a bug.
+- **`s.text()`'s 7th positional arg is `weight`, not `anchor`.** Writing
+  `s.text(x, y, s, size, fill, 700)` and expecting right-alignment silently
+  leaves the run left-anchored; the glyphs then start at `x` and overflow their
+  container, and `qc.py` reports it as `box edge cuts` on every number in the
+  column (ch17 d04's whole money column). Pass `"end"` explicitly.
 - `s.fit(bottom, pad)` on every diagram, or the canvas keeps dead space.
 - **A "parallel" circuit copied from a working diagram can render in series** if
   the shared node is drawn as one wire chaining component→component instead of
@@ -330,23 +350,229 @@ Check these before rendering — each one shipped once and had to be fixed:
 ## Open items
 
 - ch03 p2 and p4 have ~4.6–4.8 cm page-foot gaps — acceptable, revisit only if
-  the user objects.
+  the user objects. ch18 has three of the same size (4.93 / 4.56 / 4.55 cm)
+  and ch19 one (4.80 cm on p5, where `d03_types` is too tall to follow
+  §১৯.২.১); each is a `worked_example` or a figure that could not be pulled
+  up further.
+- ch19 ends on a header-only page 36 — the empty paragraph Word requires
+  after the final ❖ চিত্রসূত্র box. ch13 already ships the same artefact.
+  Harmless per chapter, and it disappears when the chapters are merged.
 - Appendix ক (symbol chart) can reuse the four sheets from `dia_ch05.py`.
 - Once all 28 chapters exist: merge into one file, continuous page numbers,
   single TOC + চিত্রসূচি + সারণিসূচি.
 
 ## Next step
 
-**Chapter 16 — পাওয়ার ফর্মুলা ও ক্যালকুলেশন** (module lesson 16, ~18 pages).
-Scope in `BOOK_INDEX.md`: সিঙ্গেল ফেজ ও থ্রি-ফেজ · অ্যাম্পিয়ার, ভোল্টেজ ও
-পাওয়ারের সূত্র · ক্যালকুলেশন. A maths-heavy chapter, so `b.math()` and
-`worked_example()` do most of the work — re-read the OMML constraints below
-before writing (no Bangla inside `steps=`, Latin digits in equations, `cos φ`
-as upright text not `\cos\phi`). `Circuit Diagram.pptx` slides 25–26 have
-voltmeter/ammeter connection drawings; ch08 already used that material, so
-check before reusing. BNBC 1.3.7.4 (the 1.65 inductive-load factor, used in
-ch15's example ১৫.১) and Table 8.1.17 (minimum load densities) are both worth
-citing here.
+**Chapter 22 — সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস** (module lesson 22,
+~26 pages).  Scope: সার্কিট ব্রেকারের পরিচিতি ও ব্যবহার · সার্কিট ব্রেকার
+ক্যালকুলেশন.  Sources at the root, none of them mined yet:
+`circuit breaker.docx`, `circuit breaker & cable calculation.docx`,
+`Standard Markings on Circuit Breakers.docx`.  Ch21 already embedded
+`HW Connection Diagram All.pptx` s29/s31/s32/s33, which show MCCB, MCB,
+RCCB and SPD in place — check whether any *other* slide in either deck is
+breaker-specific before hand-drawing.  Breaking capacity (Icu/Ics), curve
+types (B/C/D) and the IEC numbers (60898-1 for MCB, 60947-2 for MCCB,
+61008/61009 for RCCB) must be verified by web search — do not write them
+from memory.  BNBC 1.3.9.3.8 (20% spare) and 1.3.27(a)/(c) are already
+verified and quoted in ch20/ch21.
+
+**Chapter 21's sources (do not re-discover).**  Two decks, both mined:
+
+- `Busbar All.pptx` — 7 slides.  s1 copper + aluminium 3D renders,
+  s2 twisted-wire joints + a real panel busbar photo, s3 selection
+  criteria, s4 current density, s5 the W/T/L sketch, s6 a table of **28
+  market sizes**, s7 the calculation flowchart.  The four embedded images
+  are pulled straight out of the PPTX (full resolution) rather than
+  cropped from a slide render — `assets_ch21.PPTX_PICS`, guarded by sha1
+  *and* pixel size.  **Trap: the shape names are inverted** — s2's
+  "Picture 6" is the panel photo and "Picture 8" is the wires.
+- `HW Connection Diagram All.pptx` slides **29, 31, 32, 33** (s29 meter →
+  MCCB → five busbars; s31 main meter → busbar → three sub-meters; s32
+  3Φ and 1Φ off one bar-set; s33 a full flat SDB with RCCB, SPD and
+  separate neutral/earthing bars).  Every slide's text in both decks was
+  extracted and checked — these four are the only busbar slides.
+
+Three decisions made while building it, do not re-litigate:
+
+- **Slide 7's two formulas are wrong** — it prints `KVA = 1000*V*I` and
+  `KW = 1000*V*I*Cosθ`; it must be *divide* by 1000.  The slide is
+  therefore **not** embedded; `dia_ch21.d12_calc` is its corrected
+  redrawn form, and §২১.৬.৩ states the correction in the prose.  Same
+  handling as ch20's "Magnetic Conductor".
+- **Slide 6's 28 sizes became সারণি ২১.৩, a real Word table**, not an
+  image — with each size's area and its copper/aluminium ampacity
+  computed in `ch21.SIZES` / `size_rows()`.
+- **Current density**: the institute's deck says Cu 1.5–2.0 and Al
+  0.5–1.5.  Verified engineering practice for LV switchgear is Cu
+  1.0–1.6 (1.2 in a sealed panel, 1.6 ventilated) and Al 0.7–1.2;
+  manufacturer tables for *bare bar in free air* run higher still
+  (40×5 Cu = 520 A ≈ 2.6; 50×10 Cu = 920 A ≈ 1.84, at 35 °C ambient /
+  30 K rise).  The book uses **Cu 1.6, Al 1.0** — inside both ranges —
+  and §২১.৬.১ says openly why the numbers differ.
+
+**Ch21's arithmetic is one chain — change one number and all of it moves.**
+250 kW connected · diversity 0.7 → 175 kW · 3Φ 400 V, cos φ 0.85 →
+I = 175000/588.9 = 297 A · Cu J 1.6 → 186 mm² → bar 40 × 5 (200 mm²,
+320 A) · +20% spare → 356 A → 223 mm² → 50 × 5 · Al J 1.0 → 297 mm² →
+60 × 5 · flat DB: 12 kW · 0.6 → 7200 W → 230 V, cos φ 0.95 → 33 A →
+20.6 mm².  Worked examples ২১.১–২১.৪ and সারণি ২১.৩ all hang off it.
+The denominator 1.732 × 400 × 0.85 = 588.9 is deliberately the same one
+as ch16's example ১৬.৩.
+
+BNBC clauses verified from the source PDF for ch21 and reusable later:
+**1.3.9.3.8** (≥20% spare in a branch circuit), **1.3.9.3.9** (one spare
+way per five used), **1.3.9.3.15 + Table 8.1.2** (L1 red, L2 yellow,
+L3 blue, N black, ECC green+yellow), **1.3.9.3.16** (three-phase load
+balancing, verified with a clamp meter), **1.3.14.1.6** (a small
+copper/brass earth bar even inside a switchboard's metal box),
+**1.3.17.2** (enclosure size depends on busbar size and insulator type),
+**1.3.17.4(c)** (soldered/welded lugs), **1.3.18.2** (>9 storeys →
+sandwiched copper trunking; protection at *both* the source busbar
+junction and the tap-off), **1.3.18.3(a)** (solid rectangular insulated
+copper, 200–3000 A feeder trunking), **1.3.18.3(c)** (never in damp
+places), **1.3.18.4** (busduct bars shall be copper), **1.3.37.3.5**
+(copper earthing busbar mandatory in LT panel/MDB/DB and in DB/FDB/SDB/
+BDB; crimped lugs, brass bolts).
+
+**Chapter 20's sources (do not re-discover).**  `HW Connection Diagram
+All.pptx` slides **25–28** are the only float-switch slides in either
+deck — s25/s26 = Single Condition (circuit / connection), s27/s28 =
+Double Condition.  All four are embedded via `assets_ch20.py`.  Two
+things that were decided while building it and should not be re-litigated:
+
+- **s25 says "MC = Magnetic Conductor", which is wrong** — it is Magnetic
+  *Contactor*.  The crop box deliberately cuts that legend off (x1 =
+  0.775); the correct term lives in the prose and the diagram's note strip.
+- **s26/s28 use com–NO on the first switch.**  That is drain/sump logic
+  (pump runs when water rises), not tank-filling logic.  §২০.৬.৫ says so
+  explicitly and gives the com–NC variant for filling an overhead tank.
+  This is not an error in the source — it is a different job.
+
+The ten photographs come from Wikimedia Commons.  The pair that carries
+the chapter is **Float switch off / Float switch on** (Martin Meise,
+CC BY 3.0) — the same cable float milled open in both states, so the
+steel ball, the lever and the micro-switch pin are all visible and the
+only difference between the two frames is where the ball sits.
+
+**Ch20's arithmetic reuses ch18's motor** — 1 HP, 230 V, cos φ 0.85,
+Eff 0.70, FLC 5.45 A.  Worked examples ২০.১ (5.45 A vs an 8 A inductive
+rating) and ২০.২ (2 HP → 10.9 A, contactor required) and সারণি ২০.৪'s
+whole column of FLC figures all come off that one chain.  Change ch18's
+motor and all of it moves.
+
+Facts verified for ch20 (do not re-verify): **"16(8) A" means 16 A
+resistive, 8 A inductive** — the European marking convention behind
+IEC 61058 / IEC 60730.  **Sulzer ABS KS datasheet**: minimum free cable
+50 mm → minimum switching differential 100 mm, cable H07RN-F 3G1.0,
+IP68, 60 °C continuous.  **BNBC Part 8 Ch 1 clause 1.3.27(d)** is the
+float switch's legal footing — it forbids automatic restart after a
+supply failure but explicitly does *not* preclude "starting a motor at
+intervals by an automatic control device, where other adequate
+precautions are taken against danger from unexpected restarting".  Also
+used: 1.3.27(a) (every device in the motor's current path must carry at
+least its FLC), 1.3.27(c) (>0.376 kW needs control gear with overcurrent
+protection), 1.3.7.4 (×1.65 for small inductive loads), 1.3.17.3 (no
+board on a damp wall).
+
+**Chapter 19's sources (do not re-discover).**  The institute has
+**nothing** on IPS/UPS — `Electrical House Wiring book.docx` has not one
+paragraph, and every slide's text in both diagram decks was extracted and
+checked: no IPS/UPS slide exists.  `Solar System.docx` has only the
+off-grid battery/inverter sizing arithmetic, no hardware photos.  So all
+ten photographs come from Wikimedia Commons via `assets_ch19.py`, credited
+in the ❖ চিত্রসূত্র box.  The two that carry the chapter are **UPSRearView**
+(Scott Power SDL 500 — a sharp, legible `Output 220-240V~ 50Hz, 300W,
+500VA` plate; 300/500 = PF 0.6, which is the whole power-factor lesson in
+one photograph) and **12V VRLA Battery** (RITAR RT1245 — `12V 4.5AH/20HR`
+plus cycle 14.6–14.8 V, standby 13.7–13.9 V and a 1.35 A initial-current
+limit, i.e. 0.3C).  The scope trace of a modified sine against mains was
+measured on a 60 Hz system — the caption says so.
+
+**Ch19's arithmetic is one chain — change one number and all of it moves.**
+350 W design load → 437.5 VA → 600 VA · 4 h at 12 V, DoD 0.8, η 0.85 →
+171.6 AH → 200 AH · 130 AH gives 3.03 h · charge 20 A for 6.5 h · DC
+current 34.3 A at 12 V and 17.2 A at 24 V.  §১৯.৮.৩'s market table, the
+backup-time table in §১৯.৮.৫, চিত্র ১৯.১৫ (`d13_flow`) and worked examples
+১৯.১–১৯.৫ all quote these.  `ch19.py`'s docstring repeats the list.
+**Prices are deliberately absent** — the ch17 tariff problem applies here
+too, and the Bangladeshi price sites disagree with each other.  Capacities
+and model sizes last; prices do not.
+
+**`photo_callouts()` in `dia_ch19.py` is the reusable win from ch19** — a
+photograph in the middle, Bangla labels down both margins, leaders drawn
+*after* the image.  Three traps it now encodes, each of which shipped once
+and had to be fixed:  (a) draw the image **before** the callouts or the
+image covers the leaders and every label points at the picture's edge;
+(b) aim the leader **beside** the printed lettering, never on top of it —
+on a nameplate figure the lettering *is* the lesson;  (c) position each
+label at its own target's height instead of spreading labels evenly down
+the margin, or a two-label side gets one leader slashing diagonally across
+the whole photograph.
+
+**`qc.py` checks text, not boxes.**  Ch19's `d11_connect` shipped a "সকেট"
+block whose rectangle ran off the right of the canvas while its *text*
+stayed inside — QC passed it clean.  When a row of blocks is laid out by
+centre, check `cx + w/2` against the note-strip's right edge (1194) by
+hand.
+
+**Chapter 18's sources (do not re-discover).** `Motor.docx` at the root holds
+the institute's own connection drawings inside `word/media/` — image5 = run
+capacitor, image6 = DP switch + pump, image7 = start-run capacitor, image10 =
+star terminal block, image12 = delta terminal block. They are RGBA with a
+transparent background, so they must be composited onto white before use or
+they print black (`assets_ch18.py` does this, and asserts each image's pixel
+size so a changed source file is caught). **Neither `HW Connection Diagram
+All.pptx` nor `Circuit Diagram.pptx` has any motor slide** — every slide's
+text was extracted and checked. The cutaway motor photo, stator and rotor come
+from Wikimedia Commons (PD / CC BY-SA), credited in a ❖ চিত্রসূত্র box.
+USDA Farmers' Bulletins on Commons ("Electric motors for the farm", "Selecting
+and using electric motors", "Single-phase electric motors for farm use") are
+public domain and full of usable motor line art if a later chapter needs it.
+
+**Tariff figures in ch17 will go stale.** The rates in সারণি ১৭.৩ are BERC's
+retail order effective from the June 2026 billing cycle, including the 4 June
+2026 correction that rolled the lifeline (0–50) and first-step (0–75) slabs
+back to 4.63 and 5.26. Demand charge Tk 42/kW, VAT 5%, late-payment surcharge
+5% once. When these change, সারণি ১৭.৩, `dia_ch17.d03_slab`, `d04_bill` and
+worked examples ১৭.২/১৭.৩/১৭.৪ all have to be recomputed together — the
+docstring of `ch17.py` says so too. Research note: the official BERC/BPDB/DPDC
+PDFs live on `objectstorage.ap-dcc-gazipur-1.oraclecloud15.com`, which is
+**unreachable from this machine** (connect timeout), and `berc.org.bd` has a
+broken TLS chain (`curl -k` works, WebFetch does not). The slab numbers were
+settled instead from Prothom Alo / Daily Star / bssnews coverage of the 3 June
+2026 order cross-checked against `ebill.info.bd/tariff`; low-quality SEO blogs
+disagree with each other and with the order — do not trust them.
+
+**Standing check for any chapter with MCQs:** ch17's first draft had every
+answer on option (খ). `mcq()` does not shuffle. Read the answer key as a
+string before shipping and reorder options so the key spreads across ক/খ/গ/ঘ.
+(ch19 ships ক২ খ২ গ৩ ঘ৩.)
+
+**Engine change made for ch16 (already in `bookkit.py`):** the math DSL now
+has `\sqrt{a}`, emitted as a real OMML `<m:rad>` with `degHide`. It had to be
+structural rather than a `√` character — Kalpurush has no U+221A. Verified
+rendering in LibreOffice (display, and nested inside `\frac`).
+
+**Kalpurush glyph coverage, checked against the font's cmap** (do not re-test):
+missing — `√ ² ³ φ Ω ° π ∠ ≈ Δ θ ≤`; present — `× · —`. Present-in-cmap is not
+proof of correct drawing: `÷` is in the cmap but draws as `+`, which is why the
+existing ÷ rule stands. The missing ones fall back to another font: fine for a
+lone `φ`/`Ω`/`Δ` (ch12/ch14 already ship `cos φ`), but never put `²` or `√` in
+body text, a table header or an SVG label — write `ওয়াট/বর্গমিটার` in words and
+get real superscripts from `^{2}` inside `b.math()`.  **The ÷ rule applies to
+SVG labels too**, not just body text: ch19 drafted `ওয়াট ÷ PF` and
+`1200 VA ÷ 960 W` into two diagrams before they were caught. Chrome's raster
+happened to fall back and draw them correctly, so the PNG looked fine — but
+Word renders the *SVG*, with Kalpurush, where it becomes `+`. Write `/`.
+
+The Bangla-in-OMML guard from ch16 now lives in **`Book/build/mathguard.py`** —
+an AST walk that flags any Bangla codepoint inside `b.math()` args or `steps=`
+(`given=`/`find=` are exempt, they are `_rich` body text). Run it before
+building any maths-heavy chapter:
+
+```bash
+python mathguard.py ch19.py
+```
 
 Reusable: `assets_chNN.py` (ch12/ch13/ch14/ch15) converts a source PPTX to PDF
 once into `.slidepdf/` and crops any slide at 300 dpi — point `SLIDES` at the
@@ -355,7 +581,14 @@ that asserts each slide's page text contains the expected words and dies if it
 does not; keep that, it catches an off-by-one slide before anything is cropped.
 It also shows how to crop *part* of a slide (fraction box) to lift one object
 out of a busy drawing — that is how ch15's piano/gang board photos were made
-from slides 34 and 35.
+from slides 34 and 35.  `assets_ch19.py` is the **Wikimedia Commons** variant:
+it resolves each file's URL through the Commons API, caches the download (the
+API returns 429 fast if hit in a loop — sleep between requests), asserts each
+image's pixel size as a tripwire, applies `ImageOps.exif_transpose` before
+cropping (crop boxes are written against what commons.wikimedia.org *shows*,
+and one candidate was stored rotated), and writes `credits.json` that
+`ch19.py` reads to build the ❖ চিত্রসূত্র box — so the credits cannot drift
+from the pictures.
 
 Layout lesson from ch13: two `worked_example()` blocks back to back will not
 share a page — Word pushes the second one whole, opening an ~11 cm gap. Put
@@ -370,6 +603,42 @@ within its own section — past the paragraph that explains it, and past a
 bullet list plus a safety box. Text ahead of a figure fills the page the
 figure could not fit on; the figure then starts the next page cleanly. Try
 this before anything else.
+
+Ch17 is the counter-example that sharpens the rule: moving figures around
+alone turned three gaps into two and then back into three (10.5 / 8.7 / 5.6 →
+7.1 / 7.0 → 9.6 / 7.0 → 13.9 / 4.8), because each move only relocated the same
+stranded block. What finally cleared every gap was moving a **summary table
+up**, above the subsections that explain its rows — §১৭.৫'s "বিলের অংশগুলো"
+table went from the end of the section to right after its opening paragraph.
+That is both better writing (list first, then one subsection per row) and the
+only edit that changed how much room the following worked example had. So the
+order to try is: (1) move a summary/overview table earlier, (2) put figures
+*after* the worked example in their section rather than before, (3) merge
+`steps=` lines, (4) only then shuffle figures. Also: shortening a diagram's
+**bar/plot height** (not its width) is a legitimate way to buy 2 cm — the
+placed width and therefore the type size are unchanged, so the "never shrink a
+figure" rule does not apply (`dia_ch17.d03_slab`'s `base`/`top`).
+
+Ch18 adds two more moves to that list. (a) An **embedded source image can be
+placed narrower than 15.4 cm** when its own lettering is large — ch18's two
+capacitor drawings went to 12.8 cm (still ~13 pt type) and two ~10 cm figures
+that each owned a page then shared one. The "never shrink a figure" rule is
+about *drawn* diagrams whose labels are already near 7.5 pt. (b) A **note or
+formula box moved to just before a worked example** fills the page the example
+could not fit on — ch18's "µF ঠিক, ভোল্টেজও দেখো" box moved from the end of
+§১৮.৭ to its opening and closed a 5.4 cm gap. Adding one genuinely useful
+paragraph plus a safety box ahead of a stranded example did the same for an
+8.7 cm gap; if the content is real, that is better than shuffling figures.
+
+Ch19 confirms (b) at scale: four gaps (4.8 / 7.8 / 12.1 / 5.6) went to one
+(4.8) with no figure moved for its own sake. The 12.1 cm came from a bloated
+worked example — five `steps=` lines and a five-line `given=` merged down to
+three and two. The 7.8 cm closed by putting the **table before the figure** in
+§১৯.৫.২. The last two were the ch13 back-to-back-examples trap, and both
+closed by writing content that was missing anyway: a note box on the mistake
+of dropping DoD and efficiency from the AH formula, and a quick-reference
+table of backup hours per battery size. Prefer the paragraph you owed the
+reader over the shuffle.
 
 Also from ch15: `given=`/`find=` go through `_rich`, so Bangla numerals appear
 there — and Kalpurush draws `৪` like a Latin `8`. Next to Latin values
