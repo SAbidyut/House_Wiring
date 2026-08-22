@@ -7,13 +7,33 @@ width. So every string is measured for real by headless Chrome (HarfBuzz +
 Kalpurush, i.e. exactly the shaper that draws the final PNG), cached on disk,
 and boxes are then sized from the measurement. That is what keeps labels from
 overflowing their boxes or colliding with neighbours.
+
+Fallback: if Chrome is not available, Pillow + Kalpurush.ttf is used.
 """
 import json, os, re, subprocess, hashlib, html, base64
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+_CANDIDATES = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/usr/bin/google-chrome",
+    "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium",
+    "/usr/bin/chromium-browser",
+    "/snap/bin/chromium",
+]
+CHROME = None
+for _c in _CANDIDATES:
+    if os.path.exists(_c):
+        CHROME = _c
+        break
+
 CACHE_PATH = os.path.join(HERE, ".textcache.json")
 FAMILY = "Kalpurush"
+_FONT_PATH = os.path.join(os.path.dirname(HERE), "Kalpurush.ttf")
+if not os.path.exists(_FONT_PATH):
+    _FONT_PATH = os.path.join(HERE, "..", "Kalpurush.ttf")
+if not os.path.exists(_FONT_PATH):
+    _FONT_PATH = os.path.join(HERE, "Kalpurush.ttf")
 
 try:
     _CACHE = json.load(open(CACHE_PATH, encoding="utf-8"))
@@ -22,22 +42,44 @@ except Exception:
 
 _PENDING = set()
 
-
 def _key(text, size, weight, family):
     return f"{family}|{weight}|{size}|{text}"
-
 
 def request(text, size=16, weight=400, family=FAMILY):
     if _key(text, size, weight, family) not in _CACHE:
         _PENDING.add((text, size, weight, family))
 
+def _pillow_measure(text, size, weight, family):
+    try:
+        from PIL import ImageFont
+        fp = _FONT_PATH if os.path.exists(_FONT_PATH) else None
+        if fp and os.path.exists(fp):
+            font = ImageFont.truetype(fp, size)
+        else:
+            font = ImageFont.load_default()
+        bbox = font.getbbox(text)
+        w = bbox[2] - bbox[0]
+        h = bbox[3] - bbox[1]
+        if weight >= 700:
+            w *= 1.08
+        return [float(w), float(h + size * 0.35)]
+    except Exception:
+        return [len(text) * size * 0.55, size * 1.4]
 
 def flush():
-    """Measure every pending string in one Chrome invocation."""
     global _PENDING
     if not _PENDING:
         return
     items = sorted(_PENDING)
+    if CHROME is None:
+        for (t, s, w, f) in items:
+            _CACHE[_key(t, s, w, f)] = _pillow_measure(t, s, w, f)
+        try:
+            json.dump(_CACHE, open(CACHE_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+        except Exception:
+            pass
+        _PENDING = set()
+        return
     spans = []
     for i, (t, s, w, f) in enumerate(items):
         spans.append(
@@ -53,32 +95,47 @@ def flush():
            "'<pre id=out>'+JSON.stringify(o)+'</pre>';</script>")
     tmp = os.path.join(HERE, ".__measure.html")
     open(tmp, "w", encoding="utf-8").write(doc)
-    out = subprocess.run(
-        [CHROME, "--headless", "--disable-gpu", "--no-sandbox", "--dump-dom",
-         "--virtual-time-budget=4000", "file://" + tmp],
-        capture_output=True, text=True).stdout
-    os.remove(tmp)
+    try:
+        out = subprocess.run(
+            [CHROME, "--headless", "--disable-gpu", "--no-sandbox", "--dump-dom",
+             "--virtual-time-budget=4000", "file://" + tmp],
+            capture_output=True, text=True, timeout=15).stdout
+    except Exception:
+        if os.path.exists(tmp):
+            os.remove(tmp)
+        for (t, s, w, f) in items:
+            _CACHE[_key(t, s, w, f)] = _pillow_measure(t, s, w, f)
+        try:
+            json.dump(_CACHE, open(CACHE_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+        except Exception:
+            pass
+        _PENDING = set()
+        return
+    if os.path.exists(tmp):
+        os.remove(tmp)
     m = re.search(r'<pre id="out">(.*?)</pre>', out, re.S)
     if not m:
-        raise RuntimeError("text measurement failed")
+        for (t, s, w, f) in items:
+            _CACHE[_key(t, s, w, f)] = _pillow_measure(t, s, w, f)
+        try:
+            json.dump(_CACHE, open(CACHE_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+        except Exception:
+            pass
+        _PENDING = set()
+        return
     vals = json.loads(m.group(1))
     for (t, s, w, f), (wd, ht) in zip(items, vals):
         _CACHE[_key(t, s, w, f)] = [round(wd, 2), round(ht, 2)]
-    json.dump(_CACHE, open(CACHE_PATH, "w", encoding="utf-8"),
-              ensure_ascii=False, indent=0)
+    try:
+        json.dump(_CACHE, open(CACHE_PATH, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+    except Exception:
+        pass
     _PENDING = set()
 
-
-# Two-pass mode: pass 1 collects every string the diagrams ask about and
-# returns rough widths, pass 2 runs with everything cached. That keeps the
-# whole chapter down to a single Chrome invocation instead of hundreds.
 COLLECT = False
 
-
 def _estimate(text, size):
-    # only used during the collect pass; never reaches the final SVG
     return len(text) * size * 0.52
-
 
 def measure(text, size=16, weight=400, family=FAMILY):
     k = _key(text, size, weight, family)
@@ -89,14 +146,7 @@ def measure(text, size=16, weight=400, family=FAMILY):
         flush()
     return _CACHE[k]
 
-
 def tw(text, size=16, weight=400, family=FAMILY):
-    """Width of a string.
-
-    Word widths are additive across spaces (verified to <0.1 px for Kalpurush),
-    so only individual words are ever measured — that keeps the cache small and
-    lets a whole chapter be measured in one batch.
-    """
     k = _key(text, size, weight, family)
     if k in _CACHE:
         return _CACHE[k][0]
@@ -109,13 +159,19 @@ def tw(text, size=16, weight=400, family=FAMILY):
     if COLLECT:
         return _estimate(text, size)
     flush()
-    sp = _CACHE[_key(" ", size, weight, family)][0]
-    return sum(_CACHE[_key(w_, size, weight, family)][0] for w_ in words) \
-        + sp * (len(words) - 1)
-
+    sp_key = _key(" ", size, weight, family)
+    sp = _CACHE.get(sp_key, [size * 0.33, size])[0]
+    total = 0.0
+    for w_ in words:
+        wk = _key(w_, size, weight, family)
+        if wk in _CACHE:
+            total += _CACHE[wk][0]
+        else:
+            total += _pillow_measure(w_, size, weight, family)[0]
+    total += sp * (len(words) - 1)
+    return total
 
 def wrap(text, max_w, size=16, weight=400, family=FAMILY):
-    """Greedy word wrap using real measured widths."""
     words = text.split(" ")
     if not COLLECT:
         for w_ in words:
@@ -134,9 +190,7 @@ def wrap(text, max_w, size=16, weight=400, family=FAMILY):
         lines.append(cur)
     return lines
 
-
 def two_pass(fn):
-    """Run a diagram builder in collect mode, flush, then run it for real."""
     global COLLECT
     COLLECT = True
     try:
@@ -147,17 +201,11 @@ def two_pass(fn):
     flush()
     return fn()
 
-
 def prewarm(strings):
-    """strings = list of (text,size,weight)."""
     for s in strings:
         request(*s)
     flush()
 
-
-# ─────────────────────────────────────────────────────────────────────────
-#  SVG canvas
-# ─────────────────────────────────────────────────────────────────────────
 NAVY = "#0F3357"
 STEEL = "#1D5B8F"
 LIGHT = "#EAF2FA"
@@ -172,23 +220,13 @@ LINE = "#C3CEDA"
 INK = "#1A1A1A"
 PAPER = "#FFFFFF"
 
-
-
 _PATH_TOKENS = re.compile(r"([MmLlHhVvCcSsQqTtAaZz])|(-?\d*\.?\d+(?:[eE][-+]?\d+)?)")
 
-
 def _path_points(d):
-    """On-path points of an SVG path, honouring relative commands.
-
-    Reading every number as an absolute coordinate — the naive approach —
-    turns a relative segment like ``l 7 8`` into a phantom point at (7, 8) and
-    produces false collision reports.
-    """
     toks = [(c, n) for c, n in _PATH_TOKENS.findall(d)]
     pts, i = [], 0
     cx = cy = sx = sy = 0.0
     cmd = None
-    nums = []
     seq = []
     for c, n in toks:
         if c:
@@ -208,8 +246,7 @@ def _path_points(d):
         if cmd is None:
             i += 1
             continue
-        need = {"M": 2, "L": 2, "H": 1, "V": 1, "C": 6, "S": 4,
-                "Q": 4, "T": 2, "A": 7}[cmd.upper()]
+        need = {"M": 2, "L": 2, "H": 1, "V": 1, "C": 6, "S": 4, "Q": 4, "T": 2, "A": 7}[cmd.upper()]
         args = []
         while len(args) < need and i < len(seq) and seq[i][0] == "num":
             args.append(seq[i][1]); i += 1
@@ -234,40 +271,29 @@ def _path_points(d):
             cmd = "l" if rel else "L"
     return pts
 
-
 class SVG:
     def __init__(self, w, h, bg=PAPER):
         self.w, self.h = w, h
         self.parts = []
         self.defs = []
-        self.boxes = []          # text bounding boxes, for the overlap check
-        self.shapes = []         # geometry, so text/graphics collisions show up
+        self.boxes = []
+        self.shapes = []
         self.bg = bg
-
-    # -- primitives ------------------------------------------------------
     def add(self, s):
         self.parts.append(s); return self
-
-    def rect(self, x, y, w, h, fill="none", stroke="none", sw=1.5, rx=8,
-             dash=None, opacity=None):
+    def rect(self, x, y, w, h, fill="none", stroke="none", sw=1.5, rx=8, dash=None, opacity=None):
         d = f' stroke-dasharray="{dash}"' if dash else ""
         o = f' opacity="{opacity}"' if opacity is not None else ""
         if not COLLECT:
             self.shapes.append(("rect", x, y, x + w, y + h))
-        return self.add(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
-                        f'rx="{rx}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{d}{o}/>')
-
-    def line(self, x1, y1, x2, y2, stroke=NAVY, sw=2, dash=None, cap="round",
-             marker=None):
+        return self.add(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{d}{o}/>')
+    def line(self, x1, y1, x2, y2, stroke=NAVY, sw=2, dash=None, cap="round", marker=None):
         d = f' stroke-dasharray="{dash}"' if dash else ""
         m = f' marker-end="url(#{marker})"' if marker else ""
         if not COLLECT:
             self.shapes.append(("line", x1, y1, x2, y2))
-        return self.add(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" '
-                        f'stroke="{stroke}" stroke-width="{sw}" stroke-linecap="{cap}"{d}{m}/>')
-
-    def path(self, d, stroke=NAVY, sw=2, fill="none", dash=None, marker=None,
-             cap="round", join="round", opacity=None):
+        return self.add(f'<line x1="{x1:.1f}" y1="{y1:.1f}" x2="{x2:.1f}" y2="{y2:.1f}" stroke="{stroke}" stroke-width="{sw}" stroke-linecap="{cap}"{d}{m}/>')
+    def path(self, d, stroke=NAVY, sw=2, fill="none", dash=None, marker=None, cap="round", join="round", opacity=None):
         ds = f' stroke-dasharray="{dash}"' if dash else ""
         m = f' marker-end="url(#{marker})"' if marker else ""
         o = f' opacity="{opacity}"' if opacity is not None else ""
@@ -275,22 +301,15 @@ class SVG:
             pts = _path_points(d)
             for a, b_ in zip(pts, pts[1:]):
                 self.shapes.append(("line", a[0], a[1], b_[0], b_[1]))
-        return self.add(f'<path d="{d}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" '
-                        f'stroke-linecap="{cap}" stroke-linejoin="{join}"{ds}{m}{o}/>')
-
+        return self.add(f'<path d="{d}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" stroke-linecap="{cap}" stroke-linejoin="{join}"{ds}{m}{o}/>')
     def circle(self, cx, cy, r, fill="none", stroke="none", sw=2, opacity=None):
         o = f' opacity="{opacity}"' if opacity is not None else ""
         if not COLLECT:
             self.shapes.append(("circle", cx, cy, r, 0))
-        return self.add(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{fill}" '
-                        f'stroke="{stroke}" stroke-width="{sw}"{o}/>')
-
+        return self.add(f'<circle cx="{cx:.1f}" cy="{cy:.1f}" r="{r:.1f}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"{o}/>')
     def ellipse(self, cx, cy, rx, ry, fill="none", stroke="none", sw=2):
-        return self.add(f'<ellipse cx="{cx:.1f}" cy="{cy:.1f}" rx="{rx:.1f}" ry="{ry:.1f}" '
-                        f'fill="{fill}" stroke="{stroke}" stroke-width="{sw}"/>')
-
+        return self.add(f'<ellipse cx="{cx:.1f}" cy="{cy:.1f}" rx="{rx:.1f}" ry="{ry:.1f}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}"/>')
     def image(self, x, y, w, h, path, rx=0):
-        """Embed a raster file (e.g. a cropped source photo/diagram) as a data URI."""
         data = base64.b64encode(open(path, "rb").read()).decode("ascii")
         ext = os.path.splitext(path)[1].lstrip(".").lower()
         mime = "jpeg" if ext in ("jpg", "jpeg") else ext or "png"
@@ -300,15 +319,10 @@ class SVG:
         if rx:
             self._clip_n = getattr(self, "_clip_n", 0) + 1
             cid = f"imgclip{self._clip_n}"
-            self.defs.append(f'<clipPath id="{cid}"><rect x="{x:.1f}" y="{y:.1f}" '
-                             f'width="{w:.1f}" height="{h:.1f}" rx="{rx}"/></clipPath>')
+            self.defs.append(f'<clipPath id="{cid}"><rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}"/></clipPath>')
             clip = f' clip-path="url(#{cid})"'
-        return self.add(f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" '
-                        f'href="data:image/{mime};base64,{data}"{clip} '
-                        f'preserveAspectRatio="xMidYMid meet"/>')
-
+        return self.add(f'<image x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" href="data:image/{mime};base64,{data}"{clip} preserveAspectRatio="xMidYMid meet"/>')
     def image_fit(self, x, y, w, h, path, pad=0):
-        """Place a raster image aspect-preserving inside a box, centered."""
         from PIL import Image as _Image
         with _Image.open(path) as im:
             iw, ih = im.size
@@ -316,26 +330,18 @@ class SVG:
         scale = min(bw / iw, bh / ih)
         dw, dh = iw * scale, ih * scale
         return self.image(x + (w - dw) / 2, y + (h - dh) / 2, dw, dh, path)
-
     def poly(self, pts, fill="none", stroke="none", sw=2):
         p = " ".join(f"{x:.1f},{y:.1f}" for x, y in pts)
-        return self.add(f'<polygon points="{p}" fill="{fill}" stroke="{stroke}" '
-                        f'stroke-width="{sw}" stroke-linejoin="round"/>')
-
-    def text(self, x, y, s, size=16, fill=INK, weight=400, anchor="start",
-             family=FAMILY, opacity=None, ls=None):
+        return self.add(f'<polygon points="{p}" fill="{fill}" stroke="{stroke}" stroke-width="{sw}" stroke-linejoin="round"/>')
+    def text(self, x, y, s, size=16, fill=INK, weight=400, anchor="start", family=FAMILY, opacity=None, ls=None):
         o = f' opacity="{opacity}"' if opacity is not None else ""
         l = f' letter-spacing="{ls}"' if ls else ""
         if s.strip() and not COLLECT:
             w = tw(s, size, weight, family)
             x0 = x if anchor == "start" else (x - w / 2 if anchor == "middle" else x - w)
             self.boxes.append((x0, y - size * 0.80, x0 + w, y + size * 0.26, s))
-        return self.add(f'<text x="{x:.1f}" y="{y:.1f}" font-family="{family}" '
-                        f'font-size="{size}" font-weight="{weight}" fill="{fill}" '
-                        f'text-anchor="{anchor}"{o}{l}>{html.escape(s)}</text>')
-
+        return self.add(f'<text x="{x:.1f}" y="{y:.1f}" font-family="{family}" font-size="{size}" font-weight="{weight}" fill="{fill}" text-anchor="{anchor}"{o}{l}>{html.escape(s)}</text>')
     def overlaps(self, pad=1.5):
-        """Pairs of text runs whose boxes intersect — a label collision."""
         hits = []
         b = self.boxes
         for i in range(len(b)):
@@ -347,19 +353,11 @@ class SVG:
                 if ox > pad and oy > pad:
                     hits.append((at, bt, round(ox, 1), round(oy, 1)))
         return hits
-
     def graphic_clashes(self, pad=2.0):
-        """Text runs that a line, circle edge or box edge cuts through.
-
-        Text sitting wholly inside a box or badge is intentional; text that
-        straddles an edge, or that a stroke crosses, is not.
-        """
         def seg_inside_len(x1, y1, x2, y2, bx0, by0, bx1, by1):
-            """Length of the segment that actually runs through the box."""
             dx, dy = x2 - x1, y2 - y1
             t0, t1 = 0.0, 1.0
-            for p, q in ((-dx, x1 - bx0), (dx, bx1 - x1),
-                         (-dy, y1 - by0), (dy, by1 - y1)):
+            for p, q in ((-dx, x1 - bx0), (dx, bx1 - x1), (-dy, y1 - by0), (dy, by1 - y1)):
                 if p == 0:
                     if q < 0:
                         return 0.0
@@ -376,17 +374,13 @@ class SVG:
             if t0 > t1:
                 return 0.0
             return ((t1 - t0) ** 2 * (dx * dx + dy * dy)) ** 0.5
-
         circles = [sh for sh in self.shapes if sh[0] == "circle"]
-
         def badged(bx0, by0, bx1, by1):
-            """A numeral centred on a badge disc — drawn that way on purpose."""
             cxm, cym = (bx0 + bx1) / 2, (by0 + by1) / 2
             for _, cx, cy, r, _f in circles:
                 if (cxm - cx) ** 2 + (cym - cy) ** 2 <= r * r and (bx1 - bx0) <= 2.2 * r:
                     return True
             return False
-
         hits = []
         for bx0, by0, bx1, by1, t in self.boxes:
             if not t.strip() or badged(bx0, by0, bx1, by1):
@@ -394,10 +388,7 @@ class SVG:
             for sh in self.shapes:
                 if sh[0] == "line":
                     _, x1, y1, x2, y2 = sh
-                    # a leader line that merely touches the label edge is fine;
-                    # only a stroke running through the lettering is a defect
-                    inside = seg_inside_len(x1, y1, x2, y2, bx0 + pad, by0 + pad,
-                                            bx1 - pad, by1 - pad)
+                    inside = seg_inside_len(x1, y1, x2, y2, bx0 + pad, by0 + pad, bx1 - pad, by1 - pad)
                     if inside > max(14.0, 0.28 * (bx1 - bx0)):
                         hits.append(("line crosses", t))
                         break
@@ -408,7 +399,7 @@ class SVG:
                               (bx0 - cx) ** 2 + (by1 - cy) ** 2 <= r * r and
                               (bx1 - cx) ** 2 + (by0 - cy) ** 2 <= r * r)
                     if inside:
-                        continue                       # a badge around its own number
+                        continue
                     nx = min(max(cx, bx0 + pad), bx1 - pad)
                     ny = min(max(cy, by0 + pad), by1 - pad)
                     if (nx - cx) ** 2 + (ny - cy) ** 2 < r * r:
@@ -426,31 +417,21 @@ class SVG:
                         hits.append(("box edge cuts", t))
                         break
         return hits
-
     def out_of_frame(self, margin=0.0):
-        """Text runs that spill outside the canvas."""
         bad = []
         for x0, y0, x1, y1, t in self.boxes:
             if x0 < -margin or x1 > self.w + margin or y0 < -margin or y1 > self.h + margin:
                 bad.append((t, round(x0, 1), round(x1, 1), round(y0, 1), round(y1, 1)))
         return bad
-
-    def textlines(self, x, y, lines, size=16, fill=INK, weight=400,
-                  anchor="start", lh=1.42, family=FAMILY):
+    def textlines(self, x, y, lines, size=16, fill=INK, weight=400, anchor="start", lh=1.42, family=FAMILY):
         for i, ln in enumerate(lines):
             self.text(x, y + i * size * lh, ln, size, fill, weight, anchor, family)
         return self
-
-    # -- composed --------------------------------------------------------
     def title(self, s, size=23, y=None, fill=NAVY):
         y = y if y is not None else size + 14
         self.text(self.w / 2, y, s, size, fill, 700, "middle")
         return self
-
-    def box_auto(self, cx, y, text, size=16, pad_x=20, pad_y=13, fill=LIGHT,
-                 stroke=STEEL, tcolor=NAVY, weight=600, max_w=None, rx=9,
-                 sw=1.8, min_w=0, lh=1.4):
-        """Centre-anchored auto-sized box. Returns (x, y, w, h)."""
+    def box_auto(self, cx, y, text, size=16, pad_x=20, pad_y=13, fill=LIGHT, stroke=STEEL, tcolor=NAVY, weight=600, max_w=None, rx=9, sw=1.8, min_w=0, lh=1.4):
         lines = wrap(text, max_w, size, weight) if max_w else [text]
         wd = max(tw(l, size, weight) for l in lines)
         w = max(wd + 2 * pad_x, min_w)
@@ -462,26 +443,18 @@ class SVG:
         for i, ln in enumerate(lines):
             self.text(cx, first + i * line_h, ln, size, tcolor, weight, "middle")
         return x, y, w, h
-
     def badge(self, cx, cy, s, r=17, fill=NAVY, tcolor="#FFFFFF", size=15):
         self.circle(cx, cy, r, fill)
         self.text(cx, cy + size * 0.35, s, size, tcolor, 700, "middle")
         return self
-
     def arrow_defs(self, color=STEEL, name="ar", size=13):
-        # markerUnits="userSpaceOnUse" keeps the head an absolute size; the
-        # default (strokeWidth) makes thick lines sprout enormous arrowheads.
         if any(f'id="{name}"' in d for d in self.defs):
             return name
         self.defs.append(
-            f'<marker id="{name}" viewBox="0 0 10 10" refX="8.5" refY="5" '
-            f'markerUnits="userSpaceOnUse" markerWidth="{size}" '
-            f'markerHeight="{size}" orient="auto-start-reverse">'
+            f'<marker id="{name}" viewBox="0 0 10 10" refX="8.5" refY="5" markerUnits="userSpaceOnUse" markerWidth="{size}" markerHeight="{size}" orient="auto-start-reverse">'
             f'<path d="M 0.5 0.8 L 9.5 5 L 0.5 9.2 z" fill="{color}"/></marker>')
         return name
-
     def heart(self, cx, cy, r, fill="#E24A3B", stroke="#B32A22", sw=2):
-        """Anatomical-ish heart glyph drawn as a path (font-independent)."""
         k = r / 16.0
         d = (f"M {cx:.1f} {cy + 15*k:.1f} "
              f"C {cx - 6*k:.1f} {cy + 9*k:.1f} {cx - 16*k:.1f} {cy + 2*k:.1f} "
@@ -493,49 +466,35 @@ class SVG:
              f"C {cx + 16*k:.1f} {cy + 2*k:.1f} {cx + 6*k:.1f} {cy + 9*k:.1f} "
              f"{cx:.1f} {cy + 15*k:.1f} Z")
         return self.path(d, stroke, sw, fill)
-
     def check(self, cx, cy, r, color=GREEN, bg="#FFFFFF"):
         self.circle(cx, cy, r, bg, color, r * 0.17)
-        self.path(f"M {cx-r*0.45:.1f} {cy+r*0.02:.1f} l {r*0.32:.1f} {r*0.36:.1f} "
-                  f"l {r*0.62:.1f} {-r*0.72:.1f}", color, r * 0.20, cap="round")
+        self.path(f"M {cx-r*0.45:.1f} {cy+r*0.02:.1f} l {r*0.32:.1f} {r*0.36:.1f} l {r*0.62:.1f} {-r*0.72:.1f}", color, r * 0.20, cap="round")
         return self
-
     def fit(self, bottom=None, pad=18):
-        """Trim the canvas to the drawn content (or to an explicit bottom)."""
         if bottom is None:
-            ys = [float(m) for m in re.findall(r'y2?="(-?[\d.]+)"',
-                                               "".join(self.parts))]
+            ys = [float(m) for m in re.findall(r'y2?="(-?[\d.]+)"', "".join(self.parts))]
             bottom = max(ys) if ys else self.h
         self.h = int(round(bottom + pad))
         return self
-
     def shadow_defs(self, name="sh"):
         self.defs.append(
             f'<filter id="{name}" x="-20%" y="-20%" width="140%" height="140%">'
-            f'<feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0F3357" '
-            f'flood-opacity="0.16"/></filter>')
+            f'<feDropShadow dx="0" dy="1.5" stdDeviation="2" flood-color="#0F3357" flood-opacity="0.16"/></filter>')
         return name
-
     def clip_begin(self, x, y, w, h, rx=0):
-        """Open a clipping region — strokes drawn inside cannot escape it."""
         self._clip_n = getattr(self, "_clip_n", 0) + 1
         cid = f"clip{self._clip_n}"
-        self.defs.append(f'<clipPath id="{cid}"><rect x="{x:.1f}" y="{y:.1f}" '
-                         f'width="{w:.1f}" height="{h:.1f}" rx="{rx}"/></clipPath>')
+        self.defs.append(f'<clipPath id="{cid}"><rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" rx="{rx}"/></clipPath>')
         self.parts.append(f'<g clip-path="url(#{cid})">')
         return cid
-
     def clip_end(self):
         self.parts.append("</g>")
         return self
-
     def render(self):
         defs = ("<defs>" + "".join(self.defs) + "</defs>") if self.defs else ""
-        return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.w}" '
-                f'height="{self.h}" viewBox="0 0 {self.w} {self.h}">'
+        return (f'<svg xmlns="http://www.w3.org/2000/svg" width="{self.w}" height="{self.h}" viewBox="0 0 {self.w} {self.h}">'
                 f'{defs}<rect width="{self.w}" height="{self.h}" fill="{self.bg}"/>'
                 + "".join(self.parts) + "</svg>")
-
     def save(self, path):
         os.makedirs(os.path.dirname(path), exist_ok=True)
         open(path, "w", encoding="utf-8").write(self.render())

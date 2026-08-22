@@ -38,16 +38,17 @@ order *is* the book order — do not regroup chapters by theme.
 | 19 | আইপিএস ও ইউপিএস | 36 | ✅ delivered |
 | 20 | ফ্লোট সুইচ | 25 | ✅ delivered |
 | 21 | বাসবার ও বাসবার ক্যালকুলেশন | 30 | ✅ delivered |
-| 22–28 | — | — | pending |
+| 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 28 | ✅ delivered |
+| 23–28 | — | — | pending |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 14/12 · `ch02` 15/9 · `ch03` 9/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 7/4 ·
 `ch07` 10/9 · `ch08` 11/8 · `ch09` 6/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 11/9 ·
 `ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 · `ch16` 6/7 · `ch17` 5/8 ·
-`ch18` 9/10 · `ch19` 15/19 · `ch20` 13/10 · `ch21` 14/6 — no gap > 5 cm
+`ch18` 9/10 · `ch19` 15/19 · `ch20` 13/10 · `ch21` 14/6 · `ch22` 14/16 — no gap > 5 cm
 (ch03 has two ~4.6–4.8 cm gaps, ch16 one 4.56 cm, ch18 gaps of
 4.93/4.56/4.55 cm and ch19 one 4.80 cm, see Open items; ch20 has none
-above 4.0 cm, ch21 one 4.12 cm).
+above 4.0 cm, ch21 one 4.12 cm, ch22 not checked — soffice missing in sandbox).
 
 Engine API (write a chapter without opening `bookkit.py`): `Book/build/README.md`
 Full chapter plan + numbering conventions: `Book/build/BOOK_INDEX.md`
@@ -363,18 +364,40 @@ Check these before rendering — each one shipped once and had to be fixed:
 
 ## Next step
 
-**Chapter 22 — সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস** (module lesson 22,
-~26 pages).  Scope: সার্কিট ব্রেকারের পরিচিতি ও ব্যবহার · সার্কিট ব্রেকার
-ক্যালকুলেশন.  Sources at the root, none of them mined yet:
-`circuit breaker.docx`, `circuit breaker & cable calculation.docx`,
-`Standard Markings on Circuit Breakers.docx`.  Ch21 already embedded
-`HW Connection Diagram All.pptx` s29/s31/s32/s33, which show MCCB, MCB,
-RCCB and SPD in place — check whether any *other* slide in either deck is
-breaker-specific before hand-drawing.  Breaking capacity (Icu/Ics), curve
-types (B/C/D) and the IEC numbers (60898-1 for MCB, 60947-2 for MCCB,
-61008/61009 for RCCB) must be verified by web search — do not write them
-from memory.  BNBC 1.3.9.3.8 (20% spare) and 1.3.27(a)/(c) are already
-verified and quoted in ch20/ch21.
+**Chapter 23 — ক্যাবল ও ক্যাবল ক্যালকুলেশন** (module lesson 23, ~22 pages).
+Scope: ক্যাবল পরিচিতি ও প্রকারভেদ · ক্যাবল ক্যালকুলেশন (ভোল্টেজ ড্রপ,
+কারেন্ট ক্যাপাসিটি, BNBC). Sources: `SUPER STAR Cables Technical Catalog.pdf`,
+`circuit breaker & cable calculation.docx` (cable part), `Electrical House
+Wiring book.docx` cable photos. BNBC 1.3.9.3.8, 1.3.9.3.9 already verified.
+
+**Chapter 22 delivered — notes (do not re-discover).**
+Two source docx mined:
+- `circuit breaker.docx` — 27 media: HRC fuse, glass cartridge, blade,
+  kitkat, MCB 1P/2P/3P/4P CHNT C63, RCCB 4P 63A 30mA, MCCB Hager 160A,
+  RCCB 2P, MCCB 100A, RCBO 2P/4P, SPD 2P/4P TOMZN TZG40-C. Table of B/C/D/K
+  curves (3–5, 5–10, 10–20×In) and fuse vs breaker comparison.
+- `Standard Markings on Circuit Breakers.docx` — 14 media: RCBO 1P+N,
+  MCB marking C16 6000 3, RCCB NL1-63, MCCB 320A, AFDD NB4LE-AFD,
+  MPCB NS2-25, RCBO NXBLE-40, Isolator NXHB-125, SPD NXU-I+II/F 12.5/385,
+  ACB, VCB. Plus 26 tables explaining each marking.
+- `circuit breaker & cable calculation.docx` — load chart (LED 10–20W,
+  tube 20–40W, fan 100W, socket 300/1000/1500W) and example 12200W total
+  → 58.94A (230V, cosφ 0.9) → 63A. Diversity factor formula.
+
+IEC verified via web search:
+  IEC 60898-1 MCB household, Icn 6000/10000, B/C/D [stoklink, tradeaiders]
+  IEC 60947-2 MCCB industrial, Icu/Ics kA, 25/50/75/100% [haipart, viox, sincede]
+  IEC 61008-1 RCCB trip times: 1×≤300ms, 2×≤150ms, 5×≤40ms, 0.5× no trip [stoklink, hager]
+  IEC 61009-1 RCBO combined [viox]
+  IEC 61643-11 SPD Type 1 Iimp 10/350, Type 2 In 8/20, Type 3 [trilpeak]
+
+Ch22 arithmetic chain: 12200W → 58.94A → 73.67A design → 63A main, branches
+10/16/20A. Cable coordination: 1.5RM 18A → 16A MCB, 2.5RM 24A → 20A MCB.
+BNBC 1.3.9.3.8 (20% spare) and 1.3.9.3.9 (one spare per five) reused.
+
+Diagrams: 14, QC 0 problems (Pillow fallback for measurement, dummy PNGs —
+Chrome and soffice missing in sandbox, SVG is authoritative for Word).
+`assets_ch22.py` writes `credits.json` that `ch22.py` reads for ❖ চিত্রসূত্র.
 
 **Chapter 21's sources (do not re-discover).**  Two decks, both mined:
 
