@@ -38,16 +38,17 @@ order *is* the book order — do not regroup chapters by theme.
 | 19 | আইপিএস ও ইউপিএস | 36 | ✅ delivered |
 | 20 | ফ্লোট সুইচ | 25 | ✅ delivered |
 | 21 | বাসবার ও বাসবার ক্যালকুলেশন | 30 | ✅ delivered |
-| 22–28 | — | — | pending |
+| 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 53 | ✅ delivered |
+| 23–28 | — | — | pending |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 14/12 · `ch02` 15/9 · `ch03` 9/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 7/4 ·
 `ch07` 10/9 · `ch08` 11/8 · `ch09` 6/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 11/9 ·
 `ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 · `ch16` 6/7 · `ch17` 5/8 ·
-`ch18` 9/10 · `ch19` 15/19 · `ch20` 13/10 · `ch21` 14/6 — no gap > 5 cm
-(ch03 has two ~4.6–4.8 cm gaps, ch16 one 4.56 cm, ch18 gaps of
-4.93/4.56/4.55 cm and ch19 one 4.80 cm, see Open items; ch20 has none
-above 4.0 cm, ch21 one 4.12 cm).
+`ch18` 9/10 · `ch19` 15/19 · `ch20` 13/10 · `ch21` 14/6 · `ch22` 24/21 —
+no gap > 5 cm (ch03 has two ~4.6–4.8 cm gaps, ch16 one 4.56 cm, ch18 gaps
+of 4.93/4.56/4.55 cm and ch19 one 4.80 cm, see Open
+items; ch20 has none above 4.0 cm, ch21 one 4.12 cm).
 
 Engine API (write a chapter without opening `bookkit.py`): `Book/build/README.md`
 Full chapter plan + numbering conventions: `Book/build/BOOK_INDEX.md`
@@ -233,6 +234,11 @@ two-line paragraphs with market commentary. The user flagged this on
   legally require it).
 - **All data tables are real Word tables**, never images.
 - Numbering: `চিত্র N.M`, `সারণি N.M`, equations `(N.M)`.
+- **No `§` sign anywhere in the printed text.** The user asked for it
+  to be removed on 2026-08-23; a cross-reference is written plainly —
+  `২২.৫.৫-এর ব্রেকিং ক্যাপাসিটি`, `২২.৫.৪ দ্রষ্টব্য`. It had crept
+  into ch19–ch22 only (17 places); all four were rebuilt, and none
+  changed page count. Grep `§` in `chNN.py` before shipping.
 - Every chapter ends with সারসংক্ষেপ → পারিভাষিক শব্দ → অনুশীলনী
   (MCQ with answer key + short + essay + practical, plus maths where relevant).
 - **Maths in textbook style**: display equations via `Book.math()` (real OMML
@@ -350,10 +356,16 @@ Check these before rendering — each one shipped once and had to be fixed:
 ## Open items
 
 - ch03 p2 and p4 have ~4.6–4.8 cm page-foot gaps — acceptable, revisit only if
-  the user objects. ch18 has three of the same size (4.93 / 4.56 / 4.55 cm)
+  the user objects. ch18 has three of the same size (4.93 / 4.56 / 4.55 cm),
   and ch19 one (4.80 cm on p5, where `d03_types` is too tall to follow
   §১৯.২.১); each is a `worked_example` or a figure that could not be pulled
-  up further.
+  up further.  ch22 has none above 3.95 cm — the two photo rows added
+  on 2026-08-23 reflowed everything after §২২.৪, and the three moves
+  that cleared the new gaps were all from the standing playbook:
+  `d09_poles` pushed past the BNBC paragraph that explains it,
+  `d12_rccb_work` pulled *up* to the paragraph it illustrates, and an
+  opening paragraph written for §২২.৭.২, which had begun with a figure
+  straight under its heading (the ch17 rule).
 - ch19 ends on a header-only page 36 — the empty paragraph Word requires
   after the final ❖ চিত্রসূত্র box. ch13 already ships the same artefact.
   Harmless per chapter, and it disappears when the chapters are merged.
@@ -363,18 +375,161 @@ Check these before rendering — each one shipped once and had to be fixed:
 
 ## Next step
 
-**Chapter 22 — সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস** (module lesson 22,
-~26 pages).  Scope: সার্কিট ব্রেকারের পরিচিতি ও ব্যবহার · সার্কিট ব্রেকার
-ক্যালকুলেশন.  Sources at the root, none of them mined yet:
-`circuit breaker.docx`, `circuit breaker & cable calculation.docx`,
-`Standard Markings on Circuit Breakers.docx`.  Ch21 already embedded
-`HW Connection Diagram All.pptx` s29/s31/s32/s33, which show MCCB, MCB,
-RCCB and SPD in place — check whether any *other* slide in either deck is
-breaker-specific before hand-drawing.  Breaking capacity (Icu/Ics), curve
-types (B/C/D) and the IEC numbers (60898-1 for MCB, 60947-2 for MCCB,
-61008/61009 for RCCB) must be verified by web search — do not write them
-from memory.  BNBC 1.3.9.3.8 (20% spare) and 1.3.27(a)/(c) are already
-verified and quoted in ch20/ch21.
+**Chapter 23 — ক্যাবল ও ক্যাবল ক্যালকুলেশন** (module lesson 23, ~22 pages).
+Sources at the root: `circuit breaker & cable calculation.docx` (mined for
+ch22's breaker half only — the cable half is untouched) and
+`SUPER STAR Cables catalog.pdf`.  Ch22 already fixes the cable size for
+every circuit of the model flat (সারণি ২২.১৫) and states the main cable as
+10 mm² for 33 A — ch23's ampacity and voltage-drop tables must agree with
+that table or both have to move together.  Verify IEC 60228 (conductor
+classes), the derating factors and any BNBC clause by web search.
+
+**Chapter 22's sources and decisions (do not re-discover).**
+
+- The institute's three root files (`circuit breaker.docx`, `circuit breaker
+  & cable calculation.docx`, `Standard Markings on Circuit Breakers.docx`)
+  were mined for facts only.  **Neither diagram deck has a breaker-specific
+  slide** — every slide's text in both was extracted and checked; the
+  closest are `HW Connection Diagram All.pptx` s29/s31/s32/s33, already
+  used by ch21.  So every photograph comes from Wikimedia Commons via
+  `assets_ch22.py`, credited in the ❖ চিত্রসূত্র box from `credits.json`.
+- **The chapter's whole point is reading a nameplate.**  A whole-device
+  photo placed at 15.4 cm renders its printed lettering at 3–4 pt — useless.
+  The fix, and the pattern to copy: a separate tight *face* crop of each
+  device (`ph_mcb_face`, `ph_mccb_face`, `ph_mccb_trip`, `ph_rccb_face`,
+  `ph_spd_face`) placed with `photo_callouts()`, so the lettering lands at
+  9–20 pt, each backed by its own per-marking Word table.  Two crops of one
+  Commons file is normal (`ph_spd_face` and the whole-device shot came from
+  the same picture) — but do not ship both unless they teach different
+  things.  One such second crop was cut for exactly that reason.
+- **BNBC 2012 contains no RCCB requirement at all.**  Checked clause by
+  clause against the law.resource.org PDF.  §২২.৭.৫ says so openly and
+  cites IEC 60364-4-41 (30 mA for socket circuits) as the governing rule
+  instead.  Do not "fix" this by inventing a BNBC clause number.
+- **Scope was held to house wiring on the user's explicit instruction**
+  ("i want only for house wiring").  ACB, VCB, SF₆, OCB, air-blast, MPCB,
+  AFDD and DC breakers get one short §২২.১০.৩ paragraph naming them and
+  saying where they belong — nothing more.  The user had rejected an
+  earlier `Standard Markings on Circuit Breakers.docx` for exactly this
+  bloat.
+- **Ch22's arithmetic ties to ch18, ch20 and ch21.**  Nine circuits totalling
+  11,966 W ≈ 12 kW · diversity 0.6 → 7200 W · 230 V, cos φ 0.95 → 33 A →
+  40 A DP MCB + 40 A/30 mA RCCB + 10 mm².  That 7200 W / 33 A is
+  deliberately ch21's flat DB, and the 1 HP pump's 1066 W / 5.45 A is
+  ch18's and ch20's motor.  `CIRCUITS` + `circuit_rows()` in `ch22.py`
+  compute IB and 1.25 × IB, so সারণি ২২.১৫ can never disagree with the
+  prose.  Fault level: 250 kVA, Z 4.5 % → IFL 361 A → Isc 8022 A.
+- **§২২.১৩ "বাজারে কোন ব্র্যান্ড" was added on the user's request
+  (2026-08-23)** — real brand photos plus a little brand information.
+  Research already done, do not redo:
+  - **The Bangladesh market, verified from BD dealer sites** (impress.com.bd,
+    circuitbreakermart.com, brotherstrading.com.bd, infinitybd.com,
+    bdtronics.com, and a Rahimafrooz Hager page): European premium — ABB,
+    Schneider (Acti9), Siemens, Legrand, Hager; Japanese — Mitsubishi, Fuji,
+    Terasaki (mostly MCCB); Korean — LS Electric; Indian — Havells; Chinese —
+    CHiNT (NB1-63, NXB-63, NXBLE RCBO), CNC Electric, Delixi, TOMZN;
+    Bangladeshi — Super Star (SP/DP MCB 6–63 A, 3/6 kA).
+  - **No taka figures**, on the ch17/ch19 precedent — the table gives a
+    relative tier (বেশি/মাঝারি/কম) and §২২.১৩.১ says openly why.
+  - **The institute's own breaker images were rejected *for this job*.**
+    `circuit breaker.docx` (20 images) and `Standard Markings on Circuit
+    Breakers.docx` (11) are all CHiNT/Hager/TOMZN **catalogue renders** —
+    300–780 px, so the printed lettering cannot be read, which is the whole
+    point of §২২.৫.২/৬.১/৭.২/৯.৩. (They were later accepted for a *different*
+    job — see the ছবি-সারি block below.) Everything came from Commons instead:
+    `ph_br_schneider` (Acti9 iC60N B16), `ph_br_abb` (S203 B16),
+    `ph_br_legrand` (C16), `ph_br_chint` (NB1-63 C2) — all CC BY-SA, all
+    with legible markings, so `d22_brands` proves the chapter's own thesis
+    (same IEC 60898-1 layout on four different makes) with real objects.
+  - **The ❖ চিত্রসূত্র box used to iterate a hand-written `used = [...]`
+    list.** It went stale the moment photos were added or dropped and
+    silently omitted four credits — which for CC BY-SA is a licence breach.
+    It now iterates `credits.json` itself. Never reintroduce a manual list.
+- **Two device-identification photo rows were added on the user's request
+  (2026-08-23), from the institute's own file.**  `assets_ch22_dev.py`
+  pulls all eleven renders out of `Standard Markings on Circuit
+  Breakers.docx` — the order inside `word/media/` is exactly the document's
+  order and was verified blip-by-blip: 1 MCB · 2 MCCB · 3 RCCB · 4 RCBO ·
+  5 "ELCB" · 6 MPCB · 7 AFDD · 8 Isolator · 9 SPD · 10 ACB · 11 VCB.
+  Decisions, do not re-litigate:
+  - **Two jobs, two kinds of picture.**  Commons photos teach *nameplate
+    reading* (close crops, callouts).  These renders teach *what the device
+    looks like* — white ground, one light, one angle, so six objects side by
+    side show only the shape difference.  For that job a catalogue render is
+    better than a photograph, and the low resolution costs nothing.
+  - **`dia_ch22._gallery()`** is the reusable shape: one row of tiles, photo
+    in a white well on a PLATE card, name + a one-or-two-word role under it,
+    one note strip.  It raises if a label does not fit its tile.  `d23_devices`
+    (six house devices, চিত্র ২২.৬, in §২২.৪ in সারণি ২২.৪'s order) and
+    `d24_outside` (MPCB/AFDD/ACB/VCB, চিত্র ২২.১৯, in §২২.১০.৩) use it.
+    d24 is placed 11.4 cm wide, so its type is set larger (30/24 px) — the
+    `N × P(pt) / W` rule, not a different style.  Its caption reads
+    "কোনটা কোথায় বসে — মোটরের স্টার্টারে, ঘরের সার্কিটে, এলটি প্যানেলে
+    ও ১১ কেভি সাবস্টেশনে" — one placement per tile, in tile order.  The
+    user first asked for "সাবস্টেশন এবং বিভিন্ন ইন্ডাস্ট্রিতে ব্যবহৃত…";
+    that was flagged because **AFDD is a residential device** (২২.১০.৩
+    puts it in bedrooms and hotels), and the user then left the wording
+    to me.  The lesson is general: a caption over a mixed row must
+    account for every tile, and it must not restate the artwork's own
+    header (`যেগুলো বাসার ডিবিতে বসে না` already says the negative).
+  - **The renders are RGBA with a transparent ground — but three of them
+    (MCB, MCCB, MPCB) are not.**  Their alpha is 255 everywhere and the
+    ground is solid white, so an alpha-bbox autocrop returns the whole
+    canvas.  `tight_box()` falls back to a white-difference bbox when the
+    alpha box covers >98 % of the image.
+  - **The "ELCB" render is not an ELCB** — it is a CHiNT NXBLE-40, marked
+    IEC 61009-1, i.e. an RCBO.  The source file's label is wrong.  It is
+    left out of both rows rather than teaching a falsehood; §২২.১০.২ already
+    says in prose that RCCB/RCBO are still sold as "ELCB".
+  - **The ❖ চিত্রসূত্র box now opens by naming both sources.**  The credit
+    *list* still iterates `credits.json` (Commons only) — the institute file
+    is one sentence, not a per-image list, so there is nothing to drift.
+  - **The MCQ answer key really was skewed** — 8 of 15 on গ, while the
+    comment beside it claimed ক৪ খ৪ গ৪ ঘ৩. The CLAUDE.md standing check
+    says to *read the key as a string*; counting it is the part that was
+    skipped. Now 16 questions at ক৪ খ৪ গ৪ ঘ৪.
+
+- **Seven figures were redrawn after the user's review (2026-08-23).**  The
+  complaint was overlap / illegibility in চিত্র ২২.২, ২২.৫, ২২.৮, ২২.১১ and
+  wrong leader targets in ২২.৭, ২২.১০, ২২.১৭.  What came out of it, reusable
+  for every later chapter:
+  - **A device drawn as a bare rectangle on a wire teaches nothing.**  ২২.২'s
+    fuse got metal end caps and a zig-zag element (melted, with a scorched
+    glass ellipse, in the fault row); the breaker got a toggle **on top of the
+    case** carrying `I`/`O` — a floating chip beside the contact arm is what
+    the tripped arm collided with in the first draft.
+  - **Show what the mechanism *does*, not just what it is.**  ২২.৫ now ends
+    both panels on the same **ট্রিপ বার**, and the bimetal is two strips in
+    two colours with a legend, not one rod.
+  - **Draw order carries meaning.**  In ২২.৮ the three magnetic bands are
+    drawn *before* the thermal band, so each hangs off the curve at its own
+    multiple (B at 3, C at 5, D at 10) — a staircase instead of three
+    disconnected boxes.  Region labels moved to the two empty corners with
+    arrows.
+  - **`strip_callouts()` in `dia_ch22.py`** is for wide-and-short photos
+    (≈3.6:1).  `photo_callouts` puts labels down both margins, which forces
+    diagonal leaders when there is no height; `strip_callouts` puts them
+    above and below with leaders that drop vertically and then elbow.
+  - **`callout(..., elbow=True)`** and the optional 4th item field in
+    `photo_callouts` (`(text, tfx, tfy, label_fy)`) route a leader
+    horizontally at the label's height and then vertically to the target.
+    That is the only clean way to reach a symbol that a straight line would
+    have to cross a printed schematic to touch (২২.১৪'s Type-AC box).
+  - **Measure targets, don't guess them.**  Overlay a 5%-grid on the cropped
+    photo and read the fractions off it; every wrong leader in this batch
+    came from an estimated fraction.  The two failure modes were a dot **on**
+    the printed lettering (left columns of ২২.৭/২২.১০/২২.১৭) and a leader
+    stopping at the photo's dark right edge instead of reaching the feature.
+  - **Four rating rows 0.04 of image height apart cannot each take a
+    callout** — `photo_callouts`' minimum separation is `size × 1.95` px, so
+    the leaders fan out and mislabel.  ২২.১৭ moved all four ratings to the
+    **right** module where they could be spread, and the per-marking table
+    below the figure carries the meanings.  The picture says *where to look*;
+    the table says *what it means*.
+
+- **`\%` is not a math-DSL command** — `\frac{I_{FL}}{Z\%}` shipped once and
+  printed `Z" % }} × 100 ⌐`.  Write `Z` and say in the following sentence
+  that Z is the percentage number (4.5, not 0.045).
 
 **Chapter 21's sources (do not re-discover).**  Two decks, both mined:
 

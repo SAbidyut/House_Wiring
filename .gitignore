@@ -10,3 +10,6 @@ __pycache__/
 Book/build/.slidepdf/
 Book/build/.sharp1916.pdf
 Book/build/out/
+
+# --- Stray empty git repo, not part of the book ---
+k/

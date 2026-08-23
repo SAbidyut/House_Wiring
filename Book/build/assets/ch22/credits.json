@@ -1,0 +1,82 @@
+{
+  "ph_mcb": {
+    "title": "Circuit breaker 2 pole on DIN rail",
+    "author": "Kae",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_mcb_cut": {
+    "title": "Wyłącznik instalacyjny w przekroju",
+    "author": "Koefbac",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_mcb_trans": {
+    "title": "Leitungsschutzschalter transparent",
+    "author": "Cherubino",
+    "licence": "CC BY 3.0"
+  },
+  "ph_rccb": {
+    "title": "Siemens RCCB 40 A, 30 mA (নেমপ্লেট)",
+    "author": "Dmitry G",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_toroid": {
+    "title": "Siemens RCCB 40 A, 30 mA (ভেতরের অংশ)",
+    "author": "Dmitry G",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_row": {
+    "title": "RCCB and Miniature Circuit Breaker",
+    "author": "Balurbala",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_db": {
+    "title": "Fuse box hager",
+    "author": "Dmitry G",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_br_schneider": {
+    "title": "Schneider Electric Acti9 iC60N",
+    "author": "Zimin.V.G.",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_br_abb": {
+    "title": "Miniature Circuit Breaker S203 B16",
+    "author": "ABB ltd",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_br_legrand": {
+    "title": "Disjoncteur divisionnaire Legrand",
+    "author": "France64160",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_br_chint": {
+    "title": "Chint circuit breakers",
+    "author": "Dmitry G",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_mcb_face": {
+    "title": "Circuit breaker 2 pole on DIN rail (লেবেল)",
+    "author": "Kae",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_mccb_face": {
+    "title": "MCCB Merlin Gerin Compact NS100N (লেবেল)",
+    "author": "Pui108108",
+    "licence": "CC BY 4.0"
+  },
+  "ph_mccb_trip": {
+    "title": "MCCB Merlin Gerin Compact NS100N (ট্রিপ ইউনিট)",
+    "author": "Pui108108",
+    "licence": "CC BY 4.0"
+  },
+  "ph_rccb_face": {
+    "title": "Siemens RCCB 40 A, 30 mA (লেবেল)",
+    "author": "Dmitry G",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_spd_face": {
+    "title": "Dornbirn — Surge arresters OBO V20-C (লেবেল)",
+    "author": "Asurnipal",
+    "licence": "CC BY-SA 4.0"
+  }
+}
