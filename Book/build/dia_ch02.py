@@ -35,6 +35,31 @@ def callout(s, x1, y1, x2, y2, text, anchor="start", size=T_SMALL,
 
 
 # ═══════════════════════════════════════════════════════════════════════
+def part_label(s, tx, ty, cx, top, name, sub, max_w=280, size=T_SMALL,
+               above=True, color="#8A97A6"):
+    """A part label whose leader stops at the edge of the text block.
+
+    The old version aimed the leader at the block's *anchor point*, so the
+    line ran straight through the lettering it was pointing at.  Here the
+    block is measured first and the leader ends 9 px clear of it.
+    """
+    subs = wrap(sub, max_w, size - 2, 400) if sub else []
+    w = max([tw(name, size, 700)] + [tw(l, size - 2, 400) for l in subs])
+    lh1, lh2 = size * 1.32, (size - 2) * 1.32
+    h = lh1 + len(subs) * lh2
+    x0, x1, y1 = cx - w / 2, cx + w / 2, top + h
+    ex = min(max(tx, x0 + 22), x1 - 22)
+    ey = y1 + 9 if above else top - 13
+    s.path(f"M {tx:.1f} {ty:.1f} L {ex:.1f} {ey:.1f}", color, 1.8)
+    s.circle(tx, ty, 4.4, color)
+    s.text(cx, top + size * 0.82, name, size, NAVY, 700, "middle")
+    for i, ln in enumerate(subs):
+        s.text(cx, top + lh1 + (size - 2) * 0.82 + i * lh2, ln,
+               size - 2, "#4A5561", 400, "middle")
+    return x0, top - size * 0.8, x1, y1
+
+
+# ═══════════════════════════════════════════════════════════════════════
 def d01_screwdriver():
     """Anatomy of a screwdriver — the parts a trainee must be able to name."""
     s = SVG(1200, 620)
@@ -60,59 +85,87 @@ def d01_screwdriver():
     s.poly([(826, cy - 7), (858, cy - 3), (858, cy + 3), (826, cy + 7)],
            "#7C858D", "#5A6167", 2)
 
-    callout(s, 205, cy - 56, 205, 168, "হ্যান্ডেল", "middle",
-            sub="অন্তরক প্লাস্টিক বা রাবার — হাত সুরক্ষিত রাখে", max_w=330)
-    callout(s, 271, cy - 30, 380, 168, "ফেরুল", "start",
-            sub="হ্যান্ডেল ও শ্যাফট আটকে রাখে", max_w=300)
-    callout(s, 440, cy - 17, 560, 130, "ইনসুলেটেড স্লিভ", "start",
-            sub="১০০০ V পর্যন্ত অন্তরণ (IEC 60900)", max_w=330)
-    callout(s, 690, cy - 13, 800, 168, "শ্যাফট / ব্লেড", "start",
-            sub="শক্ত ইস্পাতের দণ্ড", max_w=280)
-    callout(s, 842, cy + 3, 900, 470, "টিপ", "start",
-            sub="স্ক্রুর খাঁজে বসে — ফ্ল্যাট বা স্টার", max_w=270)
-    callout(s, 205, cy + 56, 205, 470, "গ্রিপ খাঁজ", "middle",
-            sub="পিছলে যাওয়া রোধ করে", max_w=300)
+    # ── উপরে তিনটি, নিচে তিনটি — লিডার লেখার গা ঘেঁষে থামে, ভেতর দিয়ে যায় না
+    part_label(s, 200, cy - 58, 176, 150, "হ্যান্ডেল",
+               "অন্তরক প্লাস্টিক বা রাবার — হাত সুরক্ষিত রাখে", 250)
+    part_label(s, 440, cy - 17, 566, 150, "ইনসুলেটেড স্লিভ",
+               "১০০০ V পর্যন্ত অন্তরণ (IEC 60900)", 250)
+    part_label(s, 690, cy - 13, 952, 150, "শ্যাফট / ব্লেড",
+               "শক্ত ইস্পাতের দণ্ড", 250)
 
-    s.rect(40, 528, 1120, 62, "#EAF2FA", STEEL, 2, 11)
-    s.text(600, 556, "স্ক্রু ড্রাইভারের মাপ = ব্লেডের দৈর্ঘ্য × টিপের প্রস্থ",
+    part_label(s, 200, cy + 58, 176, 452, "গ্রিপ খাঁজ",
+               "পিছলে যাওয়া রোধ করে", 250, above=False)
+    part_label(s, 271, cy + 30, 524, 452, "ফেরুল",
+               "হ্যান্ডেল ও শ্যাফট আটকে রাখে", 250, above=False)
+    part_label(s, 845, cy + 3, 946, 452, "টিপ",
+               "স্ক্রুর খাঁজে বসে — ফ্ল্যাট বা স্টার", 250, above=False)
+
+    s.rect(40, 542, 1120, 62, "#EAF2FA", STEEL, 2, 11)
+    s.text(600, 570, "স্ক্রু ড্রাইভারের মাপ = ব্লেডের দৈর্ঘ্য × টিপের প্রস্থ",
            T_NAME, NAVY, 700, "middle")
-    s.text(600, 582, "যেমন ১৫০ মিমি × ৬ মিমি — স্ক্রুর খাঁজের সমান টিপ বেছে নিতে হয়",
+    s.text(600, 596, "যেমন ১৫০ মিমি × ৬ মিমি — স্ক্রুর খাঁজের সমান টিপ বেছে নিতে হয়",
            T_SMALL, GREY, 400, "middle")
-    s.fit(590, 22)
+    s.fit(604, 22)
     return s.save(f"{OUT}/d01_screwdriver.svg")
 
 
 def d02_iec60900_marking():
-    """How to read the markings on an insulated (live-working) hand tool."""
+    """How to read the markings on an insulated (live-working) hand tool.
+
+    আগের সংস্করণে হাতলটা ছিল একটা কমলা তাল আর মার্কিংগুলো তার নিচে
+    ফাঁকা জায়গায় ভাসত — দেখে টুল মনে হতো না।  এখানে হাতলটা পুরো
+    স্ক্রু ড্রাইভারের মাপে আঁকা, আর মার্কিং তিনটে হাতলের গায়েই ছাপা —
+    ছবির কাজ দেখানো, অর্থ বোঝানোর কাজ ডান পাশের সারণির।
+    """
     s = SVG(1200, 700)
     s.title("ইনসুলেটেড টুলের গায়ের মার্কিং পাঠ (IEC 60900)", T_TITLE)
 
-    # the handle, with the markings shown at readable size
-    s.rect(60, 118, 580, 300, "#FCFDFE", LINE, 2, 16)
-    s.path("M 196 168 Q 118 168 118 214 Q 118 260 196 260 Z", "#B8500C", 2, "#F07818")
-    s.rect(194, 190, 38, 48, "#3A4750", "#222C33", 2, 6)
-    s.rect(230, 202, 372, 24, "#E8352A", "#A8231A", 2, 6)
+    # ── বাঁ দিকের ঘর : টুলটা নিজে, গায়ের ছাপা লেখাসহ ────────────────
+    s.rect(60, 118, 580, 292, "#FCFDFE", LINE, 2, 16)
+    cy = 244
+    # হাতল — গোড়ায় গোল, সামনে চ্যাপ্টা; ওই চ্যাপ্টা জায়গাতেই মার্কিং ছাপা হয়
+    s.path(f"M 302 {cy-28:.1f} Q 282 {cy-45:.1f} 200 {cy-47:.1f} "
+           f"Q 108 {cy-48:.1f} 100 {cy-24:.1f} Q 94 {cy:.1f} 100 {cy+24:.1f} "
+           f"Q 108 {cy+48:.1f} 200 {cy+47:.1f} "
+           f"Q 282 {cy+45:.1f} 302 {cy+28:.1f} Z",
+           "#B8500C", 2.4, "#F07818")
+    s.path(f"M 126 {cy-33:.1f} Q 210 {cy-39:.1f} 284 {cy-27:.1f}",
+           "#FBA65C", 9)
+    for i in range(3):
+        s.path(f"M {112+i*13} {cy-38:.1f} Q {107+i*13} {cy:.1f} "
+               f"{112+i*13} {cy+38:.1f}", "#C25A10", 4.5)
+    s.rect(298, cy - 22, 42, 44, "#3A4750", "#222C33", 2, 7)      # ফেরুল
+    s.rect(338, cy - 11, 202, 22, "#C6CDD4", "#8B949C", 2, 4)     # শ্যাফট
+    s.rect(338, cy - 11, 202, 8, "#E4E9ED", "none", 0, 2)
+    s.rect(338, cy - 15, 118, 30, "#E8352A", "#A8231A", 2, 6)     # অন্তরক স্লিভ
+    s.rect(338, cy - 15, 118, 10, "#F26A60", "none", 0, 3)
+    s.poly([(540, cy - 11), (578, cy - 6), (578, cy + 6), (540, cy + 11)],
+           "#9AA3AB", "#6E767D", 2)
+    s.poly([(578, cy - 6), (600, cy - 3), (600, cy + 3), (578, cy + 6)],
+           "#7C858D", "#5A6167", 2)
 
-    def dbl_triangle(cx, cy, k=1.0):
-        for dx in (-24 * k, 24 * k):
-            s.poly([(cx + dx, cy - 22 * k), (cx + dx + 20 * k, cy + 16 * k),
-                    (cx + dx - 20 * k, cy + 16 * k)], "none", NAVY, 4.4 * k)
-    dbl_triangle(190, 322, 1.0)
-    s.text(262, 330, "1000V", 38, NAVY, 700)
-    s.text(432, 336, "IEC 60900", 32, NAVY, 700)
-    s.line(88, 372, 612, 372, "#DCE5EE", 2)
+    # হাতলের গায়ে ছাপা তিনটে মার্কিং — কাজের আগে এটুকুই খুঁজে দেখতে হয়
+    MK = "#2A1405"
 
-    callout(s, 190, 346, 190, 452, "দ্বৈত ত্রিভুজ চিহ্ন", "middle",
-            sub="জীবন্ত লাইনে কাজের উপযোগী — IEC 60900 মেনে তৈরি", max_w=330)
-    callout(s, 336, 352, 470, 452, "১০০০ V", "middle",
-            sub="সর্বোচ্চ কার্যকর ভোল্টেজ (AC)", max_w=300)
+    def dbl_triangle(cx, cy_, k=1.0):
+        for dx in (-16 * k, 16 * k):
+            s.poly([(cx + dx, cy_ - 15 * k), (cx + dx + 13.5 * k, cy_ + 11 * k),
+                    (cx + dx - 13.5 * k, cy_ + 11 * k)], "none", MK, 3.2 * k)
+    dbl_triangle(176, cy - 14, 0.95)
+    s.text(210, cy - 5, "1000 V", 24, MK, 700)
+    s.text(152, cy + 32, "IEC 60900", 23, MK, 700)
 
+    s.rect(84, 336, 532, 54, "#FFF6E5", AMBER, 2, 11)
+    s.text(350, 369, "মার্কিং হাতলের গায়েই থাকে — মুছে গেলে টুলটাই বাতিল",
+           T_SMALL, "#7A5200", 700, "middle")
+
+    # ── ডান দিকের ঘর : কোন লেখাটার মানে কী ─────────────────────────
     rows = [("দ্বৈত ত্রিভুজ", "জীবন্ত লাইনে ব্যবহারের উপযোগী", GREEN),
             ("1000 V", "১০০০ V AC / ১৫০০ V DC পর্যন্ত অনুমোদিত", STEEL),
             ("IEC 60900", "যে মান অনুসারে পরীক্ষা করা হয়েছে", STEEL),
             ("প্রস্তুতকারকের নাম", "উৎস শনাক্তকরণ", GREY),
             ("তৈরির সন", "মেয়াদ ও ট্রেসেবিলিটি", GREY)]
-    x0, y0, w = 664, 130, 496
+    x0, y0, w = 664, 118, 496
     s.rect(x0, y0, w, 46, NAVY, NAVY, 2, 10)
     s.text(x0 + w / 2, y0 + 31, "গায়ে যা যা লেখা থাকবে", T_NAME, "#FFFFFF", 700, "middle")
     yy = y0 + 54
@@ -125,121 +178,166 @@ def d02_iec60900_marking():
             s.text(x0 + 200, yy + 30 + j * T_SMALL * 1.32, ln, T_SMALL, "#39434D", 400)
         yy += h + 8
 
-    s.rect(70, 552, 1090, 62, REDBG, RED, 2, 11)
-    s.text(615, 580, "যে টুলে এই চিহ্ন নেই, তা দিয়ে জীবন্ত লাইনে কাজ করা যাবে না",
+    bot = max(yy, 410) + 26
+    s.rect(70, bot, 1090, 62, REDBG, RED, 2, 11)
+    s.text(615, bot + 28, "যে টুলে এই চিহ্ন নেই, তা দিয়ে জীবন্ত লাইনে কাজ করা যাবে না",
            T_NAME, "#7A1810", 700, "middle")
-    s.text(615, 606,
+    s.text(615, bot + 54,
            "শুধু প্লাস্টিকের হাতল থাকা মানেই ইনসুলেটেড টুল নয় — মার্কিং দেখে নিশ্চিত হতে হবে",
            T_SMALL, "#7A1810", 400, "middle")
-    s.fit(max(yy, 614), 22)
+    s.fit(bot + 62, 22)
     return s.save(f"{OUT}/d02_iec60900_marking.svg")
 
 
 def d03_stripping():
     """ইনসুলেশন ছাড়ানোর সঠিক ও ভুল পদ্ধতি।
 
-    উপরের সারিতে হাতিয়ার কীভাবে ধরা হচ্ছে, নিচের সারিতে তার ফলে তামার
-    গায়ে কী হলো — বিবর্ধিত করে দেখানো, কারণ আসল পার্থক্যটা খালি চোখে
-    ধরা পড়ে না।
+    উপরের ঘরে হাতিয়ারটা নিজে — যেন দেখেই চেনা যায়।  নিচের ঘরে সেই
+    হাতিয়ারের ধার তারের গায়ে কতদূর নামে, বিবর্ধিত করে — আসল পার্থক্যটা
+    ওখানেই, খালি চোখে যা ধরা পড়ে না।
     """
-    s = SVG(1240, 960)
+    s = SVG(1240, 980)
     s.title("তারের ইনসুলেশন ছাড়ানো — সঠিক ও ভুল পদ্ধতি", 38)
 
     TS, TB = 23, 25                 # এই ছবির লেখা একটু বড়, নইলে ছাপায় পড়া যায় না
     INS, INS_E = "#2E6F9E", "#1D4E70"
     CU, CU_E = "#C98B3F", "#8A5A18"
-    STEEL_L, STEEL_D = "#C9D2DB", "#7C8794"
-    PANEL = "#FCFDFE"
+    ST_L, ST_M, ST_D = "#D6DDE4", "#AEB8C2", "#7C8794"
+    GRIP, GRIP_D = "#3A4750", "#222C33"
+    PANEL, WELL = "#FCFDFE", "#F2F6FA"
 
-    def wire(x0, x1, xc, cy, th=34):
-        """ইনসুলেশনসহ তার — xc বিন্দুতে ইনসুলেশন শেষ, তামা বেরিয়েছে।"""
-        s.rect(xc, cy - th / 2 + 7, x1 - xc, th - 14, CU, CU_E, 2, 6)
-        s.line(xc + 6, cy - 4, x1 - 6, cy - 4, "#E4B274", 2.4)
-        s.rect(x0, cy - th / 2, xc - x0, th, INS, INS_E, 2, 9)
+    # ── হাতিয়ার ১ : ওয়্যার স্ট্রিপার, মুখের দিক থেকে ─────────────────
+    def tool_stripper(cx, cy):
+        """প্লায়ার-ধাঁচের স্ট্রিপার — হাতল, পিভট, আর মাপ-ভাগ করা খাঁজের সারি।
 
-    def zoom_wire(x0, x1, xc, cy, th=58, notch=False):
-        """বিবর্ধিত অংশ — তামার পৃষ্ঠ মসৃণ, নাকি খাঁজ পড়েছে।"""
-        s.rect(xc, cy - th / 2 + 12, x1 - xc, th - 24, CU, CU_E, 2.4, 6)
-        s.line(xc + 10, cy - 7, x1 - 10, cy - 7, "#E4B274", 3)
-        s.rect(x0, cy - th / 2, xc - x0, th, INS, INS_E, 2.4, 10)
-        if notch:
-            nx = xc + 30
-            s.poly([(nx - 20, cy - th / 2 + 12), (nx, cy + 4),
-                    (nx + 20, cy - th / 2 + 12)], PANEL, RED, 3)
-            s.path(f"M {nx} {cy+4} L {nx-4} {cy+16}", RED, 2.6, dash="5 4")
+        খাঁজ পিভটের দিকে বড়, মুখের দিকে ছোট — আসল টুলে যেভাবে সাজানো
+        থাকে (মোটা তারে বেশি চাপ লাগে, তাই সেটা পিভটের কাছে)।
+        """
+        cx += 49                       # আঁকা অংশটা ঘরের ঠিক মাঝে বসাতে
+        hx = cx - 244                                   # হাতলের গোড়া
+        pv = cx - 46                                    # পিভটের কেন্দ্র
+        for sg in (-1, 1):
+            # হাতল — পিভটের কাছে মোটা, প্রান্তে সরু, বাইরে ছড়ানো
+            s.path(f"M {pv-10} {cy+sg*6:.1f} L {pv-16} {cy+sg*34:.1f} "
+                   f"Q {hx+104} {cy+sg*74:.1f} {hx} {cy+sg*80:.1f} "
+                   f"L {hx} {cy+sg*54:.1f} "
+                   f"Q {hx+112} {cy+sg*48:.1f} {pv-14} {cy+sg*4:.1f} Z",
+                   ST_D, 2.2, ST_L)
+            # রাবার গ্রিপ
+            s.path(f"M {hx+4} {cy+sg*78:.1f} Q {hx+94} {cy+sg*72:.1f} "
+                   f"{hx+150} {cy+sg*50:.1f} L {hx+142} {cy+sg*30:.1f} "
+                   f"Q {hx+92} {cy+sg*52:.1f} {hx+4} {cy+sg*56:.1f} Z",
+                   GRIP_D, 2, GRIP)
+        s.circle(pv, cy, 18, ST_M, ST_D, 2.2)           # পিভটের রিভেট
+        s.circle(pv, cy, 6.5, ST_D)
+        for sg in (-1, 1):
+            # চোয়াল — গোড়ায় চওড়া, মুখে সরু ঠোঁট
+            s.path(f"M {pv+2} {cy+sg*2:.1f} L {pv+2} {cy+sg*38:.1f} "
+                   f"L {pv+104} {cy+sg*32:.1f} L {pv+158} {cy+sg*22:.1f} "
+                   f"L {pv+192} {cy+sg*13:.1f} L {pv+192} {cy+sg*2:.1f} Z",
+                   ST_D, 2.2, ST_L)
+        s.line(pv + 8, cy, pv + 190, cy, ST_D, 2)       # দুই চোয়ালের ফাঁক
+        for dx, r in ((32, 14), (70, 11.5), (103, 9.5), (132, 7.5),
+                      (157, 5.5)):
+            s.circle(pv + dx, cy, r, WELL, ST_D, 2.2)   # মাপ-ভাগ করা খাঁজ
+        return pv + 192
 
-    def stripper(cx, cy, gap=34):
-        """ওয়্যার স্ট্রিপারের দুই চোয়াল — খাঁজ তামার চেয়ে বড়, তাই ছোঁয় না।"""
-        for sgn in (-1, 1):
-            y0 = cy + sgn * (gap / 2)
-            s.path(f"M {cx-64} {y0+sgn*54} L {cx-64} {y0+sgn*10} "
-                   f"L {cx-22} {y0+sgn*10} L {cx-22} {y0} "
-                   f"L {cx+22} {y0} L {cx+22} {y0+sgn*10} "
-                   f"L {cx+64} {y0+sgn*10} L {cx+64} {y0+sgn*54} Z",
-                   STEEL_D, 2.4, STEEL_L)
-        ar2 = s.arrow_defs(GREEN, "sq", 13)
-        s.path(f"M {cx+96} {cy-72} L {cx+96} {cy-34}", GREEN, 3, marker=ar2)
-        s.path(f"M {cx+96} {cy+72} L {cx+96} {cy+34}", GREEN, 3, marker=ar2)
+    # ── হাতিয়ার ২ : ইলেকট্রিশিয়ান নাইফ ───────────────────────────────
+    def tool_knife(cx, cy):
+        cx += 9                        # আঁকা অংশটা ঘরের ঠিক মাঝে বসাতে
+        hx = cx - 236
+        s.path(f"M {hx} {cy-34:.1f} Q {hx-34} {cy:.1f} {hx} {cy+34:.1f} "
+               f"L {hx+262} {cy+29:.1f} L {hx+262} {cy-29:.1f} Z",
+               "#2E2013", 2.2, "#5C4327")
+        s.path(f"M {hx+12} {cy-24:.1f} L {hx+252} {cy-21:.1f}", "#7A5C36", 6)
+        for rx in (hx + 60, hx + 190):
+            s.circle(rx, cy, 7.5, "#C9A227", "#8A6E14", 1.6)
+        # ব্লেড — সোজা পিঠ, বাঁকানো ধার, সামনে ছুঁচালো মুখ
+        s.path(f"M {hx+262} {cy-29:.1f} L {hx+368} {cy-31:.1f} "
+               f"L {hx+454} {cy+3:.1f} Q {hx+382} {cy+31:.1f} "
+               f"{hx+288} {cy+29:.1f} L {hx+262} {cy+29:.1f} Z",
+               ST_D, 2.2, ST_L)
+        s.path(f"M {hx+290} {cy+17:.1f} Q {hx+372} {cy+17:.1f} "
+               f"{hx+440} {cy-1:.1f}", ST_M, 4.5)
+        return hx + 454
 
-    def knife(cx, cy):
-        """ছুরি সমকোণে — ধার সরাসরি তামার উপরে।"""
-        s.poly([(cx - 13, cy - 78), (cx + 13, cy - 78),
-                (cx + 13, cy - 38), (cx, cy - 12), (cx - 13, cy - 38)],
-               STEEL_L, STEEL_D, 2.4)
-        s.rect(cx - 17, cy - 132, 34, 58, "#4A3520", "#2E2013", 2, 6)
-        ar3 = s.arrow_defs(RED, "kn", 13)
-        s.path(f"M {cx+56} {cy-104} L {cx+56} {cy-46}", RED, 3, marker=ar3)
+    # ── নিচের ঘর : কাটার মুহূর্ত, বিবর্ধিত ────────────────────────────
+    def section(x0, x1, xc, cy, bad):
+        """তার পাশ থেকে — ইনসুলেশন OD ৫৮, তামা ৩৪ (দুই পাশে ১২ দেয়াল)।"""
+        s.rect(xc, cy - 17, x1 - xc, 34, CU, CU_E, 2.4, 7)
+        s.line(xc + 14, cy - 8, x1 - 12, cy - 8, "#E4B274", 3)
+        s.rect(x0, cy - 29, xc - x0, 58, INS, INS_E, 2.4, 11)
+        if bad:                       # ছুরির ধার তামার ভেতরে ঢুকেছে
+            nx = xc + 40
+            s.poly([(nx - 13, cy - 17), (nx + 13, cy - 17), (nx, cy + 7)],
+                   "#FBE3E0", RED, 2.6)                  # তামায় কাটা খাঁজ
+            s.poly([(nx - 20, cy - 74), (nx + 20, cy - 74), (nx + 20, cy - 40),
+                    (nx + 7, cy - 8), (nx, cy + 6), (nx - 7, cy - 8),
+                    (nx - 20, cy - 40)], ST_L, ST_D, 2.4)
+            s.path(f"M {nx-9} {cy-66:.1f} L {nx-3} {cy-14:.1f}", ST_M, 3)
+            ar = s.arrow_defs(RED, "kdn", 13)
+            s.path(f"M {nx+70} {cy-72:.1f} L {nx+70} {cy-30:.1f}", RED, 3,
+                   marker=ar)
+        else:                         # চোয়ালের ধার তামার গা ছুঁয়েই থেমেছে
+            nx = xc + 6
+            for sg in (-1, 1):
+                s.poly([(nx - 22, cy + sg * 78), (nx + 22, cy + sg * 78),
+                        (nx + 22, cy + sg * 40), (nx + 8, cy + sg * 21),
+                        (nx, cy + sg * 17), (nx - 8, cy + sg * 21),
+                        (nx - 22, cy + sg * 40)], ST_L, ST_D, 2.4)
+                s.path(f"M {nx+13} {cy+sg*70:.1f} L {nx+5} {cy+sg*26:.1f}",
+                       ST_M, 3)
+            ar = s.arrow_defs(GREEN, "jsq", 13)
+            s.path(f"M {nx+112} {cy-100:.1f} L {nx+112} {cy-56:.1f}", GREEN, 3,
+                   marker=ar)
+            s.path(f"M {nx+112} {cy+100:.1f} L {nx+112} {cy+56:.1f}", GREEN, 3,
+                   marker=ar)
+            s.path(f"M {nx+26} {cy-17:.1f} L {x1-10} {cy-17:.1f}", GREEN, 2.4,
+                   dash="7 5")
 
     cases = [
-        (46, "সঠিক — ওয়্যার স্ট্রিপার", GREEN, GREENBG,
-         "স্ট্রিপারের খাঁজ তারের মাপ অনুযায়ী বেছে নিলে চোয়াল কেবল "
-         "ইনসুলেশন কাটে, তামায় পৌঁছায় না।",
+        (46, "সঠিক — ওয়্যার স্ট্রিপার", GREEN, GREENBG, tool_stripper,
+         "তারের মাপ অনুযায়ী খাঁজ বেছে নিলে চোয়ালের ধার ইনসুলেশন কেটে "
+         "তামার গায়ে এসে থেমে যায়।",
          "তামার পৃষ্ঠ মসৃণ ও অক্ষত", False),
-        (634, "ভুল — ছুরি সমকোণে", RED, REDBG,
+        (634, "ভুল — ছুরি সমকোণে", RED, REDBG, tool_knife,
          "ছুরি তারের সঙ্গে সমকোণে চেপে ধরলে ধার ইনসুলেশন পেরিয়ে তামার "
          "গায়ে বসে যায়।",
          "তামায় খাঁজ — টান পড়লে এখানেই ভাঙবে", True),
     ]
 
-    PW, PH = 560, 664
-    for px, head, col, bg, method, verdict, bad in cases:
+    PW, PH = 560, 700
+    for px, head, col, bg, draw_tool, method, verdict, bad in cases:
         s.rect(px, 96, PW, PH, PANEL, LINE, 1.8, 14)
         s.box_auto(px + PW / 2, 110, head, TB, fill=col, stroke=col,
                    tcolor="#FFFFFF", pad_x=26, pad_y=10)
 
-        # ── উপরের সারি : হাতিয়ার কীভাবে ধরা হচ্ছে
-        cy = 306
-        xc = px + 300
-        wire(px + 40, px + 520, xc, cy)
-        if bad:
-            knife(xc, cy)
-        else:
-            stripper(xc - 18, cy)
-        s.text(px + 40, 392, "ইনসুলেশন", TS, "#1D4E70", 700)
-        s.text(px + 520, 392, "তামা", TS, "#8A5A18", 700, "end")
+        # ── উপরের ঘর : হাতিয়ারটা নিজে
+        s.rect(px + 26, 178, PW - 52, 190, WELL, LINE, 1.6, 12)
+        draw_tool(px + PW / 2, 273)
 
-        # ── নিচের সারি : ফল, বিবর্ধিত করে
-        zy = 496
-        s.rect(px + 26, zy - 62, PW - 52, 150, "#F7FAFC", STEEL_D, 2, 12,
-               dash="8 6")
-        s.text(px + 44, zy - 32, "কাটা মুখ ×৪ বিবর্ধিত", TS, GREY, 700)
-        zoom_wire(px + 60, px + 500, px + 230, zy + 40, 58, notch=bad)
-        s.path(f"M {xc} {cy+46} L {px+230} {zy-58}", STEEL_D, 2, dash="7 5")
+        # ── নিচের ঘর : ধার কতদূর নামে, ×৪ বিবর্ধিত
+        zy = 508
+        s.rect(px + 26, 392, PW - 52, 214, "#FBFDFE", ST_D, 2, 12, dash="8 6")
+        s.text(px + 46, 424, "কাটার মুহূর্ত — ×৪ বিবর্ধিত", TS, GREY, 700)
+        section(px + 54, px + 506, px + 236, zy, bad)
+        s.text(px + 54, 584, "ইনসুলেশন", TS, "#1D4E70", 700)
+        s.text(px + 506, 584, "তামা", TS, "#8A5A18", 700, "end")
 
         for j, ln in enumerate(wrap(method, PW - 76, TS, 400)):
-            s.text(px + PW / 2, zy + 122 + j * TS * 1.32, ln, TS,
+            s.text(px + PW / 2, 646 + j * TS * 1.32, ln, TS,
                    "#39434D", 400, "middle")
 
-        s.rect(px + 26, zy + 178, PW - 52, 58, bg, col, 2, 10)
-        s.text(px + PW / 2, zy + 210, verdict, TB, col, 700, "middle")
+        s.rect(px + 26, 714, PW - 52, 58, bg, col, 2, 10)
+        s.text(px + PW / 2, 746, verdict, TB, col, 700, "middle")
 
-    s.rect(60, 800, 1120, 86, "#FFF6E5", AMBER, 2, 11)
-    s.text(620, 836, "তামায় সামান্য খাঁজ পড়লেই সেখানে তারের প্রস্থচ্ছেদ কমে "
+    s.rect(60, 826, 1120, 86, "#FFF6E5", AMBER, 2, 11)
+    s.text(620, 862, "তামায় সামান্য খাঁজ পড়লেই সেখানে তারের প্রস্থচ্ছেদ কমে "
            "যায়, রোধ বাড়ে ও তাপ জমে", TS, "#7A5200", 700, "middle")
-    s.text(620, 868, "কাজের দিন কিছু বোঝা যায় না — কয়েক মাস পরে ঠিক ওই "
+    s.text(620, 894, "কাজের দিন কিছু বোঝা যায় না — কয়েক মাস পরে ঠিক ওই "
            "বিন্দুতেই তার গরম হয়ে ভেঙে যায়", TS, "#7A5200", 400,
            "middle")
-    s.fit(886, 22)
+    s.fit(912, 22)
     return s.save(f"{OUT}/d03_stripping.svg")
 
 
@@ -459,7 +557,7 @@ def d06_classification():
                                 pad_x=34, pad_y=17)
     cols = [
         ("হ্যান্ড টুলস", "#E8F0F8", STEEL,
-         ["হাতের শক্তিতে চলে, বিদ্যুৎ লাগে না",
+         ["হাতের শক্তিতে চলে, বিদ্যুতে নয়",
           "স্ক্রু ড্রাইভার, প্লায়ার্স, হ্যামার",
           "করাত, ফাইল, চিজেল, রেঞ্চ",
           "দাম কম, বহন করা সহজ"]),

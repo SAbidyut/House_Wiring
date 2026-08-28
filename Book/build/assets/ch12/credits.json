@@ -27,5 +27,29 @@
   "ph_board_reg": {
     "source": "Wikimedia Commons — 'Switch box with fan regulator'",
     "licence": "CC0"
+  },
+  "ph_cap_polar": {
+    "source": "Wikimedia Commons — 'Polarity-wet-Al-Elcaps'",
+    "licence": "CC0"
+  },
+  "ph_cap_fan / ph_cap_fan_face": {
+    "source": "made-in-china.com — CBB61 fan capacitor product photo",
+    "licence": "Manufacturer's product photograph"
+  },
+  "ph_cap_elko": {
+    "source": "embeddinator.com — 1000 uF 25 V electrolytic capacitor",
+    "licence": "Manufacturer's product photograph"
+  },
+  "ph_cap_can / ph_cap_can_face": {
+    "source": "made-in-china.com — SH 350 V.AC fan capacitor photo",
+    "licence": "Manufacturer's product photograph"
+  },
+  "ph_cap_ceramic": {
+    "source": "Wikimedia Commons — 'Soviet ceramic disc capacitors 01'",
+    "licence": "CC0"
+  },
+  "ph_cap_var": {
+    "source": "Wikimedia Commons — 'Air variable capacitor'",
+    "licence": "CC BY-SA 3.0"
   }
 }

@@ -47,7 +47,7 @@ def bullet_panel(s, x, y, w, items, size=T_BODY, fill="#F7FAFC", stroke=LINE,
 
 
 def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
-           gloves=True, boots=True, mask=False, harness=False,
+           gloves=True, boots=True, mask=False, harness=False, earplug=False,
            skin="#F0C9A4", cloth="#2E5F8A", pants="#37474F"):
     """Stylised electrician figure; returns anchor points for callouts."""
     S = scale
@@ -112,28 +112,68 @@ def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
         s.path(f"M {cx-40*S:.1f} {hip_y-7*S:.1f} L {cx+40*S:.1f} {hip_y-7*S:.1f}",
                HD, 1.2, dash="6 7")
     s.rect(cx - 9 * S, sh_y - 16 * S, 18 * S, 18 * S, skin, "none", 0, 4 * S)
+    # ears first, so the head circle hides their inner half and only the
+    # lobe shows — an ear plug has to have somewhere real to sit
+    for ex in (cx - 28.5 * S, cx + 28.5 * S):
+        s.circle(ex, hy + 3 * S, 7.5 * S, skin, "#D6A882", 1.5)
     s.circle(cx, hy, head_r, skin, "#D6A882", 1.6)
     s.circle(cx - 10 * S, hy + 1 * S, 2.6 * S, "#33383D")
     s.circle(cx + 10 * S, hy + 1 * S, 2.6 * S, "#33383D")
     s.path(f"M {cx-8*S:.1f} {hy+14*S:.1f} Q {cx:.1f} {hy+19*S:.1f} {cx+8*S:.1f} {hy+14*S:.1f}",
            "#9C6B4A", 1.8 * S)
     if mask:
-        s.path(f"M {cx-21*S:.1f} {hy+5*S:.1f} Q {cx:.1f} {hy+28*S:.1f} "
-               f"{cx+21*S:.1f} {hy+5*S:.1f} Q {cx:.1f} {hy+13*S:.1f} "
-               f"{cx-21*S:.1f} {hy+5*S:.1f} Z", "#6E8496", 1.6, "#C9D8E2")
+        # a real dust mask: nose bridge under the goggles, pleats, ear loops
+        s.path(f"M {cx-22*S:.1f} {hy+6*S:.1f} Q {cx:.1f} {hy+2*S:.1f} {cx+22*S:.1f} {hy+6*S:.1f} "
+               f"L {cx+17*S:.1f} {hy+19*S:.1f} Q {cx:.1f} {hy+27*S:.1f} "
+               f"{cx-17*S:.1f} {hy+19*S:.1f} Z", "#5F7383", 1.7, "#DCE7EF")
+        for dy in (12, 17):
+            s.path(f"M {cx-20*S:.1f} {hy+dy*S:.1f} Q {cx:.1f} {hy+(dy+4)*S:.1f} "
+                   f"{cx+20*S:.1f} {hy+dy*S:.1f}", "#9DB2C1", 1.3 * S)
+        # the loops hook over the TOP of the ear, clear of where a plug goes
+        s.path(f"M {cx-22*S:.1f} {hy+9*S:.1f} Q {cx-34*S:.1f} {hy+5*S:.1f} "
+               f"{cx-30*S:.1f} {hy-3*S:.1f}", "#5F7383", 1.5 * S)
+        s.path(f"M {cx+22*S:.1f} {hy+9*S:.1f} Q {cx+34*S:.1f} {hy+5*S:.1f} "
+               f"{cx+30*S:.1f} {hy-3*S:.1f}", "#5F7383", 1.5 * S)
     if goggles:
-        s.rect(cx - 24 * S, hy - 8 * S, 48 * S, 17 * S, "#BBD9EE", "#2E6F9E", 1.8, 7 * S)
-        s.line(cx - 3 * S, hy - 8 * S, cx - 3 * S, hy + 9 * S, "#2E6F9E", 1.6)
-        s.line(cx - 24 * S, hy, cx - 33 * S, hy - 2 * S, "#2E6F9E", 2.4)
-        s.line(cx + 24 * S, hy, cx + 33 * S, hy - 2 * S, "#2E6F9E", 2.4)
+        # lens over the eyes only — it must not run onto the ear, or the
+        # ear plug beside it has nowhere left to sit.  The temple arm goes
+        # back ABOVE the ear, the way a strap actually runs.
+        s.rect(cx - 22 * S, hy - 9 * S, 44 * S, 17 * S, "#9CC8E8", "none", 0,
+               7 * S, opacity=0.55)
+        s.rect(cx - 22 * S, hy - 9 * S, 44 * S, 17 * S, "none", "#2E6F9E", 2, 7 * S)
+        s.line(cx - 3 * S, hy - 9 * S, cx - 3 * S, hy + 8 * S, "#2E6F9E", 1.6)
+        s.line(cx - 22 * S, hy - 4 * S, cx - 31 * S, hy - 7 * S, "#2E6F9E", 2.4)
+        s.line(cx + 22 * S, hy - 4 * S, cx + 31 * S, hy - 7 * S, "#2E6F9E", 2.4)
+    if earplug:
+        # in the ear, not on it: the plug sits at the centre of the lobe with
+        # its stem showing, drawn last so nothing covers it
+        for sgn in (-1, 1):
+            ex = cx + sgn * 28.5 * S
+            s.circle(ex, hy + 3.5 * S, 4.3 * S, "#F2C200", "#A87F00", 1.4)
+            s.line(ex + sgn * 3.2 * S, hy + 3.5 * S, ex + sgn * 6.6 * S,
+                   hy + 4.6 * S, "#F2C200", 3.2 * S)
     if helmet:
-        s.path(f"M {cx-37*S:.1f} {hy-6*S:.1f} "
-               f"A {37*S:.1f} {37*S:.1f} 0 0 1 {cx+37*S:.1f} {hy-6*S:.1f} Z",
-               "#C8500A", 1.8, "#F26B0F")
-        s.rect(cx - 45 * S, hy - 10 * S, 90 * S, 9 * S, "#F26B0F", "#C8500A", 1.6, 4 * S)
-        s.path(f"M {cx:.1f} {hy-40*S:.1f} L {cx:.1f} {hy-8*S:.1f}", "#C8500A", 2.2)
-    return {"head": (cx, hy), "helmet": (cx, hy - 34 * S),
-            "ear": (cx - 30 * S, hy + 4 * S), "mouth": (cx, hy + 18 * S),
+        # A hard hat, not a bowler.  Two things go wrong every time this is
+        # drawn: the shell comes out narrower than the skull, so it perches
+        # on top like a hat; and the brim gets pulled down over the eyes.
+        # So the shell is a low ellipse WIDER than the head (34S against the
+        # head's 30S) and it sits down over the crown, while the brim clears
+        # the eyebrow line by a clear margin.
+        HL, HD = "#F26B0F", "#C8500A"
+        s.path(f"M {cx-34*S:.1f} {hy-11*S:.1f} "
+               f"A {34*S:.1f} {27*S:.1f} 0 0 1 {cx+34*S:.1f} {hy-11*S:.1f} Z",
+               HD, 1.8, HL)
+        s.path(f"M {cx:.1f} {hy-37*S:.1f} L {cx:.1f} {hy-12*S:.1f}", HD, 2.2)
+        for dx in (-20 * S, 20 * S):
+            s.path(f"M {cx+dx:.1f} {hy-30*S:.1f} L {cx+dx*1.15:.1f} {hy-12*S:.1f}",
+                   HD, 1.5, opacity=0.7)
+        s.rect(cx - 43 * S, hy - 16 * S, 86 * S, 8.5 * S, HL, HD, 1.6, 4 * S)
+    return {"head": (cx, hy), "helmet": (cx - 16 * S, hy - 25 * S),
+            "goggles": (cx - 19 * S, hy - 1 * S),
+            "mask": (cx - 10 * S, hy + 20 * S),
+            "ear": (cx + 28.5 * S, hy + 3.5 * S),
+            "ear_l": (cx - 28.5 * S, hy + 3.5 * S),
+            "mouth": (cx, hy + 18 * S),
             "vest": (cx + 22 * S, sh_y + 70 * S),
             "hand": hand_r, "hand_l": hand_l,
             "boot": (cx + 24 * S, foot_y + 6 * S),
@@ -250,10 +290,7 @@ def d02_shock_path():
         for i in range(14):
             s.line(cx - 204 + i * 31, GY + 12, cx - 212 + i * 31, GY + 24, "#8D9AA8", 2)
 
-    a = worker(s, 282, 148, 0.86)
-    for k in ("helmet", "goggles", "vest", "gloves", "boots"):
-        pass
-    a = worker(s, 282, 148, 0.86, helmet=False, goggles=False, vest=False,
+    a = worker(s, 282, 148, 0.86, goggles=False, vest=False,
                gloves=False, boots=False, cloth="#3E6E93")
     hx1, hy1 = a["hand_l"]; hx2, hy2 = a["hand"]
     hyc = 302
@@ -266,7 +303,7 @@ def d02_shock_path():
     s.text(hx2 + 72, hy2 + 7, "N", T_NAME, RED, 700, "start")
     s.text(282, 518, "দুই হাতের মধ্য দিয়ে বর্তনী সম্পূর্ণ হয়", T_SMALL, "#7A1810", 600, "middle")
 
-    b = worker(s, 838, 148, 0.86, helmet=False, goggles=False, vest=False,
+    b = worker(s, 838, 148, 0.86, goggles=False, vest=False,
                gloves=False, boots=False, cloth="#3E6E93")
     hx, hy = b["hand"]
     s.path(f"M {hx:.1f} {hy-9:.1f} Q 838 240 838 {hyc-19:.1f}", RED, 3.6, dash="10 7")
@@ -326,17 +363,12 @@ def d05_ppe():
     s = SVG(1200, 820)
     s.title("ব্যক্তিগত প্রতিরক্ষামূলক সরঞ্জাম (PPE) — মাথা থেকে পা", T_TITLE)
     S = 1.42
-    a = worker(s, 600, 92, S, mask=True, harness=True)
-    hx, hy = a["head"]
-    left = [("সেফটি হেলমেট", "পড়ন্ত বস্তু ও আঘাত থেকে মাথা রক্ষা করে",
-             (hx - 26 * S, hy - 30 * S)),
-            ("সেফটি গগলস", "স্পার্ক, ধুলা ও ধাতুকণা থেকে চোখ বাঁচায়",
-             (hx - 24 * S, hy - 1 * S)),
-            ("ডাস্ট মাস্ক", "ধুলা ও ক্ষতিকর ধোঁয়া শ্বাসে ঢোকা রোধ করে",
-             (hx - 14 * S, hy + 17 * S)),
+    a = worker(s, 600, 92, S, mask=True, harness=True, earplug=True)
+    left = [("সেফটি হেলমেট", "পড়ন্ত বস্তু ও আঘাত থেকে মাথা রক্ষা করে", a["helmet"]),
+            ("সেফটি গগলস", "স্পার্ক, ধুলা ও ধাতুকণা থেকে চোখ বাঁচায়", a["goggles"]),
+            ("ডাস্ট মাস্ক", "ধুলা ও ক্ষতিকর ধোঁয়া শ্বাসে ঢোকা রোধ করে", a["mask"]),
             ("সেফটি হারনেস", "উঁচুতে কাজের সময় পড়ে যাওয়া ঠেকায়", a["harness"])]
-    right = [("ইয়ার প্লাগ", "উচ্চ শব্দ থেকে শ্রবণশক্তি রক্ষা করে",
-              (hx + 29 * S, hy + 4 * S)),
+    right = [("ইয়ার প্লাগ", "উচ্চ শব্দ থেকে শ্রবণশক্তি রক্ষা করে", a["ear"]),
              ("রিফ্লেক্টিভ অ্যাপ্রন", "দূর থেকে কর্মীকে দৃশ্যমান করে তোলে", a["vest"]),
              ("ইনসুলেটেড গ্লাভস", "বিদ্যুৎ ও তাপ থেকে হাত রক্ষা করে", a["hand"]),
              ("সেফটি শু", "বিদ্যুৎ নিরোধী ও ভারী বস্তু থেকে পা বাঁচায়", a["boot"])]
@@ -545,7 +577,7 @@ def d11_cpr():
             # rescuer's two hands gripping the shoulders
             for dx in (-16, 20):
                 s.rect(shx + dx, shy - 30, 32, 28, "#F0C9A4", "#C79A72", 1.8, 11)
-                s.path(f"M {shx+dx+16:.1f} {shy-30:.1f} L {shx+dx+70:.1f} {shy-96:.1f}",
+                s.path(f"M {shx+dx+16:.1f} {shy-30:.1f} L {shx+dx+58:.1f} {shy-74:.1f}",
                        "#2E5B7E", 17)
             # shake marks
             for sx, dr in ((shx - 40, -1), (shx + 74, 1)):
@@ -554,52 +586,54 @@ def d11_cpr():
                     s.path(f"M {sx:.1f} {shy-34-r:.1f} "
                            f"A {r} {r} 0 0 {1 if dr>0 else 0} {sx:.1f} {shy-34+r:.1f}",
                            STEEL, 3.2, opacity=0.85 - 0.3 * k)
-            s.rect(px + 256, py + 58, 272, 56, "#FFFFFF", NAVY, 2.2, 14)
-            s.path(f"M {px+300:.1f} {py+114:.1f} L {px+270:.1f} {py+148:.1f} "
-                   f"L {px+338:.1f} {py+114:.1f} Z", "none", 0, "#FFFFFF")
-            s.path(f"M {px+300:.1f} {py+114:.1f} L {px+270:.1f} {py+148:.1f} "
-                   f"L {px+338:.1f} {py+114:.1f}", NAVY, 2.2)
-            s.text(px + 392, py + 94, "শুনতে পাচ্ছেন?", T_S, NAVY, 700, "middle")
+            s.rect(px + 262, py + 62, 268, 56, "#FFFFFF", NAVY, 2.2, 14)
+            s.path(f"M {px+306:.1f} {py+118:.1f} L {px+282:.1f} {py+148:.1f} "
+                   f"L {px+344:.1f} {py+118:.1f} Z", "none", 0, "#FFFFFF")
+            s.path(f"M {px+306:.1f} {py+118:.1f} L {px+282:.1f} {py+148:.1f} "
+                   f"L {px+344:.1f} {py+118:.1f}", NAVY, 2.2)
+            s.text(px + 396, py + 98, "শুনতে পাচ্ছেন?", T_S, NAVY, 700, "middle")
 
         elif i == 1:
             v = victim(s, vx, gy)
             fx, fy_ = v["forehead"]
             cx_, cy_ = v["chin"]
-            # palm on the forehead, pressing back
-            s.rect(fx - 6, fy_ - 34, 62, 28, "#F0C9A4", "#C79A72", 1.8, 11)
-            s.path(f"M {fx+25:.1f} {fy_-84:.1f} L {fx+25:.1f} {fy_-42:.1f}", RED, 4.4,
+            # palm on the forehead, pressing back — centred on the skull, not
+            # hanging off its right side
+            s.rect(fx - 16, fy_ - 34, 58, 28, "#F0C9A4", "#C79A72", 1.8, 11)
+            s.path(f"M {fx+13:.1f} {fy_-84:.1f} L {fx+13:.1f} {fy_-42:.1f}", RED, 4.4,
                    marker=ar_r)
-            # two fingers lifting the chin
-            s.rect(cx_ - 40, cy_ - 4, 36, 16, "#F0C9A4", "#C79A72", 1.6, 7)
-            s.rect(cx_ - 40, cy_ + 16, 36, 16, "#F0C9A4", "#C79A72", 1.6, 7)
-            s.path(f"M {cx_-54:.1f} {cy_+20:.1f} L {cx_-26:.1f} {cy_-4:.1f}", GREEN, 4.4,
+            # two fingers lifting the chin — they follow the jaw and stop well
+            # short of the floor; the lower one used to sit on the ground line
+            s.rect(cx_ - 44, cy_ - 6, 34, 12, "#F0C9A4", "#C79A72", 1.6, 5)
+            s.rect(cx_ - 44, cy_ + 9, 34, 12, "#F0C9A4", "#C79A72", 1.6, 5)
+            s.path(f"M {cx_-64:.1f} {cy_+24:.1f} L {cx_-42:.1f} {cy_+4:.1f}", GREEN, 4.4,
                    marker=ar_g)
-            # open airway
-            s.path(f"M {v['mouth'][0]-4:.1f} {v['mouth'][1]:.1f} "
-                   f"Q {vx+96:.1f} {gy-72:.1f} {vx+164:.1f} {gy-58:.1f}",
-                   GREEN, 3.4, dash="9 7")
-            s.text(px + 252, py + 72, "কপালে চাপ", T_S, RED, 700)
-            s.text(px + 252, py + 106, "থুতনি উপরে", T_S, GREEN, 700)
-            s.text(px + 252, py + 140, "শ্বাসনালি খুলে যায়", T_S, "#39434D", 400)
+            # the airway itself — out of the mouth, back through the neck and
+            # down into the chest.  Drawn across the eye and nose it read as a
+            # line ruled over the face instead of a passage inside the head.
+            s.path(f"M {vx+42:.1f} {gy-31:.1f} Q {vx+86:.1f} {gy-40:.1f} "
+                   f"{vx+152:.1f} {gy-52:.1f}", GREEN, 3.4, dash="9 7", marker=ar_g)
+            s.text(px + 300, py + 88, "কপালে চাপ", T_S, RED, 700)
+            s.text(px + 300, py + 122, "থুতনি উপরে", T_S, GREEN, 700)
+            s.text(px + 300, py + 156, "শ্বাসনালি খুলে যায়", T_S, "#39434D", 400)
 
         elif i == 2:
             v = victim(s, vx, gy)
             hx, hy_ = v["chest"]
             # rescuer's straight arms coming down onto the chest
-            for dx, dy in ((0, 0), (26, 12)):
-                s.path(f"M {hx+92+dx:.1f} {hy_-104+dy:.1f} L {hx+8:.1f} {hy_-26:.1f}",
+            for dx, dy in ((0, 0), (24, 11)):
+                s.path(f"M {hx+80+dx:.1f} {hy_-100+dy:.1f} L {hx+8:.1f} {hy_-26:.1f}",
                        "#3E6E93", 20)
             s.rect(hx - 26, hy_ - 30, 62, 28, "#F0C9A4", "#C79A72", 1.8, 12)
-            s.path(f"M {hx-58:.1f} {hy_-96:.1f} L {hx-58:.1f} {hy_-40:.1f}", RED, 5,
+            s.path(f"M {hx-46:.1f} {hy_-88:.1f} L {hx-46:.1f} {hy_-36:.1f}", RED, 5,
                    marker=ar_r)
             # depth gauge
             gx = hx + 34
             s.path(f"M {gx:.1f} {gy-78:.1f} L {gx:.1f} {gy-38:.1f}", RED, 3,
                    marker=ar_r)
-            s.line(gx - 12, gy - 80, gx + 12, gy - 80, RED, 2.4)
-            s.line(gx - 12, gy - 36, gx + 12, gy - 36, RED, 2.4)
-            s.path(f"M {gx+14:.1f} {gy-58:.1f} L {gx+34:.1f} {gy-96:.1f}", "#8A97A6", 1.6)
-            s.text(gx + 30, gy - 104, "৫–৬ সেমি", T_S, RED, 700)
+            s.line(gx - 11, gy - 80, gx + 11, gy - 80, RED, 2.4)
+            s.line(gx - 11, gy - 36, gx + 11, gy - 36, RED, 2.4)
+            s.text(gx + 26, gy - 92, "৫–৬ সেমি", T_S, RED, 700)
             s.text(px + PW - 22, py + 76, "কনুই সোজা রাখো", T_S, "#39434D", 400, "end")
 
         else:
@@ -712,16 +746,16 @@ def d14_earthing():
         s.rect(x, y, 140, 112, "#B7C1CB", "#7C8794", 2, 11)
         s.rect(x + 20, y + 22, 100, 46, "#8D9AA8", "#6B7684", 1.4, 6)
         for j, ln in enumerate(wrap(label, 300, T_SMALL, 600)):
-            s.text(x + 70, y + 148 + j * T_SMALL * 1.35, ln, T_SMALL, "#39434D", 600, "middle")
+            s.text(x + 70, y + 158 + j * T_SMALL * 1.35, ln, T_SMALL, "#39434D", 600, "middle")
 
     GY = 512
     for cx, title, br in ((308, "আর্থিং ছাড়া", RED), (892, "আর্থিং সহ", GREEN)):
-        s.rect(cx - 266, 72, 532, 522, "#FCFDFE", LINE, 1.8, 14)
+        s.rect(cx - 266, 72, 532, 542, "#FCFDFE", LINE, 1.8, 14)
         s.box_auto(cx, 86, title, T_NAME, fill=br, stroke=br, tcolor="#FFFFFF",
                    pad_x=26, pad_y=12)
-        s.rect(cx - 226, GY, 452, 13, "#8D9AA8", "#6B7684", 1.4, 3)
-        for i in range(15):
-            s.line(cx - 220 + i * 31, GY + 13, cx - 228 + i * 31, GY + 26, "#8D9AA8", 2)
+        s.rect(cx - 240, GY, 480, 13, "#8D9AA8", "#6B7684", 1.4, 3)
+        for i in range(16):
+            s.line(cx - 234 + i * 31, GY + 13, cx - 242 + i * 31, GY + 26, "#8D9AA8", 2)
 
     # left — no earth
     appliance(140, 202, "ত্রুটিপূর্ণ যন্ত্র (বডিতে লিক)")
@@ -737,7 +771,7 @@ def d14_earthing():
     s.path(f"M 432 {w['bottom']-6:.1f} L 432 {GY-14:.1f}", RED, 3.4, dash="9 6", marker=ar_r)
     for j, ln in enumerate(wrap("কারেন্ট মানুষের দেহ দিয়ে মাটিতে যায় — মারাত্মক শক",
                                 460, T_SMALL, 600)):
-        s.text(308, GY + 52 + j * T_SMALL * 1.35, ln, T_SMALL, "#7A1810", 600, "middle")
+        s.text(308, GY + 72 + j * T_SMALL * 1.35, ln, T_SMALL, "#7A1810", 600, "middle")
 
     # right — with earth
     appliance(724, 202, "একই ত্রুটি — বডি আর্থ করা")
@@ -745,9 +779,10 @@ def d14_earthing():
     s.text(644, 172, "L", T_NAME, RED, 700, "end")
     s.path("M 794 178 L 794 202", NAVY, 3)
     s.circle(794, 228, 9, RED)
-    s.path(f"M 794 314 L 794 {GY-16:.1f}", GREEN, 3.8, marker=ar_g)
-    s.text(776, 402, "ফল্ট কারেন্ট", T_BODY, GREEN, 700, "end")
-    s.text(776, 428, "আর্থ তারে চলে যায়", T_BODY, GREEN, 400, "end")
+    s.rect(714, 258, 12, 20, GREEN, "#0E4430", 1.4, 3)
+    s.path(f"M 714 268 L 686 268 L 686 {GY-16:.1f}", GREEN, 3.8, marker=ar_g)
+    s.text(706, 402, "ফল্ট কারেন্ট", T_BODY, GREEN, 700)
+    s.text(706, 428, "আর্থ তারে চলে যায়", T_BODY, GREEN, 400)
     w2 = worker(s, 1022, 246, 0.72, helmet=False, goggles=False, vest=False,
                 gloves=False, boots=False, cloth="#3E6E93")
     hx2, hy2 = w2["hand_l"]
@@ -755,18 +790,18 @@ def d14_earthing():
     s.check(944, 330, 21)
     for j, ln in enumerate(["স্পর্শ করলেও", "বিপজ্জনক শক লাগে না"]):
         s.text(1040, 152 + j * T_SMALL * 1.35, ln, T_SMALL, GREEN, 600, "middle")
-    s.line(794, GY, 794, GY + 16, GREEN, 3.6)
-    for i, ww in enumerate((44, 30, 18)):
-        s.line(794 - ww / 2, GY + 20 + i * 9, 794 + ww / 2, GY + 20 + i * 9, GREEN, 3.6)
+    s.line(686, GY, 686, GY + 14, GREEN, 3.6)
+    for i, ww in enumerate((42, 28, 16)):
+        s.line(686 - ww / 2, GY + 18 + i * 8, 686 + ww / 2, GY + 18 + i * 8, GREEN, 3.6)
     for j, ln in enumerate(wrap("বড় ফল্ট কারেন্টে ব্রেকার বা RCCB সঙ্গে সঙ্গে ট্রিপ করে",
                                 460, T_SMALL, 600)):
-        s.text(892, GY + 52 + j * T_SMALL * 1.35, ln, T_SMALL, "#12523A", 600, "middle")
+        s.text(892, GY + 72 + j * T_SMALL * 1.35, ln, T_SMALL, "#12523A", 600, "middle")
 
-    s.rect(40, 616, 1120, 58, "#EAF2FA", STEEL, 2, 11)
-    s.text(600, 653,
+    s.rect(40, 636, 1120, 58, "#EAF2FA", STEEL, 2, 11)
+    s.text(600, 673,
            "ধাতব বডিযুক্ত প্রতিটি যন্ত্র অবশ্যই আর্থ করতে হবে — এটি ঐচ্ছিক নয়, বাধ্যতামূলক",
            T_NAME, NAVY, 700, "middle")
-    s.fit(674, 24)
+    s.fit(694, 24)
     return s.save(f"{OUT}/d14_earthing.svg")
 
 

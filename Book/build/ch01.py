@@ -13,7 +13,7 @@ OUT = os.path.join(HERE, "out")
 # bands Word leaves when a figure will not fit on the page it belongs to.
 W = {
     "d01": 15.4, "d02": 15.2, "d04": 15.0, "d05": 14.6, "d06": 15.4,
-    "d07": 12.6, "d08": 15.2, "d10": 13.4, "d11": 13.6, "d12": 14.2,
+    "d07": 12.6, "d08": 15.2, "d10": 13.4, "d11": 14.8, "d12": 14.2,
     "d13": 15.2, "d14": 15.4, "firstaid": 6.4,
 }
 try:

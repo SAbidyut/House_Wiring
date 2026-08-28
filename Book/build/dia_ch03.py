@@ -151,7 +151,7 @@ def plug_supply(s, x, cy, ytop, ybot, pins=2):
 
 # ═══════════════════════════════════════════════════════════════════════
 def d01_circuit_parts():
-    s = SVG(1240, 620)
+    s = SVG(1240, 640)
     s.title("একটি আদর্শ বৈদ্যুতিক বর্তনীর উপাদান", T_TITLE)
     L, R_, T, B = 250, 900, 210, 430
     cx = (L + R_) / 2
@@ -180,12 +180,12 @@ def d01_circuit_parts():
         s.text(tx, ty, name, T_BODY, NAVY, 700, anc)
         s.text(tx, ty + 26, sub, T_SMALL, GREY, 400, anc)
 
-    s.rect(60, 500, 1120, 62, "#EAF2FA", STEEL, 2, 11)
-    s.text(620, 528, "চারটি উপাদানের যেকোনো একটি না থাকলে বর্তনী অসম্পূর্ণ",
+    s.rect(60, 526, 1120, 62, "#EAF2FA", STEEL, 2, 11)
+    s.text(620, 554, "চারটি উপাদানের যেকোনো একটি না থাকলে বর্তনী অসম্পূর্ণ",
            T_NAME, NAVY, 700, "middle")
-    s.text(620, 554, "উৎস → পরিবাহী → সুইচ → লোড → আবার উৎসে ফিরে আসা",
+    s.text(620, 580, "উৎস → পরিবাহী → সুইচ → লোড → আবার উৎসে ফিরে আসা",
            T_SMALL, GREY, 400, "middle")
-    s.fit(562, 22)
+    s.fit(588, 22)
     return s.save(f"{OUT}/d01_circuit_parts.svg")
 
 
@@ -210,7 +210,12 @@ def d02_circuit_states():
             s.path(f"M {R_} {B} L {L} {B}", SYM, SW)
             s.path(f"M {L} {B} L {L} {T}", SYM, SW)
             s.path(f"M {cx-40} {T} L {cx-40} {B}", RED, 4.4)
-            s.text(cx - 40, (T + B) / 2 + 8, "শর্ট পথ", T_SMALL, RED, 700, "end")
+            # লেবেলটা লাইনের ডানপাশে — শর্ট পথ আর বাতির মাঝের ফাঁকা
+            # জায়গাটাই এখানে একমাত্র জায়গা যেখানে লেখা কোনো তারের
+            # গায়ে পড়ে না
+            s.text(cx - 26, (T + B) / 2 - 12, "শর্ট পথ", T_SMALL, RED, 700, "start")
+            s.text(cx - 26, (T + B) / 2 + 14, "রোধ প্রায় শূন্য", T_SMALL - 2,
+                   "#9A4038", 400, "start")
             sym_lamp(s, R_, (T + B) / 2, 20)
         else:
             s.path(f"M {L} {T} L {cx-26} {T}", SYM, SW)
@@ -242,42 +247,198 @@ def d02_circuit_states():
     return s.save(f"{OUT}/d02_circuit_states.svg")
 
 
-def d03_holders():
-    s = SVG(1240, 560)
-    s.title("হোল্ডার ও ল্যাম্পের প্রকারভেদ", T_TITLE)
-    items = [
-        ("ব্যাটেন হোল্ডার", "সোজা ছাদ বা বোর্ডে বসে", "batten"),
-        ("অ্যাঙ্গেল হোল্ডার", "দেয়ালে কোণ করে বসে", "angle"),
-        ("পেন্ডেন্ট হোল্ডার", "সিলিং রোজ থেকে ঝোলে", "pendant"),
-        ("স্ক্রু (ES) হোল্ডার", "প্যাঁচ কেটে বাতি বসে", "screw"),
-    ]
-    cw, gapx = 272, 24
-    x0 = (1240 - (4 * cw + 3 * gapx)) / 2
-    for i, (name, note, kind) in enumerate(items):
-        x = x0 + i * (cw + gapx)
-        s.rect(x, 96, cw, 300, "#FCFDFE", LINE, 1.8, 13)
-        cx, cy = x + cw / 2, 190
-        if kind == "pendant":
-            s.rect(cx - 24, cy - 66, 48, 18, "#B7C1CB", "#7C8794", 2, 4)
-            s.path(f"M {cx} {cy-48} L {cx} {cy-18}", "#39434D", 3)
-        if kind == "angle":
-            s.rect(cx - 30, cy - 40, 60, 16, "#B7C1CB", "#7C8794", 2, 4)
-            s.path(f"M {cx} {cy-24} L {cx+16} {cy-8}", "#8D9AA8", 8)
-        s.rect(cx - 24, cy - 16, 48, 26, "#E4E9ED", "#7C8794", 2.2, 5)
-        if kind == "screw":
-            for k in range(3):
-                s.path(f"M {cx-14} {cy+12+k*6} L {cx+14} {cy+14+k*6}", "#8D9AA8", 3)
+# ── হোল্ডার : আসল ছবি + বসানোর ধরন ──────────────────────────────────
+T_TILE = 23          # টাইলের নাম     → 23 × 436.5 / 1240 ≈ ৮.১ পয়েন্ট
+T_TSUB = 21          # টাইলের উপশিরোনাম → ≈ ৭.৪ পয়েন্ট
+
+WOOD = "#C8A272"     # কাঠের বোর্ড / ছাদের পাটাতন
+WOODL = "#8A6437"
+SHELL = "#EDF1F4"    # হোল্ডারের সাদা খোল
+SHELLL = "#7C8794"
+BRASS = "#C79A2E"
+
+
+def _hatch_slab(s, x, y, w, h, fill=WOOD, stroke=WOODL):
+    """ছাদ, বোর্ড বা দেয়াল — তেরছা দাগ দিয়ে গাঁথুনি বোঝানো।"""
+    s.rect(x, y, w, h, fill, stroke, 2, 3)
+    step = 22
+    d = min(w, h)
+    for i in range(int((w + h) / step) + 1):
+        x0 = x + i * step
+        x1, y1 = x0 - h, y + h
+        if x0 > x + w:
+            x0, yy0 = x + w, y + (x0 - (x + w))
         else:
-            s.path(f"M {cx-15} {cy+10} L {cx+15} {cy+10} L {cx+11} {cy+22} "
-                   f"L {cx-11} {cy+22} Z", "#8D9AA8", 2, "#B7C1CB")
-        s.circle(cx, cy + 52, 26, "#FFF3C4", "#B08C00", 2.4)
-        s.path(f"M {cx-12} {cy+58} q 12 -22 24 0", "#B08C00", 2.4)
-        s.text(cx, 320, name, T_BODY, NAVY, 700, "middle")
-        for j, ln in enumerate(wrap(note, cw - 40, T_SMALL, 400)):
-            s.text(cx, 352 + j * T_SMALL * 1.32, ln, T_SMALL, GREY, 400, "middle")
-    s.text(620, 442, "হোল্ডারের দুটি টার্মিনালের একটিতে ফেজ, অন্যটিতে নিউট্রাল যায়",
-           T_SMALL, GREY, 400, "middle")
-    s.fit(442, 24)
+            yy0 = y
+        if x1 < x:
+            y1 = y + h - (x - x1)
+            x1 = x
+        if x0 > x1:
+            s.path(f"M {x0} {yy0} L {x1} {y1}", stroke, 1.1)
+    return d
+
+
+def _lamp_unit(s, bx, by, ang=0.0, sc=1.0, plate=True, cap="pin", body=True):
+    """হোল্ডার + বাতি, যেকোনো কোণে।
+
+    স্থানীয় স্থানাঙ্কে +y মানে বাতির দিক; `ang` ঘোরালে গোটা জিনিসটা
+    সেই কোণে বসে (ang = -45 → নিচে-ডানে, অ্যাঙ্গেল হোল্ডারের মতো)।
+    """
+    a = math.radians(ang)
+    ca, sa = math.cos(a), math.sin(a)
+
+    def P(lx, ly):
+        lx, ly = lx * sc, ly * sc
+        return (bx + lx * ca - ly * sa, by + lx * sa + ly * ca)
+
+    if plate:
+        s.poly([P(-33, 0), P(33, 0), P(33, 10), P(-33, 10)], SHELL, SHELLL, 2)
+    if body:
+        s.poly([P(-25, 8), P(25, 8), P(22, 45), P(-22, 45)], SHELL, SHELLL, 2.2)
+    s.poly([P(-24, 45), P(24, 45), P(24, 55), P(-24, 55)], "#DCE3E9", SHELLL, 2)
+    if cap == "screw":
+        for k in range(3):
+            s.path("M %.1f %.1f L %.1f %.1f" % (P(-15, 47 + k * 4) +
+                                                P(15, 49 + k * 4)), BRASS, 2.4)
+    else:
+        for dx in (-16, 16):
+            s.poly([P(dx - 4, 46), P(dx + 4, 46), P(dx + 4, 55), P(dx - 4, 55)],
+                   BRASS, "none", 0)
+    cx, cy = P(0, 90)
+    s.circle(cx, cy, 27 * sc, "#FFF3C4", "#B08C00", 2.4)
+    s.path(f"M {cx-12*sc:.1f} {cy+6*sc:.1f} Q {cx:.1f} {cy-14*sc:.1f} "
+           f"{cx+12*sc:.1f} {cy+6*sc:.1f}", "#B08C00", 2.4)
+    return P
+
+
+def _angle_holder(s, wx, py, ang=-46.0):
+    """অ্যাঙ্গেল হোল্ডার — দেয়ালের গায়ে গোল গোড়া, মুখ কোণ করে কাটা।
+
+    `_lamp_unit()` দিয়ে এটি আঁকা যায় না।  ওটি সোজা খোলের হোল্ডার —
+    কাঁধ, বলয়, বাতি এক অক্ষে।  অ্যাঙ্গেল হোল্ডারের গোড়া আর মুখ **এক
+    অক্ষে নয়**:  গোড়াটা দেয়ালের সমতলে, মুখটা তার সঙ্গে কোণ করে।  তাই
+    গোটা দেহটা এখানে একটাই বদ্ধ পথ — দেয়াল থেকে বেরিয়ে ফুলে উঠে কোণ
+    করা মুখে গিয়ে শেষ — আর মুখের কলার, পিতলের বলয় ও বাতি তার উপরে।
+    """
+    a = math.radians(ang)
+    ca, sa = math.cos(a), math.sin(a)
+    ux, uy = -sa, ca                       # মুখ যেদিকে তাকিয়ে
+    px_, py_ = ca, sa                      # মুখের আড়াআড়ি
+
+    wf = wx + 26                           # দেয়ালের সামনের তল
+    bx, by = wf + 42, py + 134             # মুখের কেন্দ্র
+    hw = 27                                # মুখের অর্ধ-প্রস্থ
+
+    m1 = (bx + hw * px_, by + hw * py_)
+    m2 = (bx - hw * px_, by - hw * py_)
+
+    def off(pt, d):
+        return (pt[0] + d * ux, pt[1] + d * uy)
+
+    # দেয়ালে আটকানোর পাত — দেহের আগে, আর দেহের চেয়ে একটু লম্বা, তাই
+    # উপরে-নিচে সামান্য বেরিয়ে থেকে পাত বলেই চেনা যায়
+    s.rect(wf - 2, py + 88, 13, 90, "#DCE3E9", SHELLL, 2, 4)
+    # দেহ — দেয়াল থেকে বেরিয়ে ফুলে উঠে কোণ করা মুখে শেষ
+    s.path(f"M {m1[0]:.1f} {m1[1]:.1f} "
+           f"C {wx+82} {py+94} {wx+50} {py+92} {wf} {py+98} "
+           f"L {wf} {py+168} "
+           f"C {wx+34} {py+170} {wx+44} {py+162} {m2[0]:.1f} {m2[1]:.1f} Z",
+           SHELLL, 2.2, SHELL)
+    # মুখের কলার
+    s.poly([m1, off(m1, 19), off(m2, 19), m2], "#DCE3E9", SHELLL, 2)
+    # ভেতরের পিতলের বলয়
+    s.poly([off(m1, 6), off(m1, 12), off(m2, 12), off(m2, 6)], BRASS, "none", 0)
+    # বাতি
+    cbx, cby = off((bx, by), 44)
+    s.circle(cbx, cby, 26, "#FFF3C4", "#B08C00", 2.4)
+    s.path(f"M {cbx-12:.1f} {cby+6:.1f} Q {cbx:.1f} {cby-14:.1f} "
+           f"{cbx+12:.1f} {cby+6:.1f}", "#B08C00", 2.4)
+    return cbx + 26
+
+
+def d03_holders():
+    """চিত্র ৩.৩ — উপরের সারিতে আসল হোল্ডার, নিচের সারিতে কে কোথায় বসে।
+
+    আগের সংস্করণে চারটি হোল্ডারই হাতে আঁকা ছিল এবং চারটি দেখতে প্রায়
+    এক — শিক্ষার্থী বাজারে গিয়ে ওগুলো চিনত না।  ছবিগুলো এখন
+    ইনস্টিটিউটের নিজের নথি থেকে নেওয়া আসল আলোকচিত্র (`assets_ch03.py`);
+    আঁকা থাকে কেবল সেটুকু, ছবি যা দেখাতে পারে না — কোন হোল্ডার ছাদে
+    বসে, কোনটা দেয়ালে কোণ করে, কোনটা সিলিং রোজ থেকে ঝোলে।
+    """
+    s = SVG(1240, 960)
+    s.title("হোল্ডার — আসল চেহারা ও বসানোর ধরন", T_TITLE)
+
+    # ── সারি ১ : আসল ছবি ───────────────────────────────────────────
+    s.box_auto(620, 92, "আসল হোল্ডার", T_NAME, fill=STEEL, stroke=STEEL,
+               tcolor="#FFFFFF", pad_x=26, pad_y=9)
+    # নাম থেকে “হোল্ডার” শব্দটা বাদ — ছবির শিরোনামেই আছে, আর পাঁচটা
+    # টাইলে ওটা রাখলে লেখা টাইলের বাইরে চলে যায়
+    photos = [
+        ("ph_batten_pin.jpg", "ব্যাটেন", "পিন (BC)"),
+        ("ph_batten_screw.jpg", "ব্যাটেন", "প্যাঁচ (ES)"),
+        ("ph_angle.jpg", "অ্যাঙ্গেল", "পিন (BC)"),
+        ("ph_pendant_pin.jpg", "পেন্ডেন্ট", "পিন (BC)"),
+        ("ph_pendant_screw.jpg", "পেন্ডেন্ট", "প্যাঁচ (ES)"),
+    ]
+    m, gap, well = 22, 15, 196
+    tile = (1240 - 2 * m - gap * (len(photos) - 1)) / len(photos)
+    top = 150
+    for i, (img, name, sub) in enumerate(photos):
+        x = m + i * (tile + gap)
+        s.rect(x, top, tile, well + 82, "#F7FAFC", LINE, 1.8, 12)
+        s.rect(x + 11, top + 9, tile - 22, well - 12, "#FFFFFF", LINE, 1.2, 8)
+        s.image_fit(x + 15, top + 12, tile - 30, well - 18, f"{IMG}/{img}", 3)
+        for txt, dy, size, col, wt in ((name, well + 26, T_TILE, NAVY, 700),
+                                       (sub, well + 58, T_TSUB, GREY, 400)):
+            if tw(txt, size, wt) > tile - 14:
+                raise ValueError(f"d03: টাইলে ধরে না — {txt!r}")
+            s.text(x + tile / 2, top + dy, txt, size, col, wt, "middle")
+
+    # ── সারি ২ : কোথায় কীভাবে বসে ──────────────────────────────────
+    s.box_auto(620, 470, "বসানোর ধরন", T_NAME, fill=GREEN, stroke=GREEN,
+               tcolor="#FFFFFF", pad_x=26, pad_y=9)
+    pw, pgap = (1240 - 2 * m - 2 * 20) / 3, 20
+    py, ph = 528, 292
+    kinds = [("ব্যাটেন হোল্ডার", "ছাদ বা কাঠের বোর্ডে সোজা", "batten"),
+             ("অ্যাঙ্গেল হোল্ডার", "দেয়ালে কোণ করে, বাতি নিচে", "angle"),
+             ("পেন্ডেন্ট হোল্ডার", "সিলিং রোজ থেকে ঝুলন্ত", "pendant")]
+    for i, (name, role, kind) in enumerate(kinds):
+        x = m + i * (pw + pgap)
+        s.rect(x, py, pw, ph, "#FCFDFE", LINE, 1.8, 13)
+        cx = x + pw / 2
+        s.text(cx, py + 34, name, T_TILE, NAVY, 700, "middle")
+
+        if kind == "batten":
+            # তার ছাদের ভেতর দিয়ে এসে পাতের নিচে ঢোকে — বাইরে থেকে
+            # কিছুই দেখা যায় না, তাই আঁকাও নেই
+            _hatch_slab(s, cx - 122, py + 54, 244, 24)
+            _lamp_unit(s, cx, py + 78, 0, 0.94)
+
+        elif kind == "angle":
+            # দেয়ালটা প্যানেলের বাঁয়ে নয়, গোটা জিনিসটা যাতে মাঝখানে বসে
+            wx = cx - 66
+            _hatch_slab(s, wx, py + 62, 26, 148)
+            _angle_holder(s, wx, py)
+
+        else:
+            _hatch_slab(s, cx - 122, py + 54, 244, 24)
+            # সিলিং রোজ — ছাদের গায়ে চ্যাপ্টা গোল বাক্স
+            s.path(f"M {cx-36} {py+78} A 36 36 0 0 0 {cx+36} {py+78} Z",
+                   SHELLL, 2, SHELL)
+            s.path(f"M {cx-36} {py+78} L {cx+36} {py+78}", SHELLL, 2)
+            # সিলিং রোজের নাম প্যানেলের নিচের লাইনেই আছে — ছবির ভেতরে
+            # আবার লিখলে লেখাটা কাঠের পাটাতনের কোণে গিয়ে ঠেকে
+            s.path(f"M {cx-6} {py+108} L {cx-6} {py+146}", BROWN, 3.4)
+            s.path(f"M {cx+6} {py+108} L {cx+6} {py+146}", BLUE, 3.4)
+            _lamp_unit(s, cx, py + 146, 0, 0.80, plate=False)
+
+        s.text(cx, py + ph - 20, role, T_TSUB, GREY, 400, "middle")
+
+    note = "প্যাঁচ টাইপ হোল্ডারে ফেজ যায় কেন্দ্রের সংযোগে, নিউট্রাল বাইরের প্যাঁচে"
+    ny = 854
+    s.rect(m, ny, 1240 - 2 * m, 58, "#EAF2FA", STEEL, 2, 11)
+    s.text(620, ny + 36, note, T_NAME, NAVY, 700, "middle")
+    s.fit(ny + 58, 24)
     return s.save(f"{OUT}/d03_holders.svg")
 
 

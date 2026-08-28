@@ -17,10 +17,11 @@ IMG = os.path.join(HERE, "assets", "ch12")
 
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
-T_CALL = 24
+T_NAME = 26
+T_BODY = 23.5
+T_SMALL = 22.5          # ১৫.৪ সেমি চওড়ায় ≈ ৭.৯ pt — ৭.৫ pt-এর মেঝের উপরে
+T_CALL = 25.5
+T_TINY = 20.5
 LH = 1.42
 
 SYM = "#12324D"
@@ -46,16 +47,24 @@ def note_strip(s, y, text, x=46, w=1148, fill="#EAF2FA", stroke=STEEL,
     return y + 58
 
 
-def callout(s, x, y, text, tx, ty, anchor="end", size=T_CALL, col=NAVY):
-    """লেবেল ও লিডার — লাইন লেখার যে পাশে লক্ষ্য, সেই কিনারা থেকেই বেরোয়।"""
+def callout(s, x, y, text, tx, ty, anchor="end", size=T_CALL, col=NAVY,
+            elbow=False, lead=STEEL):
+    """লেবেল ও লিডার — লাইন লেখার যে পাশে লক্ষ্য, সেই কিনারা থেকেই বেরোয়।
+
+    `elbow=True` দিলে লিডার আগে লেবেলের উচ্চতায় আড়াআড়ি যায়, তারপর খাড়া
+    নেমে লক্ষ্যে ঠেকে — ছাপা লেখা বা আঁকা অংশের উপর দিয়ে তির্যক রেখা
+    টানা এড়াতে (অধ্যায় ২২-এর শিক্ষা)।
+    """
     s.text(x, y + size * 0.32, text, size, col, 700, anchor)
     w = tw(text, size, 700)
     x0 = x if anchor == "start" else (x - w / 2 if anchor == "middle"
                                       else x - w)
     x1 = x0 + w
     start = x1 + 10 if tx > x1 else x0 - 10
-    s.path(f"M {start} {y} L {tx} {ty}", STEEL, 2.2)
-    s.circle(tx, ty, 5, STEEL)
+    d = (f"M {start} {y} L {tx} {y} L {tx} {ty}" if elbow
+         else f"M {start} {y} L {tx} {ty}")
+    s.path(d, lead, 2.2)
+    s.circle(tx, ty, 5, lead)
 
 
 def img_panel(s, x, y, w, h, title, img, col=STEEL, cap=None):
@@ -125,46 +134,129 @@ def reg_sym(s, cx, cy, w=104, h=44, col=SYM):
 
 
 # ═══════════════════════════════════════════════════════════════════════
+def _hatch(s, x, y, w, h, col="#8D9AA8", step=11, sw=1.4):
+    """কাটা-তলের হ্যাচিং — সেকশন বোঝাতে।"""
+    s.clip_begin(x, y, w, h, 2)
+    n = int((w + h) / step) + 2
+    for i in range(n):
+        x0 = x - h + i * step
+        s.path(f"M {x0:.1f} {y + h:.1f} L {x0 + h:.1f} {y:.1f}", col, sw)
+    s.clip_end()
+
+
+def _motor_section(s, cx, top, bot, hw, cut_right=True):
+    """বাইরের-রোটর মোটরের কাটা-চিত্র — ডান দেয়াল ভাঙা রেখে ভেতর দেখানো।"""
+    shell, shed = "#C2CCD6", "#6E7A87"
+    s.rect(cx - hw, top, 2 * hw, 17, shell, shed, 2.2, 3)
+    s.rect(cx - hw, bot - 17, 2 * hw, 17, shell, shed, 2.2, 3)
+    s.rect(cx - hw, top, 17, bot - top, shell, shed, 2.2, 3)
+    if cut_right:
+        s.rect(cx + hw - 17, top, 17, 28, shell, shed, 2.2, 3)
+        s.rect(cx + hw - 17, bot - 28, 17, 28, shell, shed, 2.2, 3)
+        d = f"M {cx+hw-17} {top+28}"
+        step = (bot - top - 56) / 8
+        for i in range(8):
+            d += f" l {8 if i % 2 == 0 else -8} {step:.1f}"
+        s.path(d, shed, 2)
+    else:
+        s.rect(cx + hw - 17, top, 17, bot - top, shell, shed, 2.2, 3)
+    # খাঁচার বার — কাটা না-হওয়া বাঁ দেয়ালের ভেতরের গায়ে
+    s.rect(cx - hw + 17, top + 22, 11, bot - top - 44, COPPER, "#8E5620",
+           1.6, 2)
+    # স্থির শ্যাফট
+    s.rect(cx - 11, top - 4, 22, bot - top + 30, "#9AA6B2", "#63707D", 2.2, 3)
+    # স্টেটর কোর ও কয়েল
+    sx, swd = cx - 78, 156
+    s.rect(sx, top + 34, swd, bot - top - 68, "#E3E9EF", "#8D9AA8", 2.2, 4)
+    for xb in (sx + 7, sx + swd - 29):
+        s.rect(xb, top + 50, 22, bot - top - 100, COPPER, "#8E5620", 1.8, 4)
+    # বেয়ারিং — স্থির শ্যাফট ও ঘূর্ণায়মান পাতের মাঝে
+    for yb in (top + 8, bot - 8):
+        s.rect(cx - 29, yb - 9, 58, 18, "#F2F5F8", "#63707D", 2, 3)
+        for dx in (-16, 16):
+            s.circle(cx + dx, yb, 5, "#7C8794")
+    return sx, swd
+
+
+def _blades(s, cx, bot, hw, reach):
+    for sgn in (-1, 1):
+        s.poly([(cx + sgn * (hw + 2), bot - 22),
+                (cx + sgn * reach, bot - 6),
+                (cx + sgn * reach, bot + 14),
+                (cx + sgn * (hw + 2), bot + 2)],
+               "#5B7C99", "#3C566B", 2.2)
+
+
 def d01_parts():
-    """সিলিং ফ্যানের বাইরের ও ভেতরের অংশ।"""
-    s = SVG(1240, 700)
+    """সিলিং ফ্যানের বাইরের অংশ (আলোকচিত্র) ও ভেতরের কাটা-চিত্র।"""
+    s = SVG(1240, 1060)
     s.title("সিলিং ফ্যানের অংশ পরিচিতি", T_TITLE)
 
-    PW, PH = 560, 470
-    panel(s, 46, 96, PW, PH, "নিচ থেকে দেখা", STEEL)
+    # ── ১ম সারি : বাস্তব ফ্যানের ছবি, দুই পাশে লেবেল ────────────────
+    PW, PH = 1148, 392
+    panel(s, 46, 96, PW, PH, "বাস্তব ফ্যান — বাইরে যা দেখা যায়", STEEL)
     IW = 400
-    IH = IW * 1234 / 1700
-    IX, IY = 46 + (PW - IW) / 2, 168
+    IH = round(IW * 1456 / 1800)
+    IX, IY = 46 + (PW - IW) / 2, 154
     s.image(IX, IY, IW, IH, f"{IMG}/ph_fan.jpg", 8)
-    LY = IY + IH + 44
-    # লক্ষ্যবিন্দুগুলো ছবির উপর গ্রিড ফেলে মাপা
-    callout(s, 96, LY, "ব্লেড", IX + 0.22 * IW, IY + 0.72 * IH, "start")
-    callout(s, 552, LY, "মোটর হাউজিং", IX + 0.55 * IW, IY + 0.52 * IH, "end")
-    callout(s, 46 + PW / 2, LY + 44, "ব্লেড ব্র্যাকেট",
-            IX + 0.42 * IW, IY + 0.62 * IH, "middle")
 
-    # ── ডান পাশে কাটা-চিত্র (হাতে আঁকা) ─────────────────────────────
-    panel(s, 634, 96, PW, PH, "পাশ থেকে কাটা-চিত্র", GREEN)
-    CX = 634 + PW / 2 - 40
-    CEIL = 176
-    s.rect(CX - 190, CEIL - 26, 380, 26, "#D9DFE6", "#A9B4C0", 2, 3)
-    s.text(CX - 168, CEIL - 6, "ছাদ", T_SMALL, "#54606C", 700, "middle")
-    s.circle(CX, CEIL + 14, 13, "none", METAL, 5)          # হুক
-    s.rect(CX - 34, CEIL + 26, 68, 26, METAL_L, METAL, 2, 5)   # ক্যানোপি
-    s.rect(CX - 11, CEIL + 52, 22, 84, METAL_L, METAL, 2, 3)   # ডাউন রড
-    s.rect(CX - 74, CEIL + 136, 148, 96, "#E7ECF1", "#7C8794", 2.6, 12)
-    s.circle(CX, CEIL + 184, 26, "#FFFFFF", "#7C8794", 2.4)
-    for dx in (-1, 1):
-        s.poly([(CX + dx * 74, CEIL + 156), (CX + dx * 226, CEIL + 172),
-                (CX + dx * 226, CEIL + 194), (CX + dx * 74, CEIL + 200)],
-               "#5B7C99", "#3C566B", 2.4)
-    callout(s, 742, CEIL + 14, "হুক", CX - 13, CEIL + 14, "end")
-    callout(s, 742, CEIL + 58, "ক্যানোপি", CX - 34, CEIL + 38, "end")
-    callout(s, 742, CEIL + 104, "ডাউন রড", CX - 11, CEIL + 96, "end")
-    callout(s, 1146, CEIL + 122, "মোটর ও কয়েল", CX + 74, CEIL + 168, "end")
-    callout(s, 1146, CEIL + 232, "ব্লেড", CX + 168, CEIL + 186, "end")
+    def at(fx, fy):
+        return IX + fx * IW, IY + fy * IH
 
-    y = note_strip(s, 96 + PH + 22,
+    # লক্ষ্যবিন্দুগুলো ছবির পিক্সেল মেপে বসানো (অধ্যায় ২৩-এর নিয়ম) —
+    # চোখে আন্দাজ করলে ব্লেডের লিডার পটভূমিতেই গিয়ে পড়ে।
+    callout(s, IX - 42, IY + 0.17 * IH, "ব্লেড", *at(0.136, 0.169), "end")
+    callout(s, IX - 42, IY + 0.44 * IH, "ব্লেড ব্র্যাকেট",
+            *at(0.381, 0.412), "end")
+    callout(s, IX - 42, IY + 0.72 * IH, "মোটর হাউজিং",
+            *at(0.487, 0.482), "end")
+    callout(s, IX + IW + 42, IY + 0.17 * IH, "সিলিং রোজ ও সরবরাহ তার",
+            *at(0.549, 0.190), "start")
+    callout(s, IX + IW + 42, IY + 0.50 * IH, "মোটরের উপরের ঢাকনা",
+            *at(0.478, 0.349), "start")
+
+    # ── ২য় সারি : কাটা-চিত্র ────────────────────────────────────────
+    TY = 96 + PH + 20
+    PH2 = 404
+    panel(s, 46, TY, PW, PH2, "পাশ থেকে কাটা-চিত্র", GREEN)
+    CX = 620
+    CEIL = TY + 84
+
+    # ছাদ ও হুক
+    s.rect(CX - 320, CEIL - 30, 640, 30, "#D9DFE6", "#A9B4C0", 2, 3)
+    _hatch(s, CX - 320, CEIL - 30, 640, 30, "#B4BFCB", 16, 1.2)
+    s.path(f"M {CX} {CEIL} L {CX} {CEIL+8}", METAL, 6)
+    s.circle(CX, CEIL + 20, 12, "none", METAL, 5.5)            # হুক
+    s.path(f"M {CX} {CEIL+32} L {CX} {CEIL+40}", METAL, 6)
+
+    # ক্যানোপি — ভেতরে ক্যাপাসিটর
+    s.poly([(CX - 76, CEIL + 96), (CX + 76, CEIL + 96),
+            (CX + 44, CEIL + 40), (CX - 44, CEIL + 40)],
+           "#EDF1F5", "#8D9AA8", 2.4)
+    s.rect(CX + 16, CEIL + 56, 44, 32, "#20456F", "#12324D", 2, 3)
+    s.line(CX + 24, CEIL + 88, CX + 8, CEIL + 118, "#8E5620", 2.4)
+    s.line(CX + 50, CEIL + 88, CX + 16, CEIL + 118, "#8E5620", 2.4)
+    s.rect(CX - 13, CEIL + 96, 26, 34, METAL_L, METAL, 2.2, 3)  # ডাউন রড
+
+    TOP, BOT, HW = CEIL + 130, CEIL + 262, 150
+    sx, swd = _motor_section(s, CX, TOP, BOT, HW)
+    _blades(s, CX, BOT, HW, 300)
+    for sgn in (-1, 1):                                   # ব্লেড ব্র্যাকেট
+        s.rect(CX + sgn * HW - (36 if sgn > 0 else 0), BOT - 24, 36, 17,
+               "#9FB0C0", "#5D6E7E", 2, 2)
+
+    L, R = 306, 934
+    callout(s, L, CEIL + 20, "ছাদের হুক", CX - 12, CEIL + 20, "end")
+    callout(s, L, CEIL + 66, "ক্যানোপি", CX - 60, CEIL + 66, "end")
+    callout(s, L, CEIL + 112, "ডাউন রড", CX - 13, CEIL + 112, "end")
+    callout(s, L, TOP + 56, "মোটর হাউজিং", CX - HW + 8, TOP + 56, "end")
+    callout(s, L, BOT + 26, "ব্লেড", CX - 250, BOT + 4, "end")
+    callout(s, R, CEIL + 62, "ক্যাপাসিটর", CX + 60, CEIL + 62, "start")
+    callout(s, R, TOP + 8, "বেয়ারিং", CX + 29, TOP + 8, "start")
+    callout(s, R, TOP + 60, "স্টেটর ও কয়েল", sx + swd, TOP + 60, "start")
+    callout(s, R, BOT + 26, "ব্লেড ব্র্যাকেট", CX + HW + 4, BOT - 6, "start")
+
+    y = note_strip(s, TY + PH2 + 20,
                    "ফ্যানের ওজন ধরে রাখে ছাদের হুক — ডাউন রড ও ক্যানোপি "
                    "কেবল সেটিকে ঢেকে রাখে, ভার বহন করে না")
     s.fit(y, 24)
@@ -172,110 +264,143 @@ def d01_parts():
 
 
 def d02_motor():
-    """ফ্যানের মোটরের ভেতরে দুই কয়েল কীভাবে বসে।"""
-    s = SVG(1240, 720)
-    s.title("ফ্যানের মোটরে রানিং ও স্টার্টিং কয়েল", T_TITLE)
+    """বাইরের রোটর — ফ্যানের মোটরের গঠন ও দুই কয়েল।"""
+    s = SVG(1240, 690)
+    s.title("ফ্যানের মোটর — স্টেটর ভেতরে, রোটর বাইরে", T_TITLE)
 
-    CX, CY, R = 430, 350, 190
-    s.circle(CX, CY, R, "#F3F6F9", "#8D9AA8", 3)
-    s.circle(CX, CY, R - 52, "#FFFFFF", "#8D9AA8", 2.4)
-    s.circle(CX, CY, 66, "#E7ECF1", "#7C8794", 3)          # রোটর
-    for i in range(12):
-        a = math.radians(i * 30)
-        s.line(CX + 48 * math.cos(a), CY + 48 * math.sin(a),
-               CX + 62 * math.cos(a), CY + 62 * math.sin(a), "#9AA6B2", 3)
-    s.text(CX, CY + 8, "রোটর", T_SMALL, "#37424E", 700, "middle")
+    PW, PH = 1148, 484
+    panel(s, 46, 96, PW, PH, "মোটরের কাটা-চিত্র", STEEL)
 
-    # চার মেরু — দুই জোড়া কয়েল
-    for a_deg, col in ((0, RED), (180, RED), (90, STEEL), (270, STEEL)):
+    # ═════ বাঁ দিক — পাশ থেকে কাটা ════════════════════════════════
+    CX, TOP, BOT, HW = 336, 268, 424, 126
+    s.box_auto(CX, 146, "পাশ থেকে", T_TINY, fill=LIGHT, stroke=STEEL,
+               tcolor=NAVY, pad_x=14, pad_y=5)
+    s.rect(CX - 13, 206, 26, 62, METAL_L, METAL, 2.2, 3)        # ডাউন রড
+    sx, swd = _motor_section(s, CX, TOP, BOT, HW)
+    _blades(s, CX, BOT, HW, 196)
+
+    callout(s, 194, 232, "ডাউন রড", CX - 13, 232, "end")
+    callout(s, 194, TOP + 40, "রোটর খোল", CX - HW + 8, TOP + 40, "end")
+    callout(s, 194, TOP + 96, "খাঁচার বার", CX - HW + 23, TOP + 96, "end")
+    callout(s, 580, TOP + 6, "বেয়ারিং", CX + 29, TOP + 6, "start")
+    callout(s, 580, TOP + 42, "স্টেটর", sx + swd, TOP + 42, "start")
+    callout(s, 580, BOT - 56, "কয়েল", sx + swd - 18, BOT - 56, "start")
+    s.text(CX, BOT + 60, "স্থির শ্যাফট", T_SMALL, NAVY, 700, "middle")
+    s.path(f"M {CX} {BOT+42} L {CX} {BOT+26}", STEEL, 2.2)
+    s.text(CX - 168, BOT + 60, "ব্লেড", T_SMALL, NAVY, 700, "middle")
+    s.path(f"M {CX-168} {BOT+42} L {CX-168} {BOT+22}", STEEL, 2.2)
+
+    # ═════ ডান দিক — নিচ থেকে কাটা (সেকশন) ════════════════════════
+    OX, OY, RO = 920, 352, 112
+    s.box_auto(OX, 140, "নিচ থেকে", T_TINY, fill=LIGHT, stroke=STEEL,
+               tcolor=NAVY, pad_x=14, pad_y=5)
+
+    for i in range(3):                                   # ব্লেড ব্র্যাকেট
+        a = math.radians(90 + i * 120)
+        ux, uy = math.cos(a), math.sin(a)
+        tx, ty = -uy, ux
+        s.poly([(OX + RO * ux + 22 * tx, OY + RO * uy + 22 * ty),
+                (OX + RO * ux - 22 * tx, OY + RO * uy - 22 * ty),
+                (OX + (RO + 26) * ux - 16 * tx, OY + (RO + 26) * uy - 16 * ty),
+                (OX + (RO + 26) * ux + 16 * tx, OY + (RO + 26) * uy + 16 * ty)],
+               "#9FB0C0", "#5D6E7E", 2)
+
+    s.circle(OX, OY, RO, "#C2CCD6", "#6E7A87", 2.6)             # রোটর খোল
+    s.circle(OX, OY, RO - 26, "#FFFFFF", "#6E7A87", 2.2)
+    for i in range(24):                                        # খাঁচার বার
+        a = math.radians(i * 15)
+        s.circle(OX + (RO - 14) * math.cos(a), OY + (RO - 14) * math.sin(a),
+                 5.2, COPPER, "#8E5620", 1.2)
+
+    RS = RO - 38
+    s.circle(OX, OY, 42, "#E3E9EF", "#8D9AA8", 2.4)            # স্টেটর কোর
+    for a_deg, col in ((90, RED), (270, RED), (0, STEEL), (180, STEEL)):
         a = math.radians(a_deg)
-        ux, uy = math.cos(a), math.sin(a)          # কেন্দ্র থেকে বাইরের দিক
-        tx, ty = -uy, ux                           # লম্ব দিক
-        # খুঁটির মুখ
-        s.poly([(CX + (R - 62) * ux + 30 * tx, CY + (R - 62) * uy + 30 * ty),
-                (CX + (R - 62) * ux - 30 * tx, CY + (R - 62) * uy - 30 * ty),
-                (CX + (R - 40) * ux - 18 * tx, CY + (R - 40) * uy - 18 * ty),
-                (CX + (R - 40) * ux + 18 * tx, CY + (R - 40) * uy + 18 * ty)],
-               "#E7ECF1", "#8D9AA8", 2.2)
-        # খুঁটির গায়ে জড়ানো কয়েল
+        ux, uy = math.cos(a), math.sin(a)
+        tx, ty = -uy, ux
+        s.poly([(OX + 36 * ux + 24 * tx, OY + 36 * uy + 24 * ty),
+                (OX + 36 * ux - 24 * tx, OY + 36 * uy - 24 * ty),
+                (OX + RS * ux - 28 * tx, OY + RS * uy - 28 * ty),
+                (OX + RS * ux + 28 * tx, OY + RS * uy + 28 * ty)],
+               "#E3E9EF", "#8D9AA8", 2.2)
         for i in range(4):
-            rr = R - 36 + i * 11
-            s.path(f"M {CX + rr*ux + 24*tx:.1f} {CY + rr*uy + 24*ty:.1f} "
-                   f"A 24 24 0 0 1 {CX + rr*ux - 24*tx:.1f} "
-                   f"{CY + rr*uy - 24*ty:.1f}", col, 4)
+            rr = 44 + i * 9
+            s.path(f"M {OX + rr*ux + 25*tx:.1f} {OY + rr*uy + 25*ty:.1f} "
+                   f"A 25 25 0 0 {1 if a_deg in (90, 180) else 0} "
+                   f"{OX + rr*ux - 25*tx:.1f} {OY + rr*uy - 25*ty:.1f}",
+                   col, 4)
+    s.circle(OX, OY, 15, "#9AA6B2", "#63707D", 2.2)            # শ্যাফট
 
-    s.text(CX + R + 24, CY + 6, "রানিং কয়েল", T_CALL, RED, 700)
-    s.text(CX - R - 24, CY - 10, "রানিং কয়েল", T_CALL, RED, 700, "end")
-    s.text(CX - R - 24, CY + 18, "(মোটা তার, রোধ কম)", T_SMALL, GREY, 400,
-           "end")
-    s.text(CX, CY - R - 26, "স্টার্টিং কয়েল", T_CALL, STEEL, 700, "middle")
-    s.text(CX, CY + R + 46, "স্টার্টিং কয়েল (সরু তার, রোধ বেশি)", T_SMALL,
-           GREY, 400, "middle")
+    ar = s.arrow_defs(GREEN, "rot12", 14)
+    s.path(f"M {OX - 44} {OY - RO - 24} A {RO+24} {RO+24} 0 0 1 "
+           f"{OX + 44} {OY - RO - 24}", GREEN, 3.6, marker=ar)
 
-    # ঘূর্ণনের তীর
-    ar = s.arrow_defs(GREEN, "rot", 14)
-    s.path(f"M {CX+108} {CY-108} A 152 152 0 0 1 {CX+108} {CY+108}", GREEN,
-           3.4, marker=ar)
+    s.text(OX, OY - RO - 44, "রোটর ঘোরে", T_SMALL, GREEN, 700, "middle")
+    callout(s, 1050, OY - 62, "এয়ার গ্যাপ",
+            OX + 89 * math.cos(math.radians(-42)),
+            OY + 89 * math.sin(math.radians(-42)), "start")
+    callout(s, 1050, OY + 64, "স্টেটর", OX + 28, OY + 28, "start")
 
-    # ব্যাখ্যার কার্ড
-    x0, PW = 760, 434
-    items = [
-        ("দুটি কয়েল কেন", "একটি কয়েলে চুম্বকক্ষেত্র শুধু আগে-পিছে দোলে, "
-         "ঘোরে না — তাই মোটর নিজে থেকে চালু হয় না।"),
-        ("৯০° কোণে বসানো", "স্টার্টিং কয়েলকে রানিং কয়েলের সঙ্গে ৯০ ডিগ্রি "
-         "কোণে বসানো হয়।"),
-        ("ক্যাপাসিটরের কাজ", "ক্যাপাসিটর স্টার্টিং কয়েলের কারেন্টকে এগিয়ে "
-         "দেয়; দুই কয়েলের কারেন্টে সময়ের ব্যবধান তৈরি হয়।"),
-        ("ফল", "দুই মিলে ঘূর্ণায়মান চুম্বকক্ষেত্র তৈরি হয় এবং রোটর ঘুরতে "
-         "শুরু করে।"),
-    ]
-    yy = 118
-    for head, body in items:
-        lines = wrap(body, PW - 44, T_SMALL, 400)
-        h = 44 + len(lines) * T_SMALL * 1.34
-        s.rect(x0, yy, PW, h, "#F7FAFC", LINE, 1.8, 11)
-        s.text(x0 + 22, yy + 32, head, T_BODY, NAVY, 700)
-        for j, ln in enumerate(lines):
-            s.text(x0 + 22, yy + 62 + j * T_SMALL * 1.34, ln, T_SMALL,
-                   "#39434D", 400)
-        yy += h + 16
+    # রং-সংকেত
+    ly = OY + RO + 52
+    for dx, col, txt in ((-118, RED, "রানিং কয়েল"),
+                         (36, STEEL, "স্টার্টিং কয়েল")):
+        s.rect(OX + dx, ly - 15, 22, 22, col, col, 1, 4)
+        s.text(OX + dx + 32, ly + 3, txt, T_SMALL, NAVY, 700)
 
-    y = note_strip(s, max(yy + 8, 594),
-                   "সিলিং ফ্যানে ক্যাপাসিটর সবসময় লাইনে থাকে — চালু হওয়ার "
-                   "পরেও বিচ্ছিন্ন হয় না, একে বলে PSC মোটর")
+    y = note_strip(s, 96 + PH + 22,
+                   "স্টেটর ভেতরে স্থির থাকে, রোটর তার বাইরে দিয়ে ঘোরে — "
+                   "ব্লেড এই ঘূর্ণায়মান খোলের গায়েই বসানো")
     s.fit(y, 24)
     return s.save(f"{OUT}/d02_motor.svg")
 
 
 def d03_cap_types():
-    """রান ও স্টার্ট ক্যাপাসিটরের পার্থক্য।"""
-    return two_panel(
-        "d03_cap_types", "ফ্যান ও মোটরে ব্যবহৃত ক্যাপাসিটর",
-        ("রান ক্যাপাসিটর — ফ্যানে এটিই থাকে", "ph_cap_run.png"),
-        ("স্টার্ট ক্যাপাসিটর — বড় মোটরে", "ph_cap_start.jpg"),
-        "রান ক্যাপাসিটর ছোট মানের, সারাক্ষণ চলে; স্টার্ট ক্যাপাসিটর বড় মানের, "
-        "কয়েক সেকেন্ডের জন্য বসে", h=600)
+    """ফ্যানের দুই চেহারার রান ক্যাপাসিটর ও বড় মোটরের স্টার্ট ক্যাপাসিটর।"""
+    s = SVG(1240, 700)
+    s.title("ফ্যান ও মোটরে ব্যবহৃত ক্যাপাসিটর", T_TITLE)
+    PW, GAP, PH = 365, 26, 452
+    cases = [
+        ("রান — গোল কৌটা", "ph_cap_can.jpg", STEEL),
+        ("রান — বাক্স (CBB61)", "ph_cap_fan.jpg", STEEL),
+        ("স্টার্ট ক্যাপাসিটর", "ph_cap_start.jpg", GREEN),
+    ]
+    for i, (head, img, col) in enumerate(cases):
+        px = 46 + i * (PW + GAP)
+        img_panel(s, px, 96, PW, PH, head, f"{IMG}/{img}", col)
+    y = note_strip(s, 96 + PH + 22,
+                   "গোল কৌটা আর বাক্স — দুটোই ফ্যানের রান ক্যাপাসিটর, কাজ "
+                   "এক; স্টার্ট ক্যাপাসিটর বড় মানের, ফ্যানে বসে না")
+    s.fit(y, 24)
+    return s.save(f"{OUT}/d03_cap_types.svg")
 
 
 def d04_cap_read():
-    """ক্যাপাসিটরের গায়ের লেখা পড়া।"""
-    s = SVG(1240, 940)
-    s.title("ক্যাপাসিটরের গায়ের লেখা পড়া", T_TITLE)
-    IX, IY, IW = 300, 200, 640
-    IH = IW * 648 / 702
-    s.rect(IX - 14, IY - 14, IW + 28, IH + 28, "#FCFDFE", LINE, 1.8, 12)
-    s.image(IX, IY, IW, IH, f"{IMG}/ph_cap_run.png", 6)
+    """ফ্যানের ক্যাপাসিটরের গায়ের লেখা পড়া — বাজারের চলতি গোল কৌটা।"""
+    s = SVG(1240, 800)
+    s.title("ফ্যানের ক্যাপাসিটরের গায়ের লেখা", T_TITLE)
+    IW = 400
+    IH = round(IW * 924 / 761)
+    IX, IY = (1240 - IW) / 2, 148
+    s.rect(IX - 12, IY - 12, IW + 24, IH + 24, "#FCFDFE", LINE, 1.8, 12)
+    s.image(IX, IY, IW, IH, f"{IMG}/ph_cap_can_face.jpg", 6)
 
     def at(fx, fy):
         return IX + fx * IW, IY + fy * IH
 
-    callout(s, 274, 380, "মান (µF)", *at(0.303, 0.352), "end")
-    callout(s, 274, 600, "ফ্রিকোয়েন্সি ৫০/৬০ Hz", *at(0.214, 0.604), "end")
-    callout(s, 966, 330, "সহনসীমা ±৫%", *at(0.381, 0.416), "start")
-    callout(s, 966, 452, "কর্মক্ষম ভোল্টেজ", *at(0.639, 0.343), "start")
-    callout(s, 966, 620, "সর্বোচ্চ তাপমাত্রা ৭০°C", *at(0.559, 0.604), "start")
+    # লিডারের ডগা ছাপা লেখার *পাশে* — নেমপ্লেটে ছাপা লেখাটাই এখানে পাঠ।
+    LX, RX = IX - 34, IX + IW + 34
+    callout(s, LX, IY + 0.18 * IH, "দুই স্পেড টার্মিনাল", *at(0.31, 0.16),
+            "end")
+    callout(s, LX, IY + 0.52 * IH, "মান — 2.5 µF", *at(0.30, 0.675), "end")
+    callout(s, LX, IY + 0.84 * IH, "PCB-মুক্ত তেল", *at(0.19, 0.820), "end")
+    callout(s, RX, IY + 0.36 * IH, "ব্র্যান্ড ও ধরন", *at(0.84, 0.575),
+            "start")
+    callout(s, RX, IY + 0.64 * IH, "কর্মক্ষম ভোল্টেজ — 350 V AC",
+            *at(0.77, 0.745), "start")
+    callout(s, RX, IY + 0.92 * IH, "তৈরির দেশ", *at(0.76, 0.880), "start")
 
-    y = note_strip(s, IY + IH + 52,
+    y = note_strip(s, IY + IH + 40,
                    "বদলানোর সময় µF মান হুবহু মেলাতে হবে; ভোল্টেজ রেটিং সমান "
                    "বা বেশি চলবে, কম কখনোই নয়")
     s.fit(y, 24)
@@ -303,11 +428,11 @@ def d06_reg_types():
     s = SVG(1240, 800)
     s.title("রেগুলেটরের প্রকারভেদ", T_TITLE)
     PW, GAP = 365, 26
-    PH = 300
+    PH = 262
 
     # ১ — রেজিস্টিভ
     panel(s, 46, 96, PW, PH, "রেজিস্টিভ (কয়েল টাইপ)", RED)
-    cx, cy = 46 + PW / 2, 96 + 170
+    cx, cy = 46 + PW / 2, 96 + 156
     coil_sym(s, cx - 96, cx + 96, cy, RED, 5)
     s.text(cx, cy + 62, "সিরিজে বসানো রোধ", T_SMALL, "#39434D", 400, "middle")
     s.text(cx, cy + 92, "বাড়তি শক্তি তাপ হয়ে যায়", T_SMALL, RED, 700,
@@ -335,7 +460,7 @@ def d06_reg_types():
          "কম গতিতে খরচ কমে"),
         ("তাপ", "রেগুলেটর গরম হয়", "গরম হয় না বললেই চলে", "সামান্য গরম হয়"),
         ("দাম ও আকার", "বড় ও ভারী", "মাঝারি", "ছোট, বোর্ডে বসে যায়"),
-        ("শব্দ", "শব্দ নেই", "শব্দ নেই", "কম গতিতে গুনগুন শব্দ হতে পারে"),
+        ("শব্দ", "শব্দ নেই", "শব্দ নেই", "কম গতিতে গুনগুন হতে পারে"),
     ]
     ty = 96 + PH + 26
     s.rect(46, ty, 1148, 44, NAVY, NAVY, 2, 10)
@@ -367,118 +492,151 @@ def d06_reg_types():
     return s.save(f"{OUT}/d06_reg_types.svg")
 
 
+def vcoil(s, cy0, cy1, x, col=SYM, n=4, left=True):
+    """খাড়া কয়েলের প্রতীক — পরপর কয়েকটি অর্ধবৃত্ত।"""
+    step = (cy1 - cy0) / n
+    d = f"M {x:.1f} {cy0:.1f}"
+    for i in range(n):
+        d += (f" q {-step*0.9 if left else step*0.9:.1f} {step/2:.1f} "
+              f"0 {step:.1f}")
+    s.path(d, col, SW, "none")
+
+
+def _node(s, x, y, col=SYM, r=7):
+    s.circle(x, y, r, col)
+
+
+def _term(s, x, y, tag, dx=0, dy=0, anchor="start", col=NAVY):
+    """ফ্যানের বাইরে বেরোনো প্রান্তের নাম।"""
+    s.circle(x, y, 8, "#FFFFFF", col, 3)
+    s.text(x + dx, y + dy, tag, T_SMALL, col, 700, anchor)
+
+
 def d07_cap_conn():
-    """ফ্যানের ক্যাপাসিটর ও কয়েলের সংযোগ।"""
-    s = SVG(1240, 700)
+    """ফ্যানের তিন প্রান্ত, দুই কয়েল ও ক্যাপাসিটরের সংযোগ।"""
+    s = SVG(1240, 800)
     s.title("ফ্যানের কয়েল ও ক্যাপাসিটরের সংযোগ", T_TITLE)
 
-    L_Y, N_Y = 176, 560
-    X0, X1 = 120, 1060
-    s.path(f"M {X0} {L_Y} L {X1} {L_Y}", LIVE, SW)
-    s.path(f"M {X0} {N_Y} L {X1} {N_Y}", NEUT, SW)
-    s.text(X0 - 12, L_Y + 8, "ফেজ", T_CALL, LIVE, 700, "end")
-    s.text(X0 - 12, N_Y + 8, "নিউট্রাল", T_CALL, NEUT, 700, "end")
+    LY, NY = 168, 630                       # ফেজ ও নিউট্রাল বাস
+    X0 = 150
+    XC, XL, XR = 690, 520, 860              # কমন, রানিং প্রান্ত, স্টার্টিং প্রান্ত
+    TOPB, BOTB = 215, 478                   # ফ্যানের ঘেরের উপরে-নিচে
+    CY, KY0, KY1 = 258, 300, 432            # কমন নোড ও কয়েলের দুই মাথা
+    QY = 528                                # ক্যাপাসিটরের সারি
 
-    # সুইচ ও রেগুলেটর ফেজ লাইনে
-    s.path(f"M 240 {L_Y} L 268 {L_Y-22}", SYM, SW)
-    s.circle(240, L_Y, 5, SYM)
-    s.circle(288, L_Y, 5, SYM)
-    s.text(264, L_Y - 40, "সুইচ", T_SMALL, NAVY, 700, "middle")
-    reg_sym(s, 420, L_Y)
-    s.text(420, L_Y - 48, "রেগুলেটর", T_SMALL, NAVY, 700, "middle")
+    # ── ফ্যানের ঘের ──────────────────────────────────────────────
+    s.rect(440, TOPB, 500, BOTB - TOPB, "#F8FAFC", STEEL, 2.4, 14, dash="10 7")
+    s.text(456, TOPB + 32, "ফ্যানের ভেতরে", T_SMALL, STEEL, 700)
 
-    # ফ্যানের ভেতর
-    BX, BY, BW, BH = 560, 236, 520, 300
-    s.rect(BX, BY, BW, BH, "#FCFDFE", STEEL, 2.4, 14, dash="10 7")
-    s.text(BX + 16, BY + 30, "ফ্যানের ভেতরে", T_SMALL, STEEL, 700)
+    # ── ফেজ : বাস → সুইচ → রেগুলেটর → কমন প্রান্ত ────────────────
+    s.path(f"M {X0} {LY} L 300 {LY}", LIVE, SW)
+    s.path(f"M 300 {LY} L 336 {LY-26}", SYM, SW)          # সুইচ
+    _node(s, 300, LY, SYM, 6)
+    _node(s, 360, LY, SYM, 6)
+    s.text(330, LY - 44, "সুইচ", T_SMALL, NAVY, 700, "middle")
+    s.path(f"M 360 {LY} L 450 {LY}", LIVE, SW)
+    reg_sym(s, 510, LY)
+    s.text(510, LY - 46, "রেগুলেটর", T_SMALL, NAVY, 700, "middle")
+    s.path(f"M 570 {LY} L {XC} {LY}", LIVE, SW)
+    s.path(f"M {XC} {LY} L {XC} {CY}", LIVE, SW)
+    s.text(X0 - 14, LY + 8, "ফেজ", T_CALL, LIVE, 700, "end")
 
-    A_X, B_X = 660, 980            # দুই প্রান্তের নোড
-    RUN_Y, ST_Y = BY + 96, BY + 208
-    s.path(f"M {A_X} {L_Y} L {A_X} {ST_Y}", LIVE, SW)
-    s.path(f"M {B_X} {N_Y} L {B_X} {ST_Y}", NEUT, SW)
-    s.circle(A_X, L_Y, 6, LIVE)
-    s.circle(B_X, N_Y, 6, NEUT)
+    # ── কমন থেকে দুই কয়েল ───────────────────────────────────────
+    _node(s, XC, CY)
+    s.path(f"M {XL} {CY} L {XR} {CY}", SYM, SW)
+    s.path(f"M {XL} {CY} L {XL} {KY0}", SYM, SW)
+    s.path(f"M {XR} {CY} L {XR} {KY0}", SYM, SW)
+    vcoil(s, KY0, KY1, XL, SYM, 4, left=True)
+    vcoil(s, KY0, KY1, XR, STEEL, 4, left=False)
+    s.path(f"M {XL} {KY1} L {XL} {QY}", SYM, SW)
+    s.path(f"M {XR} {KY1} L {XR} {QY}", SYM, SW)
+    s.text(426, (KY0 + KY1) / 2 + 8, "রানিং কয়েল", T_CALL, NAVY, 700, "end")
+    s.text(954, (KY0 + KY1) / 2 + 8, "স্টার্টিং কয়েল", T_CALL, STEEL, 700,
+           "start")
 
-    # রানিং কয়েল
-    s.path(f"M {A_X} {RUN_Y} L {A_X+70} {RUN_Y}", SYM, SW)
-    coil_sym(s, A_X + 70, A_X + 230, RUN_Y, SYM, 4)
-    s.path(f"M {A_X+230} {RUN_Y} L {B_X} {RUN_Y}", SYM, SW)
-    s.text(A_X + 150, RUN_Y - 46, "রানিং কয়েল", T_CALL, NAVY, 700, "middle")
+    # ── ক্যাপাসিটর : দুই প্রান্তের মাঝে ──────────────────────────
+    s.path(f"M {XL} {QY} L {XC - 13} {QY}", SYM, SW)
+    cap_sym(s, XC, QY, 46, 54, SYM, vertical=False)
+    s.path(f"M {XC + 13} {QY} L {XR} {QY}", SYM, SW)
+    s.text(XC, QY + 54, "ক্যাপাসিটর", T_CALL, NAVY, 700, "middle")
 
-    # স্টার্টিং কয়েল + ক্যাপাসিটর
-    s.path(f"M {A_X} {ST_Y} L {A_X+52} {ST_Y}", SYM, SW)
-    cap_sym(s, A_X + 78, ST_Y, 46, 54, SYM, vertical=False)
-    s.path(f"M {A_X+104} {ST_Y} L {A_X+140} {ST_Y}", SYM, SW)
-    coil_sym(s, A_X + 140, A_X + 280, ST_Y, STEEL, 4, up=False)
-    s.path(f"M {A_X+280} {ST_Y} L {B_X} {ST_Y}", SYM, SW)
-    s.text(A_X + 78, ST_Y + 52, "ক্যাপাসিটর", T_SMALL, NAVY, 700, "middle")
-    s.text(A_X + 220, ST_Y + 52, "স্টার্টিং কয়েল", T_SMALL, STEEL, 700,
-           "middle")
+    # ── নিউট্রাল : বাস → রানিং প্রান্ত ───────────────────────────
+    s.path(f"M {X0} {NY} L {XL} {NY}", NEUT, SW)
+    s.path(f"M {XL} {NY} L {XL} {QY}", NEUT, SW)
+    _node(s, XL, QY)
+    _node(s, XR, QY)
+    s.text(X0 - 14, NY + 8, "নিউট্রাল", T_CALL, NEUT, 700, "end")
 
-    # দুই কয়েলের সংযোগ বিন্দু
-    s.path(f"M {A_X} {RUN_Y} L {A_X} {ST_Y}", SYM, SW)
-    s.circle(A_X, RUN_Y, 6, SYM)
-    s.path(f"M {B_X} {RUN_Y} L {B_X} {ST_Y}", SYM, SW)
-    s.circle(B_X, RUN_Y, 6, SYM)
+    # ── তিন প্রান্তের নাম ───────────────────────────────────────
+    _term(s, XC, TOPB, "কমন — C", 16, -14)
+    _term(s, XL, BOTB, "রানিং — R", -16, 30, "end")
+    _term(s, XR, BOTB, "স্টার্টিং — S", 16, 30)
 
-    y = note_strip(s, 600,
-                   "দুই কয়েলই ফেজ ও নিউট্রালের মাঝে প্যারালালে বসে; "
-                   "ক্যাপাসিটর কেবল স্টার্টিং কয়েলের সঙ্গে সিরিজে থাকে")
+    y = note_strip(s, 700,
+                   "ফেজ যায় কমন প্রান্তে, নিউট্রাল রানিং প্রান্তে; "
+                   "ক্যাপাসিটর বসে রানিং ও স্টার্টিং প্রান্তের মাঝে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d07_cap_conn.svg")
 
 
 def d08_direction():
-    """ঘূর্ণনের দিক উল্টানো।"""
-    s = SVG(1240, 660)
+    """নিউট্রাল প্রান্ত বদলে ঘূর্ণনের দিক উল্টানো।"""
+    s = SVG(1240, 760)
     s.title("ফ্যানের ঘূর্ণনের দিক বদলানো", T_TITLE)
-    PW, PH = 560, 420
+    PW, PH = 560, 540
+    AY = 548                                # ঘূর্ণন-তিরের নিজস্ব ব্যান্ড
 
-    for k, (px, head, col, swap) in enumerate(
-            ((46, "স্বাভাবিক সংযোগ", STEEL, False),
-             (634, "স্টার্টিং কয়েলের দুই প্রান্ত উল্টানো", GREEN, True))):
+    for px, head, col, on_start, spin, rev in (
+            (46, "নিউট্রাল রানিং প্রান্তে (R)", STEEL,
+             False, "ঘোরে ঘড়ির কাঁটার দিকে", False),
+            (634, "নিউট্রাল স্টার্টিং প্রান্তে (S)", GREEN,
+             True, "ঘোরে উল্টো দিকে", True)):
         panel(s, px, 96, PW, PH, head, col)
-        A_X, B_X = px + 96, px + 464
-        RUN_Y, ST_Y = 220, 340
-        s.text(A_X - 46, RUN_Y + 8, "ফেজ", T_SMALL, LIVE, 700, "middle")
-        s.text(B_X + 46, RUN_Y + 8, "নিউট্রাল", T_SMALL, NEUT, 700, "middle")
-        s.path(f"M {A_X-14} {RUN_Y} L {A_X} {RUN_Y}", LIVE, SW)
-        s.path(f"M {B_X} {RUN_Y} L {B_X+14} {RUN_Y}", NEUT, SW)
+        XC, XL, XR = px + 306, px + 186, px + 428
+        LY, CY, KY0, KY1, QY, NY = 186, 236, 272, 380, 442, 500
+        TOPB, BOTB = 212, 410
 
-        coil_sym(s, A_X + 60, A_X + 200, RUN_Y, SYM, 4)
-        s.path(f"M {A_X} {RUN_Y} L {A_X+60} {RUN_Y}", SYM, SW)
-        s.path(f"M {A_X+200} {RUN_Y} L {B_X} {RUN_Y}", SYM, SW)
-        s.text(A_X + 130, RUN_Y - 42, "রানিং কয়েল", T_SMALL, NAVY, 700,
-               "middle")
+        s.rect(px + 126, TOPB, 362, BOTB - TOPB, "#F8FAFC", STEEL, 2,
+               12, dash="9 6")
 
-        s.path(f"M {A_X} {RUN_Y} L {A_X} {ST_Y}", SYM, SW)
-        s.path(f"M {B_X} {RUN_Y} L {B_X} {ST_Y}", SYM, SW)
-        s.circle(A_X, RUN_Y, 6, SYM)
-        s.circle(B_X, RUN_Y, 6, SYM)
-        cap_sym(s, A_X + 40, ST_Y, 44, 50, SYM, vertical=False)
-        s.path(f"M {A_X} {ST_Y} L {A_X+18} {ST_Y}", SYM, SW)
-        coil_sym(s, A_X + 108, A_X + 238, ST_Y, STEEL, 4, up=False)
-        if not swap:
-            s.path(f"M {A_X+62} {ST_Y} L {A_X+108} {ST_Y}", SYM, SW)
-            s.path(f"M {A_X+238} {ST_Y} L {B_X} {ST_Y}", SYM, SW)
-        else:                       # দুই প্রান্ত অদলবদল — তার ঘুরিয়ে আনা
-            s.path(f"M {A_X+62} {ST_Y} L {A_X+80} {ST_Y} L {A_X+80} {ST_Y+44} "
-                   f"L {A_X+238} {ST_Y+44} L {A_X+238} {ST_Y}", RED, SW)
-            s.path(f"M {A_X+108} {ST_Y} L {A_X+108} {ST_Y-40} "
-                   f"L {B_X} {ST_Y-40} L {B_X} {ST_Y}", RED, SW)
+        s.path(f"M {px+134} {LY} L {XC} {LY}", LIVE, SW)
+        s.path(f"M {XC} {LY} L {XC} {CY}", LIVE, SW)
+        s.text(px + 126, LY + 8, "ফেজ", T_SMALL, LIVE, 700, "end")
+        _node(s, XC, CY)
+        s.path(f"M {XL} {CY} L {XR} {CY}", SYM, SW)
+        s.path(f"M {XL} {CY} L {XL} {KY0}", SYM, SW)
+        s.path(f"M {XR} {CY} L {XR} {KY0}", SYM, SW)
+        vcoil(s, KY0, KY1, XL, SYM, 3, left=True)
+        vcoil(s, KY0, KY1, XR, STEEL, 3, left=False)
+        s.path(f"M {XL} {KY1} L {XL} {QY}", SYM, SW)
+        s.path(f"M {XR} {KY1} L {XR} {QY}", SYM, SW)
+        s.path(f"M {XL} {QY} L {XC - 12} {QY}", SYM, SW)
+        cap_sym(s, XC, QY, 42, 48, SYM, vertical=False)
+        s.path(f"M {XC + 12} {QY} L {XR} {QY}", SYM, SW)
+        _node(s, XL, QY)
+        _node(s, XR, QY)
 
-        # কয়েলের দুই প্রান্তের চিহ্ন — উল্টালে জায়গা বদলায়
-        left_tag, right_tag = ("U", "V") if not swap else ("V", "U")
-        ty_ = ST_Y + 76 if swap else ST_Y + 40
-        s.text(A_X + 100, ty_, left_tag, T_SMALL, RED, 700, "middle")
-        s.text(A_X + 246, ty_, right_tag, T_SMALL, RED, 700, "middle")
-        s.text(px + PW / 2, 96 + PH - 26,
-               "ঘোরে ঘড়ির কাঁটার দিকে" if not swap else "ঘোরে উল্টো দিকে",
-               T_NAME, col, 700, "middle")
+        NX = XR if on_start else XL
+        s.path(f"M {px+134} {NY} L {NX} {NY}", NEUT, SW)
+        s.path(f"M {NX} {NY} L {NX} {QY}", NEUT, SW)
+        s.text(px + 126, NY + 8, "নিউট্রাল", T_SMALL, NEUT, 700, "end")
 
-    y = note_strip(s, 96 + PH + 26,
-                   "ক্যাপাসিটরের তার নয় — স্টার্টিং কয়েলের দুই প্রান্ত "
-                   "অদলবদল করলেই ঘূর্ণনের দিক উল্টে যায়")
+        _term(s, XC, TOPB, "C", 14, -12)
+        _term(s, XL, BOTB, "R", -14, 26, "end")
+        _term(s, XR, BOTB, "S", 14, 26)
+
+        # তিরটি নিউট্রাল তারের নিচে নিজের ব্যান্ডে — চাপা বাঁক (r=88) রাখায়
+        # চূড়া NY থেকে ২৫ px নিচে থাকে, তাই তারের উপর দিয়ে যায় না।
+        ar = s.arrow_defs(col, f"sp{px}", 13)
+        x1, x2, sw_ = ((px + PW / 2 + 60, px + PW / 2 - 60, 0) if rev
+                       else (px + PW / 2 - 60, px + PW / 2 + 60, 1))
+        s.path(f"M {x1} {AY} A 88 88 0 0 {sw_} {x2} {AY}",
+               col, 3.4, marker=ar)
+        s.text(px + PW / 2, 96 + PH - 26, spin, T_NAME, col, 700, "middle")
+
+    y = note_strip(s, 96 + PH + 22,
+                   "ক্যাপাসিটরের তার নাড়িয়ে লাভ নেই — নিউট্রাল রানিং থেকে "
+                   "স্টার্টিং প্রান্তে সরালেই ঘূর্ণনের দিক উল্টে যায়")
     s.fit(y, 24)
     return s.save(f"{OUT}/d08_direction.svg")
 
@@ -499,7 +657,7 @@ def d10_cap_family():
     s.title("ক্যাপাসিটরের প্রকারভেদ", T_TITLE)
     PW, GAP, PH = 365, 26, 400
     cases = [
-        ("পোলারাইজড — ইলেক্ট্রোলাইটিক", "ph_cap_polar.jpg", RED,
+        ("পোলারাইজড — ইলেক্ট্রোলাইটিক", "ph_cap_elko.jpg", RED,
          "গায়ে সাদা দাগ ও − চিহ্ন থাকে; DC বর্তনীতে চলে"),
         ("নন-পোলারাইজড — সিরামিক", "ph_cap_ceramic.jpg", GREEN,
          "কোনো ধনাত্মক-ঋণাত্মক নেই; দুই দিকেই বসে"),
@@ -520,56 +678,72 @@ def d10_cap_family():
     return s.save(f"{OUT}/d10_cap_family.svg")
 
 
+def _cap_symbol(s, x, y, polarized, label):
+    if polarized:
+        s.path(f"M {x} {y} L {x+38} {y}", SYM, SW)
+        s.line(x + 38, y - 24, x + 38, y + 24, SYM, SW + 1)
+        s.path(f"M {x+60} {y-24} q -18 24 0 48", SYM, SW + 1)
+        s.path(f"M {x+60} {y} L {x+100} {y}", SYM, SW)
+        s.text(x + 28, y - 34, "+", 24, RED, 700, "middle")
+    else:
+        s.path(f"M {x} {y} L {x+38} {y}", SYM, SW)
+        s.line(x + 38, y - 24, x + 38, y + 24, SYM, SW + 1)
+        s.line(x + 60, y - 24, x + 60, y + 24, SYM, SW + 1)
+        s.path(f"M {x+60} {y} L {x+100} {y}", SYM, SW)
+    s.text(x + 118, y + 8, label, T_SMALL, "#39434D", 400)
+
+
 def d11_cap_symbols():
-    """পোলারাইজড ও নন-পোলারাইজড ক্যাপাসিটর চেনা ও তাদের প্রতীক।"""
-    s = SVG(1240, 620)
+    """পোলারাইজড ও নন-পোলারাইজড — আসল ছবিতে চেনার উপায় ও প্রতীক।"""
+    s = SVG(1240, 920)
     s.title("পোলারাইজড ও নন-পোলারাইজড — চেনার উপায়", T_TITLE)
-    PW, PH = 560, 400
+    PW = 1148
 
-    # ── বাঁ প্যানেল : পোলারাইজড
-    panel(s, 46, 96, PW, PH, "পোলারাইজড (ইলেক্ট্রোলাইটিক)", RED)
-    bx, by = 110, 215
-    s.rect(bx, by, 96, 150, "#2B4E7E", "#17325A", 2.6, 10)     # কৌটা
-    s.rect(bx + 62, by + 8, 24, 134, "#DCE6F2", "#9AB0CC", 2, 6)  # সাদা দাগ
-    for k in range(3):
-        s.text(bx + 74, by + 44 + k * 34, "−", 26, "#17325A", 700, "middle")
-    s.path(f"M {bx+24} {by} L {bx+24} {by-42}", "#8D9AA8", 4)   # লম্বা পা
-    s.path(f"M {bx+72} {by+150} L {bx+72} {by+184}", "#8D9AA8", 4)
-    s.text(bx + 24, by - 54, "+", 30, RED, 700, "middle")
-    callout(s, 250, by - 30, "লম্বা পা = ধনাত্মক", bx + 24, by - 24, "start")
-    callout(s, 250, by + 75, "সাদা দাগ ও − চিহ্ন", bx + 86, by + 75, "start")
-    callout(s, 250, by + 177, "খাটো পা = ঋণাত্মক", bx + 72, by + 170, "start")
+    # ── ১ম সারি : পোলারাইজড ─────────────────────────────────────
+    PH1 = 352
+    panel(s, 46, 96, PW, PH1, "পোলারাইজড — ইলেক্ট্রোলাইটিক", RED)
+    EW = 604
+    EH = round(EW * 775 / 2000)
+    EX, EY = 46 + (PW - EW) / 2, 148
+    s.image(EX, EY, EW, EH, f"{IMG}/ph_cap_elko.jpg", 6)
 
-    # প্রতীক
-    sx, sy = 120, 452
-    s.path(f"M {sx} {sy} L {sx+40} {sy}", SYM, SW)
-    s.line(sx + 40, sy - 26, sx + 40, sy + 26, SYM, SW + 1)
-    s.path(f"M {sx+62} {sy-26} q -18 26 0 52", SYM, SW + 1)
-    s.path(f"M {sx+62} {sy} L {sx+104} {sy}", SYM, SW)
-    s.text(sx + 30, sy - 38, "+", 24, RED, 700, "middle")
-    s.text(sx + 130, sy + 8, "পোলারাইজড ক্যাপাসিটরের প্রতীক", T_SMALL,
-           "#39434D", 400)
+    def ea(fx, fy):
+        return EX + fx * EW, EY + fy * EH
 
-    # ── ডান প্যানেল : নন-পোলারাইজড
-    panel(s, 634, 96, PW, PH, "নন-পোলারাইজড (ফ্যানের ক্যাপাসিটর)", GREEN)
-    cx2, cy2 = 800, 200
-    s.rect(cx2, cy2, 150, 130, "#1F2933", "#0E1419", 2.6, 10)
-    s.text(cx2 + 75, cy2 + 58, "3.15 µF", T_NAME, "#FFFFFF", 700, "middle")
-    s.text(cx2 + 75, cy2 + 94, "450 V AC", T_SMALL, "#C9D2DB", 400, "middle")
-    s.path(f"M {cx2+40} {cy2} L {cx2+40} {cy2-46}", "#8D9AA8", 4)
-    s.path(f"M {cx2+110} {cy2} L {cx2+110} {cy2-46}", "#8D9AA8", 4)
-    callout(s, 1150, cy2 + 40, "দুই তার একই রকম", cx2 + 150, cy2 + 40, "end")
-    callout(s, 1150, cy2 + 128, "গায়ে + বা − নেই", cx2 + 150, cy2 + 110, "end")
+    callout(s, EX - 34, EY + 0.20 * EH, "মান 1000 µF · 25 V",
+            *ea(0.115, 0.235), "end", T_SMALL)
+    callout(s, EX - 34, EY + 0.76 * EH, "রুপালি দাগ ও − চিহ্ন",
+            *ea(0.155, 0.760), "end", T_SMALL)
+    callout(s, EX + EW + 34, EY + 0.24 * EH, "লম্বা পা = ধনাত্মক (+)",
+            *ea(0.930, 0.520), "start", T_SMALL)
+    callout(s, EX + EW + 34, EY + 0.86 * EH, "খাটো পা = ঋণাত্মক (−)",
+            *ea(0.860, 0.715), "start", T_SMALL)
+    _cap_symbol(s, 116, 96 + PH1 - 36, True, "পোলারাইজড প্রতীক")
+    s.text(1128, 96 + PH1 - 28, "দাগের পাশের পা-ই ঋণাত্মক", T_SMALL, RED,
+           700, "end")
 
-    sx2, sy2 = 740, 452
-    s.path(f"M {sx2} {sy2} L {sx2+40} {sy2}", SYM, SW)
-    s.line(sx2 + 40, sy2 - 26, sx2 + 40, sy2 + 26, SYM, SW + 1)
-    s.line(sx2 + 62, sy2 - 26, sx2 + 62, sy2 + 26, SYM, SW + 1)
-    s.path(f"M {sx2+62} {sy2} L {sx2+104} {sy2}", SYM, SW)
-    s.text(sx2 + 150, sy2 + 8, "নন-পোলারাইজড ক্যাপাসিটরের প্রতীক", T_SMALL,
-           "#39434D", 400)
+    # ── ২য় সারি : নন-পোলারাইজড ──────────────────────────────────
+    TY, PH2 = 96 + PH1 + 18, 340
+    panel(s, 46, TY, PW, PH2, "নন-পোলারাইজড — ফ্যানের ক্যাপাসিটর", GREEN)
+    FW = 212
+    FH = round(FW * 924 / 761)
+    FX, FY = 46 + (PW - FW) / 2, TY + 50
+    s.image(FX, FY, FW, FH, f"{IMG}/ph_cap_can_face.jpg", 6)
 
-    y = note_strip(s, 96 + PH + 26,
+    def fa(fx, fy):
+        return FX + fx * FW, FY + fy * FH
+
+    callout(s, FX - 34, FY + 0.16 * FH, "দুই টার্মিনাল একই রকম",
+            *fa(0.31, 0.16), "end", T_SMALL)
+    callout(s, FX - 34, FY + 0.86 * FH, "গায়ে + বা − কিছু নেই",
+            *fa(0.16, 0.940), "end", T_SMALL)
+    callout(s, FX + FW + 34, FY + 0.72 * FH, "350V.AC — AC লাইনের জন্য",
+            *fa(0.77, 0.745), "start", T_SMALL)
+    _cap_symbol(s, 116, TY + PH2 - 44, False, "নন-পোলারাইজড প্রতীক")
+    s.text(1128, TY + PH2 - 36, "দুই দিকেই বসানো যায়", T_SMALL, GREEN,
+           700, "end")
+
+    y = note_strip(s, TY + PH2 + 22,
                    "AC লাইনে ভোল্টেজের দিক প্রতি অর্ধচক্রে উল্টে যায় — তাই "
                    "সেখানে পোলারিটিহীন ক্যাপাসিটর ছাড়া চলে না")
     s.fit(y, 24)

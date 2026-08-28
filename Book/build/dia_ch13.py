@@ -21,7 +21,7 @@ T_TITLE = 34
 T_NODE = 28
 T_NAME = 24.5
 T_BODY = 21.5
-T_SMALL = 20
+T_SMALL = 23
 T_CALL = 24
 LH = 1.42
 
@@ -303,17 +303,14 @@ def d05_inter_inside():
         panel(s, px, 96, PW, PH, head, col)
         X, Y, WD, SPR = px + 130, 290, 200, 66
         inter_sym(s, X, Y, crossed, WD, SPR)
-        for dy, tag in ((-SPR, "১"), (SPR, "২")):
+        for dy, left, right in ((-SPR, "A", "C"), (SPR, "B", "D")):
             s.path(f"M {X-84} {Y+dy} L {X} {Y+dy}", STRAP, SW)
             s.path(f"M {X+WD} {Y+dy} L {X+WD+84} {Y+dy}", STRAP, SW)
-        s.text(px + 40, Y - SPR - 24, "বাঁ ১", T_SMALL, STEEL, 700)
-        s.text(px + 40, Y + SPR - 24, "বাঁ ২", T_SMALL, STEEL, 700)
-        s.text(px + PW - 40, Y - SPR - 24, "ডান ১", T_SMALL, STEEL, 700, "end")
-        s.text(px + PW - 40, Y + SPR - 24, "ডান ২", T_SMALL, STEEL, 700, "end")
+            s.badge(X - 104, Y + dy, left, 21, STEEL, "#FFFFFF", T_NAME)
+            s.badge(X + WD + 104, Y + dy, right, 21, STEEL, "#FFFFFF", T_NAME)
         s.text(px + PW / 2, 96 + PH - 40,
-               "বাঁ ১ → ডান ১ · বাঁ ২ → ডান ২" if not crossed
-               else "বাঁ ১ → ডান ২ · বাঁ ২ → ডান ১",
-               T_NAME, col, 700, "middle")
+               "A → C · B → D" if not crossed else "A → D · B → C",
+               T_TITLE, col, 700, "middle")
 
     y = note_strip(s, 96 + PH + 26,
                    "ইন্টারমিডিয়েট সুইচ কখনো বর্তনী কাটে না — কেবল দুই "
@@ -422,56 +419,109 @@ def d08_tunnel_seq():
     return s.save(f"{OUT}/d08_tunnel_seq.svg")
 
 
+SWLIVE = "#C2410C"
+EARTH = "#1B6E47"
+WALL = "#DCE3EA"
+WALL_S = "#98A5B2"
+
+
+def _board(s, x, y, w, h, col):
+    """দেয়ালে বসানো সুইচ বোর্ড — বাক্স ও তার ভেতরের সুইচ-প্লেট।"""
+    s.rect(x, y, w, h, "#FFFFFF", col, 3.2, 10)
+    s.rect(x + w * 0.24, y + h * 0.20, w * 0.52, h * 0.60,
+           "#E7ECF1", "#8D9AA8", 2.4, 6)
+
+
+def wire_tag(s, tx1, ty1, tx2, ty2, bx, by, n):
+    """তারের গোছার আড়াআড়ি দাগ ও পাশে সংখ্যা — কয়টি তার তা গুনে দেখানোর চিহ্ন।"""
+    s.path(f"M {tx1} {ty1} L {tx2} {ty2}", "#6B7784", 2.8)
+    s.circle(bx, by, 19, "#FFFFFF", NAVY, 2.6)
+    s.text(bx, by + T_NAME * 0.35, n, T_NAME, NAVY, 700, "middle")
+
+
+def _wire_key(s, y, items, x=46, w=1148):
+    """তারের রঙের চাবি — এক লাইনে, প্রতিটি এক শব্দ।"""
+    s.rect(x, y, w, 62, "#F7FAFC", LINE, 1.8, 12)
+    widths = [44 + 12 + tw(t, T_SMALL, 700) for _c, t in items]
+    gap = (w - sum(widths)) / (len(items) + 1)
+    cx = x + gap
+    for (col, t), wd in zip(items, widths):
+        s.path(f"M {cx} {y+31} L {cx+44} {y+31}", col, SW + 1.2)
+        s.text(cx + 56, y + 31 + T_SMALL * 0.35, t, T_SMALL, NAVY, 700)
+        cx += wd + gap
+    return y + 62
+
+
 def d09_stair_layout():
-    """সিঁড়ির বাস্তব লে-আউট ও তারের সংখ্যা।"""
-    s = SVG(1240, 800)
+    """সিঁড়ির বাস্তব লে-আউট — কাটা-ছবিতে বোর্ডের অবস্থান ও তারের সংখ্যা।"""
+    s = SVG(1240, 900)
     s.title("সিঁড়ির ওয়্যারিং — বোর্ড কোথায়, তার কয়টি", T_TITLE)
 
-    SLAB = 330                       # দুই তলার মাঝের ছাদ
-    s.rect(120, SLAB, 1000, 20, "#DDE4EB", "#A9B4C0", 2, 3)
-    s.text(1110, 316, "উপরতলা", T_SMALL, GREY, 700, "end")
-    s.text(1110, 386, "নিচতলা", T_SMALL, GREY, 700, "end")
+    # ── ঘরের কাটা-ছবি ───────────────────────────────────────────────
+    X0, X1, TH = 96, 1152, 20
+    ROOF, GND, SLAB = 108, 618, 360          # ছাদ · নিচতলার মেঝে · দোতলার মেঝে
+    FT = 62                                  # মেঝের পুরুত্ব — ভেতরে কন্ডুইট
+    s.rect(X0, ROOF, X1 - X0, TH, WALL, WALL_S, 2, 2)
+    s.rect(X0, GND, X1 - X0, FT, WALL, WALL_S, 2, 2)
+    s.rect(X0, ROOF, 22, GND - ROOF + FT, WALL, WALL_S, 2, 2)
+    s.rect(X1 - 22, ROOF, 22, GND - ROOF + FT, WALL, WALL_S, 2, 2)
+    s.rect(700, SLAB, X1 - 22 - 700, TH, WALL, WALL_S, 2, 2)
 
-    # সিঁড়ির ধাপ — নিচ থেকে উপরে
-    for k in range(7):
-        s.rect(620 + 34 * k, 570 - 34 * (k + 1), 34, 34, "#EEF2F6",
-               "#B7C2CE", 1.8, 0)
+    # সিঁড়ির ফ্লাইট — নিচতলার মেঝে থেকে দোতলার স্ল্যাব পর্যন্ত
+    SX0, SX1, N = 440, 700, 7
+    gx, gy = (SX1 - SX0) / N, (GND - SLAB) / N
+    pts, px_, py_ = [(SX0, GND)], SX0, GND
+    for _ in range(N):
+        py_ -= gy
+        pts.append((px_, py_))
+        px_ += gx
+        pts.append((px_, py_))
+    pts += [(SX1, SLAB + 46)]
+    s.poly(pts, "#E3E9EF", "#8D9AA8", 2.4)
 
-    # ডিস্ট্রিবিউশন বোর্ড
-    s.rect(120, 450, 92, 120, "#FFFFFF", NAVY, 3, 10)
-    s.text(166, 520, "DB", T_CALL, NAVY, 700, "middle")
+    s.text(716, 340, "উপরতলা", T_SMALL, GREY, 700)
+    s.text(716, 440, "নিচতলা", T_SMALL, GREY, 700)
 
-    # দুই সুইচ বোর্ড
-    for bx, by, lab, col in (
-            (268, 450, "নিচতলার বোর্ড — টু-ওয়ে সুইচ ১", STEEL),
-            (880, 170, "উপরতলার বোর্ড — টু-ওয়ে সুইচ ২", GREEN)):
-        s.rect(bx, by, 100, 120, "#FFFFFF", col, 3, 10)
-        s.rect(bx + 20, by + 26, 60, 68, "#E7ECF1", "#8D9AA8", 2.2, 6)
-        for j, ln in enumerate(wrap(lab, 200, T_SMALL, 700)):
-            s.text(bx + 50, by - 78 + j * T_SMALL * 1.32, ln, T_SMALL, col,
-                   700, "middle")
+    # ── যন্ত্রপাতি ───────────────────────────────────────────────────
+    s.rect(118, 430, 92, 122, "#FFFFFF", NAVY, 3.2, 10)
+    s.text(164, 500, "DB", T_CALL, NAVY, 700, "middle")
 
-    # সিঁড়ির বাতি
-    lamp_sym(s, 620, 230, 34, True)
-    s.text(620, 170, "সিঁড়ির বাতি", T_CALL, NAVY, 700, "middle")
+    _board(s, 310, 452, 96, 108, STEEL)
+    s.text(358, 438, "সুইচ বোর্ড ১", T_NAME, STEEL, 700, "middle")
 
-    # ফেজ — DB থেকে নিচতলার বোর্ডে
-    s.path("M 212 500 L 268 500", LIVE, SW)
-    s.text(240, 478, "ফেজ", T_SMALL, LIVE, 700, "middle")
+    _board(s, 1034, 214, 96, 104, GREEN)
+    s.text(1020, 274, "সুইচ বোর্ড ২", T_NAME, GREEN, 700, "end")
 
-    # স্ট্র্যাপার — দুই বোর্ডের মাঝে
-    s.path("M 318 570 L 318 610 L 930 610 L 930 290", STRAP, SW + 1)
-    s.text(620, 648, "২টি স্ট্র্যাপার তার", T_CALL, STRAP, 700, "middle")
+    LX, LY, LR = 600, 240, 36
+    s.path(f"M {LX} {ROOF+TH} L {LX} {LY-LR}", "#98A5B2", 5)
+    lamp_sym(s, LX, LY, LR, True)
+    s.text(LX, LY + LR + 44, "সিঁড়ির বাতি", T_NAME, NAVY, 700, "middle")
 
-    # সুইচ করা ফেজ — উপরতলার বোর্ড থেকে বাতিতে
-    s.path("M 880 230 L 654 230", SYM, SW)
-    s.text(768, 202, "সুইচ করা ফেজ — ১ তার", T_SMALL, NAVY, 700, "middle")
+    # ── ১. DB → নিচতলার বোর্ড : ফেজ ও আর্থ ─────────────────────────
+    s.path("M 210 478 L 310 478", LIVE, SW)
+    s.path("M 210 502 L 310 502", EARTH, SW)
+    wire_tag(s, 246, 516, 274, 464, 260, 422, "২")
 
-    # নিউট্রাল — DB থেকে সরাসরি বাতিতে, কোনো সুইচ ছোঁয় না
-    s.path("M 150 450 L 150 230 L 586 230", NEUT, SW)
-    s.text(300, 208, "নিউট্রাল", T_SMALL, NEUT, 700, "middle")
+    # ── ২. নিচতলার বোর্ড → উপরতলার বোর্ড : দুই স্ট্র্যাপার ও আর্থ ──
+    for d, col in ((18, STRAP), (0, STRAP), (-18, EARTH)):
+        s.path(f"M {358+d} 560 L {358+d} {650-d} L {1082-d} {650-d} "
+               f"L {1082-d} 318", col, SW)
+    wire_tag(s, 606, 676, 634, 624, 620, 580, "৩")
 
-    y = note_strip(s, 682,
+    # ── ৩. উপরতলার বোর্ড → বাতি : সুইচ করা ফেজ ─────────────────────
+    s.path("M 1082 214 L 1082 186 L 628 186 L 628 218", SWLIVE, SW)
+    wire_tag(s, 926, 198, 954, 174, 940, 146, "১")
+    s.text(830, 172, "সুইচ করা ফেজ", T_SMALL, SWLIVE, 700, "end")
+
+    # ── ৪. DB → বাতি : নিউট্রাল, কোনো সুইচ ছোঁয় না ─────────────────
+    s.path("M 146 430 L 146 152 L 572 152 L 572 218", NEUT, SW)
+    wire_tag(s, 132, 394, 160, 366, 196, 380, "১")
+    s.text(224, 388, "নিউট্রাল", T_SMALL, NEUT, 700)
+
+    y = _wire_key(s, 708, [(LIVE, "ফেজ"), (NEUT, "নিউট্রাল"),
+                           (STRAP, "স্ট্র্যাপার"), (SWLIVE, "সুইচ করা ফেজ"),
+                           (EARTH, "আর্থ")])
+    y = note_strip(s, y + 22,
                    "দুই বোর্ডের মাঝে অন্তত ৩ তার টানতে হয় — "
                    "১টি নয়, এটাই নতুনদের সবচেয়ে বড় ভুল",
                    fill=AMBERBG, stroke=AMBER, tcolor="#7A5200")

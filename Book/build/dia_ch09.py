@@ -92,11 +92,15 @@ def face_indicator(s, cx, cy):
 
 
 def face_socket2(s, cx, cy):
-    """২-পিন সকেটের মুখ — দুটি গোল ছিদ্র।"""
-    s.rect(cx - 30, cy - 44, 60, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
-    for dx in (-13, 13):
-        s.circle(cx + dx, cy - 12, 8, "#3B4550")
-        s.circle(cx + dx, cy + 20, 8, "#3B4550")
+    """২-পিন সকেটের মুখ — খাড়া মডিউলে উপরে-নিচে দুটি ছিদ্র।
+
+    বিন্যাসটা চিত্র ৯.৪-এর সোর্স মডিউলের হুবহু — বাজারের পিয়ানো বোর্ডে
+    সকেট এভাবেই বসে, ছিদ্র দুটো পাশাপাশি নয়, একটার নিচে আরেকটা।
+    """
+    s.rect(cx - 31, cy - 44, 62, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
+    s.rect(cx - 22, cy - 36, 44, 72, "#FAFBFC", "#C3CEDA", 1.6, 5)
+    for dy in (-17, 17):
+        s.circle(cx, cy + dy, 9.5, "#3B4550")
 
 
 def face_socket3(s, cx, cy):
@@ -247,11 +251,11 @@ def d03_pins():
     s.text(cx + 19, 196, "N", T_NAME, BLUE, 700, "middle")
 
     sx = 46 + PW - 130
-    s.rect(sx - 52, 244, 104, 128, "#FFFFFF", "#9AA6B2", 2.4, 10)
-    for dx in (-22, 22):
-        s.circle(sx + dx, 288, 11, "#3B4550")
-        s.circle(sx + dx, 332, 11, "#3B4550")
-    s.text(sx, 400, "সকেট", T_BODY, NAVY, 700, "middle")
+    s.rect(sx - 45, 236, 90, 144, "#FFFFFF", "#9AA6B2", 2.4, 10)
+    s.rect(sx - 32, 250, 64, 116, "#FAFBFC", "#C3CEDA", 1.8, 7)
+    for dy in (-28, 28):
+        s.circle(sx, 308 + dy, 13, "#3B4550")
+    s.text(sx, 412, "সকেট", T_BODY, NAVY, 700, "middle")
 
     s.text(46 + PW / 2, 460,
            "কেবল ফেজ ও নিউট্রাল — আর্থ নেই", T_BODY, RED, 700, "middle")

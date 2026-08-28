@@ -47,19 +47,33 @@ def note_strip(s, y, text, x=46, w=1148, fill="#EAF2FA", stroke=STEEL,
 
 
 def callout(s, x, y, text, tx, ty, anchor="end", size=T_CALL, col=NAVY):
-    """লেবেল ও তার লিডার লাইন — লেখা সবসময় ছবির বাইরে থাকে।"""
+    """লেবেল ও তার লিডার — লিডার কখনও নিজের লেখার উপর দিয়ে যায় না।"""
     s.text(x, y + size * 0.32, text, size, col, 700, anchor)
-    x0 = x + 10 if anchor == "end" else x - 10
-    s.path(f"M {x0} {y} L {tx} {ty}", STEEL, 2.2)
+    w = tw(text, size, 700)
+    if anchor == "end":
+        x1, x2 = x - w, x
+    elif anchor == "middle":
+        x1, x2 = x - w / 2, x + w / 2
+    else:
+        x1, x2 = x, x + w
+    if tx > x2:
+        p0 = (x2 + 10, y)
+    elif tx < x1:
+        p0 = (x1 - 10, y)
+    else:                                   # লক্ষ্য লেখার নিচে বা উপরে
+        p0 = (tx, y - size * 0.8 if ty < y else y + size * 0.7)
+    s.path(f"M {p0[0]} {p0[1]} L {tx} {ty}", STEEL, 2.2)
     s.circle(tx, ty, 5, STEEL)
 
 
 # ── circuit symbols ─────────────────────────────────────────────────────
 def ac_source(s, cx, cy, r=40):
+    """AC সোর্স — সাইন তরঙ্গ বৃত্তের ভেতরে, কেন্দ্র বরাবর প্রতিসম।"""
     s.circle(cx, cy, r, "#FFFFFF", SYM, SW)
-    k = r * 0.55
-    s.path(f"M {cx-2*k:.1f} {cy:.1f} q {k/2:.1f} {-k*1.1:.1f} {k:.1f} 0 "
-           f"q {k/2:.1f} {k*1.1:.1f} {k:.1f} 0", SYM, SW)
+    w = r * 0.60               # প্রতি অর্ধ-তরঙ্গের প্রস্থ
+    a = r * 0.74               # কন্ট্রোল-পয়েন্ট; চূড়া বসে এর অর্ধেকে
+    s.path(f"M {cx-w:.1f} {cy:.1f} q {w/2:.1f} {-a:.1f} {w:.1f} 0 "
+           f"q {w/2:.1f} {a:.1f} {w:.1f} 0", SYM, SW)
     return r
 
 
@@ -67,10 +81,11 @@ def lamp(s, cx, cy, r=34, state="off", col=SYM):
     """বাতির প্রতীক — নিভন্ত, মৃদু বা পূর্ণ উজ্জ্বল।"""
     fill = {"off": "#FFFFFF", "dim": "#FFEDB3", "bright": "#FFC400"}[state]
     if state == "bright":
-        for i in range(8):
-            a = math.radians(i * 45 + 22.5)
-            s.line(cx + (r + 11) * math.cos(a), cy + (r + 11) * math.sin(a),
-                   cx + (r + 27) * math.cos(a), cy + (r + 27) * math.sin(a),
+        # রশ্মি অনুভূমিক অক্ষ থেকে সরিয়ে রাখা — তার ওই পথেই বাতিতে ঢোকে
+        for deg in (30, 60, 120, 150, 210, 240, 300, 330):
+            a = math.radians(deg)
+            s.line(cx + (r + 9) * math.cos(a), cy + (r + 9) * math.sin(a),
+                   cx + (r + 22) * math.cos(a), cy + (r + 22) * math.sin(a),
                    "#F0A000", 4.2)
     s.circle(cx, cy, r, fill, col, SW)
     k = r * 0.70
@@ -105,14 +120,22 @@ def module_plate(s, cx, y, w=118, h=190):
 
 
 def face_fuse(s, cx, cy):
+    """ক্যারিয়ারে বসানো কার্টিজ ফিউজ — দুই প্রান্তে ধাতব ক্যাপ, মাঝে এলিমেন্ট।"""
     s.rect(cx - 26, cy - 44, 52, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
-    s.rect(cx - 17, cy - 26, 34, 52, "#FFF3C4", "#B08C00", 2, 4)
-    s.path(f"M {cx} {cy-26} L {cx} {cy+26}", "#8A6D00", 3)
+    s.rect(cx - 22, cy - 15, 44, 30, "#FFF3C4", "#B08C00", 2, 4)
+    for dx in (-22, 12):
+        s.rect(cx + dx, cy - 15, 10, 30, METAL, "#6B7684", 1.6, 2)
+    s.path(f"M {cx-12} {cy} L {cx+12} {cy}", "#8A6D00", 2.4)
+    s.path(f"M {cx} {cy-44} L {cx} {cy-15}", "#B0BAC5", 2)
+    s.path(f"M {cx} {cy+15} L {cx} {cy+44}", "#B0BAC5", 2)
 
 
 def face_indicator(s, cx, cy):
+    """নিয়ন ইন্ডিকেটর — বেজেলের মাঝে ছোট গোল লাল লেন্স।"""
     s.rect(cx - 26, cy - 44, 52, 88, "#FFFFFF", "#9AA6B2", 2.2, 7)
-    s.rect(cx - 18, cy - 34, 36, 68, "#E8483A", "#9C2B20", 2, 5)
+    s.circle(cx, cy, 19, "#F0F3F6", "#9AA6B2", 2)
+    s.circle(cx, cy, 12, "#E8483A", "#9C2B20", 2)
+    s.circle(cx - 4, cy - 4, 3.4, "#F9BDB6")
 
 
 def face_switch(s, cx, cy, on=True):
@@ -163,10 +186,10 @@ def _sheet(fname, title, left_img, right_img, note, h=560):
 # ═══════════════════════════════════════════════════════════════════════
 def d01_parts():
     """সিরিজ বোর্ডের গঠন ও অংশ পরিচিতি।"""
-    s = SVG(1240, 900)
+    s = SVG(1240, 760)
     s.title("সিরিজ বোর্ডের গঠন ও অংশ পরিচিতি", T_TITLE)
 
-    BX, BY, BW, BH = 250, 250, 930, 262
+    BX, BY, BW, BH = 310, 250, 850, 262
     s.rect(BX, BY, BW, BH, "#E7ECF1", "#7C8794", 3, 18)
     s.rect(BX + 14, BY + 14, BW - 28, BH - 28, "#F7FAFC", "#B0BAC5", 1.8, 12)
 
@@ -177,22 +200,22 @@ def d01_parts():
     cy = BY + BH / 2
     for i, (name, draw) in enumerate(mods):
         cx = BX + 40 + step * (i + 0.5)
-        module_plate(s, cx, BY + 38, 122, BH - 76)
+        module_plate(s, cx, BY + 38, 118, BH - 76)
         draw(s, cx, cy)
         ly = 148 if i % 2 == 0 else 204
         s.text(cx, ly, name, T_CALL, NAVY, 700, "middle")
         s.path(f"M {cx} {ly+10} L {cx} {BY+32}", STEEL, 2.2)
         s.circle(cx, BY + 32, 5, STEEL)
 
-    # সরবরাহ কর্ড ও ২-পিন প্লাগ
-    s.path(f"M {BX} {cy} L 150 {cy} L 150 646 L 232 646", "#3B4550", 9)
-    plug2(s, 274, 646, 0.9)
+    # দেয়াল-সকেটে যাওয়া ২-পিন প্লাগ ও ফ্লেক্সিবল কর্ড
+    s.path(f"M {BX} {cy} C 268 {cy} 240 400 214 428", "#3B4550", 9, "none")
+    plug2(s, 172, 428, 0.9)
 
-    callout(s, 486, 560, "বোর্ড বডি (অগ্নিরোধী PVC)", BX + BW / 2, BY + BH, "start")
-    callout(s, 430, 612, "ফ্লেক্সিবল কর্ড", 160, 612, "start")
-    callout(s, 430, 690, "২-পিন প্লাগ", 322, 668, "start")
+    callout(s, 172, 540, "২-পিন প্লাগ", 172, 462, "middle")
+    callout(s, 330, 604, "ফ্লেক্সিবল কর্ড", 256, 412, "middle")
+    callout(s, 760, 604, "বোর্ড বডি (অগ্নিরোধী PVC)", 760, BY + BH, "middle")
 
-    y = note_strip(s, 736,
+    y = note_strip(s, 654,
                    "ফিউজ, সুইচ, টেস্ট বাতি ও সকেট — সবই একই লাইনে সিরিজে; "
                    "কেবল ইন্ডিকেটর বাতি ফেজ ও নিউট্রালের মাঝে প্যারালালে")
     s.fit(y, 24)
@@ -231,8 +254,8 @@ def d02_why():
             s.text(PX + 228, 324, "কারেন্ট বয়ে যায়", T_SMALL, RED, 700, "middle")
         else:
             lamp(s, PX + 262, TOP, 34, "bright")
-            s.path(f"M {L} {TOP} L {PX+262-61} {TOP}", LIVE, SW)
-            s.path(f"M {PX+262+61} {TOP} L {R} {TOP}", LIVE, SW)
+            s.path(f"M {L} {TOP} L {PX+262-36} {TOP}", LIVE, SW)
+            s.path(f"M {PX+262+36} {TOP} L {R} {TOP}", LIVE, SW)
             s.text(PX + 228, 296, "সিরিজে বসানো", T_SMALL, GREEN, 700, "middle")
             s.text(PX + 228, 324, "টেস্ট বাতি", T_SMALL, GREEN, 700, "middle")
 
@@ -263,7 +286,7 @@ def d03_circuit():
 
 def d04_states():
     """সকেটে যন্ত্র লাগানোর পর টেস্ট বাতির তিন অবস্থা ও তার অর্থ।"""
-    s = SVG(1240, 640)
+    s = SVG(1240, 648)
     s.title("টেস্ট বাতির তিন অবস্থা ও তার অর্থ", T_TITLE)
 
     PW, GAP = 365, 26
@@ -276,33 +299,61 @@ def d04_states():
         ("বাতি পূর্ণ উজ্জ্বল জ্বলে", "bright", RED, REDBG,
          "শর্ট সার্কিট", "ফেজ ও নিউট্রাল কোথাও লেগে গেছে"),
     ]
+    TOP, SCY, BOT = 214, 280, 350
     for i, (head, state, col, bg, verdict, why) in enumerate(cases):
         PX = x0 + i * (PW + GAP)
         panel(s, PX, 96, PW, 434, head, col)
 
-        L, R, TOP, BOT = PX + 74, PX + 292, 218, 344
-        scy = 281
-        ac_source(s, L, scy, 32)
-        s.path(f"M {L} {TOP} L {L} {scy-32}", LIVE, SW)
-        s.path(f"M {L} {scy+32} L {L} {BOT}", NEUT, SW)
-        s.path(f"M {L} {BOT} L {R} {BOT}", NEUT, SW)
-        lamp(s, PX + 183, TOP, 30, state)
-        s.path(f"M {L} {TOP} L {PX+183-(57 if state=='bright' else 32)} {TOP}",
-               LIVE, SW)
-        s.path(f"M {PX+183+(57 if state=='bright' else 32)} {TOP} L {R} {TOP}",
-               LIVE, SW)
-        socket_sym(s, R, scy, 30)
-        s.path(f"M {R} {TOP} L {R} {scy-30}", LIVE, SW)
-        s.path(f"M {R} {scy+30} L {R} {BOT}", NEUT, SW)
-        s.text(R, 384, "সকেট", T_SMALL, GREY, 600, "middle")
+        L, R = PX + 62, PX + 262
+        lx, lr = PX + 152, 27
+        bw, bh = 112, 86
+        ty, by = SCY - bh / 2, SCY + bh / 2
 
-        s.rect(PX + 18, 400, PW - 36, 116, bg, col, 2, 11)
-        s.text(PX + PW / 2, 436, verdict, T_NAME, col, 700, "middle")
-        for j, ln in enumerate(wrap(why, PW - 72, T_SMALL, 400)):
-            s.text(PX + PW / 2, 470 + j * T_SMALL * 1.34, ln, T_SMALL,
+        # সরবরাহ ও লুপ
+        ac_source(s, L, SCY, 26)
+        s.path(f"M {L} {TOP} L {L} {SCY-26}", LIVE, SW)
+        s.path(f"M {L} {SCY+26} L {L} {BOT}", NEUT, SW)
+        s.path(f"M {L} {BOT} L {R} {BOT}", NEUT, SW)
+
+        # টেস্ট বাতি ফেজ তারে সিরিজে
+        lamp(s, lx, TOP, lr, state)
+        s.path(f"M {L} {TOP} L {lx-lr-2} {TOP}", LIVE, SW)
+        s.path(f"M {lx+lr+2} {TOP} L {R} {TOP}", LIVE, SW)
+
+        # পরীক্ষাধীন যন্ত্র — ভেতরের প্রতীকই অবস্থাটা বলে
+        s.rect(R - bw / 2, ty, bw, bh, "#FFFFFF", NAVY, 2.4, 10)
+        s.path(f"M {R} {TOP} L {R} {ty}", LIVE, SW)
+        s.path(f"M {R} {by} L {R} {BOT}", NEUT, SW)
+        if state == "off":
+            s.path(f"M {R} {ty} L {R} {SCY-16}", LIVE, SW)
+            s.path(f"M {R} {SCY+16} L {R} {by}", NEUT, SW)
+            s.circle(R, SCY - 16, 5.5, RED)
+            s.circle(R, SCY + 16, 5.5, RED)
+        else:
+            s.path(f"M {R} {ty} L {R} {SCY-22}", LIVE, SW)
+            s.path(f"M {R} {SCY+22} L {R} {by}", NEUT, SW)
+            s.rect(R - 16, SCY - 22, 32, 44, "#FFFFFF", NAVY, 2.8, 3)
+            if state == "bright":
+                bx, y1, y2 = R + 34, ty + 13, by - 13
+                s.path(f"M {R} {y1} L {bx} {y1} L {bx} {y2} L {R} {y2}",
+                       LIVE, SW + 0.8, "none")
+                s.circle(R, y1, 5.5, LIVE)
+                s.circle(R, y2, 5.5, LIVE)
+
+        s.text(PX + 24, 386, "AC সরবরাহ", T_SMALL, GREY, 600, "start")
+        s.text(PX + PW - 24, 386, "পরীক্ষাধীন যন্ত্র", T_SMALL, GREY, 600,
+               "end")
+
+        # রায়ের ঘর
+        s.rect(PX + 18, 402, PW - 36, 116, bg, col, 2, 11)
+        lines = wrap(why, PW - 44, T_SMALL, 400)
+        vy = 442 if len(lines) == 1 else 434
+        s.text(PX + PW / 2, vy, verdict, T_NAME, col, 700, "middle")
+        for j, ln in enumerate(lines):
+            s.text(PX + PW / 2, vy + 34 + j * 30, ln, T_SMALL,
                    "#39434D", 400, "middle")
 
-    y = note_strip(s, 562,
+    y = note_strip(s, 564,
                    "টেস্ট বাতির ক্ষমতা লোডের চেয়ে কম হলে বাতি বেশি জ্বলে — "
                    "তাই পরীক্ষার আগে উপযুক্ত ওয়াটের বাতি বেছে নিতে হয়")
     s.fit(y, 24)

@@ -1,0 +1,32 @@
+{
+  "ph_bell_gong": {
+    "title": "Звонок электрический советский",
+    "author": "Monoklon",
+    "licence": "CC BY 3.0"
+  },
+  "ph_bell_open": {
+    "title": "DoorBell 001",
+    "author": "HNH",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_single": {
+    "title": "Block Instruments — Tyer's single stroke block bell",
+    "author": "Sir Ross BA",
+    "licence": "CC BY 3.0"
+  },
+  "ph_buzzer": {
+    "title": "KS-3206 6VDC Electronic Buzzer",
+    "author": "Nvtj",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_chime": {
+    "title": "Wireless Call Bell",
+    "author": "Dilshan Jayakody",
+    "licence": "CC BY-SA 2.0"
+  },
+  "ph_alarm": {
+    "title": "Kobishi Electric MSB-63A fire alarm bell",
+    "author": "BrokenSphere",
+    "licence": "CC BY-SA 3.0"
+  }
+}

@@ -1,0 +1,57 @@
+{
+  "ph_print": {
+    "title": "600 V CV ক্যাবল, 5.5 বর্গমিমি (গায়ের লেখা)",
+    "author": "Chatama",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_print_face": {
+    "title": "600 V CV ক্যাবল, 5.5 বর্গমিমি (লেখার ক্লোজ-আপ)",
+    "author": "Chatama",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_xsec": {
+    "title": "Cross section of an older US power cable",
+    "author": "TubeTimeUS",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_sheath": {
+    "title": "Installation Cable MMJ 3×2.5S",
+    "author": "Santeri Viinamäki",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_solid": {
+    "title": "Installation Cable MMJ 3×2.5S (কন্ডাক্টর)",
+    "author": "Santeri Viinamäki",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_te": {
+    "title": "'Twin and Earth' cable, BS 6004, 6 বর্গমিমি",
+    "author": "Alistair1978",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_flex": {
+    "title": "Kupferlitze (ফ্লেক্সিবল কন্ডাক্টর)",
+    "author": "Stefan Riepl (Quark48)",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_sector": {
+    "title": "অ্যালুমিনিয়াম ৪-কোর ক্যাবল, সেক্টর কন্ডাক্টর",
+    "author": "Hannes Grobe",
+    "licence": "CC BY 3.0"
+  },
+  "ph_colors": {
+    "title": "Europe color codes (কোরের রঙ)",
+    "author": "Dmitry G",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_lug": {
+    "title": "70 বর্গমিমি M10 ক্যাবল লাগ",
+    "author": "Dmitry G",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_burn": {
+    "title": "Burnt wire ferrule (পোড়া কন্ডাক্টর)",
+    "author": "Phiarc",
+    "licence": "CC BY-SA 4.0"
+  }
+}

@@ -71,9 +71,9 @@ def do_slides():
 
 # নাম → (URL, ক্রপ-বক্স ভগ্নাংশে বা None, সর্বোচ্চ চওড়া)
 PHOTOS = {
-    "ph_fan": ("https://upload.wikimedia.org/wikipedia/commons/d/d7/"
-               "An_Old_model_three_blade_ceiling_fan.JPG",
-               (0.04, 0.05, 0.97, 0.95), 1700),
+    # সিলিং ফ্যানের পরিচিতি-ছবি — পরিষ্কার, তিন ব্লেডের দেশীয় ফ্যান
+    "ph_fan": ("https://upload.wikimedia.org/wikipedia/commons/"
+               "c/c4/Fan_2024.jpg", (0.185, 0.12, 0.955, 0.95), 1800),
     "ph_cap_run": ("https://upload.wikimedia.org/wikipedia/commons/c/ca/"
                    "Ceiling_fan_capacitor.png", (0.00, 0.00, 0.50, 1.00), 1500),
     "ph_cap_run2": ("https://upload.wikimedia.org/wikipedia/commons/c/ca/"
@@ -124,6 +124,51 @@ def do_photos():
         print("✓", name, im.size)
 
 
+# ── উৎস ৩ — প্রস্তুতকারক/বিক্রেতার পণ্য-আলোকচিত্র ────────────────────
+# কমন্সে ফ্যানের ২-তারের রান ক্যাপাসিটরের কোনো ছবি নেই (সব ক-টি
+# ক্যাটাগরি ও অনুসন্ধান দেখা হয়েছে), অথচ অধ্যায়ের মূল কাজই গায়ের
+# লেখা পড়া।  তাই এই তিনটি ছবি প্রস্তুতকারকের পণ্য-আলোকচিত্র থেকে
+# নেওয়া — ব্যবহারকারীর নির্দেশে (২০২৬-০৮-২৮)।
+WEB = {
+    # ফ্যানের আসল রান ক্যাপাসিটর — CBB61, দুই তার, 4 µF 450 V.AC
+    "ph_cap_fan": ("https://image.made-in-china.com/2f0j00eZwqzyfgMDcn/"
+                   "Cbb61-3-5UF-4UF-450VAC-Electrolyte-Capacitor-Fan-"
+                   "Capacitors.jpg", (0.10, 0.02, 0.93, 0.95), 1500),
+    # একই ছবির গায়ের-লেখা অংশ — কাছ থেকে, ছাপা পড়ার জন্য
+    "ph_cap_fan_face": ("https://image.made-in-china.com/2f0j00eZwqzyfgMDcn/"
+                        "Cbb61-3-5UF-4UF-450VAC-Electrolyte-Capacitor-Fan-"
+                        "Capacitors.jpg", (0.165, 0.27, 0.905, 0.84), 1800),
+    # ফ্যানের আসল রান ক্যাপাসিটর — গোল ধূসর কৌটা, দুই স্পেড টার্মিনাল
+    # (বাংলাদেশের সিলিং ফ্যানে এটিই সবচেয়ে বেশি বসে)
+    "ph_cap_can": ("https://image.made-in-china.com/2f0j00JOKidIBjKVpn/"
+                   "Made-in-Thailand-RoHS-Sh-Generator-Sk-Capacitor-3-5UF.jpg",
+                   (0.06, 0.02, 0.95, 0.97), 1500),
+    # একই ছবির সামনের কৌটাটি — টার্মিনাল ও গায়ের লেখাসহ
+    "ph_cap_can_face": ("https://image.made-in-china.com/2f0j00JOKidIBjKVpn/"
+                        "Made-in-Thailand-RoHS-Sh-Generator-Sk-Capacitor-"
+                        "3-5UF.jpg", (0.43, 0.03, 0.90, 0.60), 1500),
+    # পোলারাইজড — অ্যালুমিনিয়াম ইলেক্ট্রোলাইটিক 1000 µF 25 V.
+    # ক্রপটা দুই পায়ের ডগা পর্যন্ত নেওয়া — লম্বা পা আর খাটো পা-র
+    # পার্থক্যটাই এখানে দেখানোর জিনিস।
+    "ph_cap_elko": ("https://www.embeddinator.com/public/upload/pros/"
+                    "1000uf_11.png", (0.05, 0.33, 0.985, 0.685), 2000),
+}
+
+
+def do_web():
+    for name, (url, box, wmax) in WEB.items():
+        im = Image.open(io.BytesIO(fetch(url))).convert("RGB")
+        if box:
+            w, h = im.size
+            im = im.crop((int(w * box[0]), int(h * box[1]),
+                          int(w * box[2]), int(h * box[3])))
+        if im.width > wmax:
+            im = im.resize((wmax, round(im.height * wmax / im.width)),
+                           Image.LANCZOS)
+        im.save(os.path.join(OUT, f"{name}.jpg"), quality=92)
+        print("✓", name, im.size)
+
+
 CREDITS = {
     "rapti_slides": {
         "files": sorted(SLIDES),
@@ -155,6 +200,18 @@ CREDITS = {
         "source": "Wikimedia Commons — 'Polarity-wet-Al-Elcaps'",
         "licence": "CC0",
     },
+    "ph_cap_fan / ph_cap_fan_face": {
+        "source": "made-in-china.com — CBB61 fan capacitor product photo",
+        "licence": "Manufacturer's product photograph",
+    },
+    "ph_cap_elko": {
+        "source": "embeddinator.com — 1000 uF 25 V electrolytic capacitor",
+        "licence": "Manufacturer's product photograph",
+    },
+    "ph_cap_can / ph_cap_can_face": {
+        "source": "made-in-china.com — SH 350 V.AC fan capacitor photo",
+        "licence": "Manufacturer's product photograph",
+    },
     "ph_cap_ceramic": {
         "source": "Wikimedia Commons — 'Soviet ceramic disc capacitors 01'",
         "licence": "CC0",
@@ -168,6 +225,7 @@ CREDITS = {
 if __name__ == "__main__":
     do_slides()
     do_photos()
+    do_web()
     json.dump(CREDITS, open(os.path.join(OUT, "credits.json"), "w"),
               ensure_ascii=False, indent=2)
     print("credits.json written")

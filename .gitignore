@@ -8,8 +8,12 @@ __pycache__/
 
 # --- Regenerable build caches (rebuilt by the pipeline; not worth versioning) ---
 Book/build/.slidepdf/
+Book/build/.commons_ch11/
 Book/build/.sharp1916.pdf
 Book/build/out/
 
 # --- Stray empty git repo, not part of the book ---
 k/
+
+# --- render.py scratch wrappers ---
+*.__r.html
