@@ -22,23 +22,23 @@ order *is* the book order — do not regroup chapters by theme.
 | 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 16 | ✅ delivered |
 | 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 18 | ✅ delivered |
 | 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 14 | ✅ delivered |
-| 06 | বেল সার্কিট (৬–৯) | 14 | ✅ delivered |
+| 06 | বেল সার্কিট (৬–৯) | 13 | ✅ delivered |
 | 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 24 | ✅ delivered |
 | 08 | মেজারিং ইন্সট্রুমেন্টস | 20 | ✅ delivered |
 | 09 | মাল্টিপ্লাগ সার্কিট | 17 | ✅ delivered |
 | 10 | সিরিজ বোর্ড | 17 | ✅ delivered |
 | 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 24 | ✅ delivered |
-| 12 | ফ্যান ও ফ্যান রেগুলেটর | 24 | ✅ delivered |
-| 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 19 | ✅ delivered |
-| 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 29 | ✅ delivered |
+| 12 | ফ্যান ও ফ্যান রেগুলেটর | 23 | ✅ delivered |
+| 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 18 | ✅ delivered |
+| 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 28 | ✅ delivered |
 | 15 | সুইচ বোর্ড | 21 | ✅ delivered |
 | 16 | পাওয়ার ফর্মুলা ও ক্যালকুলেশন | 19 | ✅ delivered |
 | 17 | বিদ্যুৎ বিল | 19 | ✅ delivered |
-| 18 | মোটর | 26 | ✅ delivered |
-| 19 | আইপিএস ও ইউপিএস | 36 | ✅ delivered |
-| 20 | ফ্লোট সুইচ | 25 | ✅ delivered |
-| 21 | বাসবার ও বাসবার ক্যালকুলেশন | 30 | ✅ delivered |
-| 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 53 | ✅ delivered |
+| 18 | মোটর | 25 | ✅ delivered |
+| 19 | আইপিএস ও ইউপিএস | 35 | ✅ delivered |
+| 20 | ফ্লোট সুইচ | 24 | ✅ delivered |
+| 21 | বাসবার ও বাসবার ক্যালকুলেশন | 29 | ✅ delivered |
+| 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 52 | ✅ delivered |
 | 23 | ক্যাবল ও ক্যাবল ক্যালকুলেশন | 49 | ✅ delivered |
 | 24 | এমডিবি ওয়্যারিং | 38 | ✅ delivered |
 | 25–28 | — | — | pending |
@@ -267,9 +267,17 @@ two-line paragraphs with market commentary. The user flagged this on
   of that job: autocrop must ignore isolated scan specks (count dark pixels per
   row/column, require ≥4) or a dust mote sets the bounding box; give each band
   its own explicit `(y0, y1)` instead of one shared cut point, so a neighbouring
-  figure's tail is excluded from *both* halves; and always credit the source in
-  a `❖ চিত্রসূত্র` note box at the chapter's end (CC BY / CC BY-SA photos
-  legally require it).
+  figure's tail is excluded from *both* halves.
+- **The `❖ চিত্রসূত্র` credit boxes were removed from every chapter on
+  2026-08-30 at the user's instruction** ("চিত্রসূত্র part ta sob pdf docx
+  file theke delete kore"). The user was told the CC BY / CC BY-SA
+  attributions are licence-required and chose to remove them anyway. The
+  `assets_chNN.py` scripts and `assets/chNN/credits.json` files are kept as
+  the in-repo provenance record; the `creds = json.load(...)` / `b.box(…,
+  title="❖  চিত্রসূত্র")` blocks were deleted from ch06, ch11–15, ch18–24.
+  Do **not** re-add a credit box to a chapter unless the user asks. Page
+  counts dropped by one in ch06/12/13/14/18/19/20/21/22 (box sat on a
+  near-empty last page); the status table above reflects the new counts.
 - **All data tables are real Word tables**, never images.
 - Numbering: `চিত্র N.M`, `সারণি N.M`, equations `(N.M)`.
 - **No `§` sign anywhere in the printed text.** The user asked for it
@@ -516,9 +524,10 @@ Check these before rendering — each one shipped once and had to be fixed:
   `d12_rccb_work` pulled *up* to the paragraph it illustrates, and an
   opening paragraph written for §২২.৭.২, which had begun with a figure
   straight under its heading (the ch17 rule).
-- ch19 ends on a header-only page 36 — the empty paragraph Word requires
-  after the final ❖ চিত্রসূত্র box. ch13 already ships the same artefact.
-  Harmless per chapter, and it disappears when the chapters are merged.
+- ch19 used to end on a header-only page 36 (the empty paragraph after the
+  final ❖ চিত্রসূত্র box). With the credit boxes removed (2026-08-30) ch19 is
+  35 pages and the artefact is gone; if any chapter still shows a trailing
+  header-only page it is harmless and disappears when the chapters are merged.
 - Appendix ক (symbol chart) can reuse the four sheets from `dia_ch05.py`.
 - Once all 28 chapters exist: merge into one file, continuous page numbers,
   single TOC + চিত্রসূচি + সারণিসূচি.

@@ -1981,30 +1981,6 @@ def build():
         widths=[3.2, 4.6, 7.6], align=["left", "left", "left"],
         size=Pt(9.5))
 
-    # ── চিত্রসূত্র ─────────────────────────────────────────────────
-    # তালিকাটা `assets_ch22.py`-এর লেখা credits.json থেকেই আসে, যাতে
-    # ছবি বদলালে এখানে হাতে বদলাতে ভুল না হয়।
-    # হাতে লেখা কোনো তালিকা এখানে **রাখা যাবে না**।  আগে একটা
-    # `used = [...]` ছিল; ছবি যোগ-বিয়োগ হওয়ার পর সেটি বাসি হয়ে যায়
-    # আর চারটি ছবির কৃতজ্ঞতা বাক্স থেকে বাদ পড়ে যায় — CC BY-SA-তে
-    # ওটা আইন ভাঙা।  `assets_ch22.py` যে ছবিগুলো সত্যিই বানায়,
-    # credits.json-এ ঠিক সেগুলোরই এন্ট্রি থাকে, তাই গোটা ফাইলটাই
-    # ক্রমানুসারে ঘোরানো হয়।
-    creds = json.load(open(os.path.join(A, "credits.json")))
-    seen, lines = set(), []
-    for k, c in creds.items():
-        key = (c["author"], c["licence"], c["title"].split(" (")[0])
-        if key in seen:
-            continue
-        seen.add(key)
-        lines.append(f"**{key[2]}** — {c['author']}, {c['licence']}")
-    b.box("note",
-          "যন্ত্র চেনার দুটি সারির ছবি ইনস্টিটিউটের নিজের ফাইল "
-          "`Standard Markings on Circuit Breakers.docx` থেকে — "
-          "CHiNT-এর পণ্য-রেন্ডার। গায়ের লেখা পড়ার বাকি সব আলোকচিত্র "
-          "উইকিমিডিয়া কমন্স থেকে:",
-          items=lines, title="❖  চিত্রসূত্র")
-
     path = os.path.join(OUT, "অধ্যায়-২২ — সার্কিট ব্রেকার ও "
                              "প্রতিরক্ষামূলক ডিভাইস.docx")
     b.save(path)

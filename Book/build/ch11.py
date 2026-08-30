@@ -495,22 +495,6 @@ def build():
           "ভাঙা অংশ কেটে বাদ দিয়ে সঠিক নিয়মে নতুন জয়েন্ট করতে হবে"]],
         caption="জয়েন্টের সাধারণ ত্রুটি, কারণ ও প্রতিকার",
         widths=[3.0, 3.8, 4.0], align=["left", "left", "left"], size=Pt(10))
-    # কৃতজ্ঞতার তালিকা `credits.json` থেকেই তৈরি হয় — হাতে লেখা তালিকা
-    # ছবি যোগ-বিয়োগ হলেই বাসি হয়ে যায় (অধ্যায় ২২-এর শিক্ষা), আর CC BY-SA-তে
-    # কৃতজ্ঞতা বাদ পড়া মানে লাইসেন্স ভাঙা।
-    cred = json.load(open(os.path.join(A, "credits.json"), encoding="utf-8"))
-    items, seen = [], set()
-    for c in cred.values():
-        key = (c["source"], c["licence"])
-        if key in seen:
-            continue
-        seen.add(key)
-        items.append(f"{c['source'].replace('Wikimedia Commons — ', '')} "
-                     f"({c['licence']})")
-    b.box("note",
-          "এই অধ্যায়ের জয়েন্টের অঙ্কনগুলো বইয়ের নিজস্ব। আলোকচিত্রগুলো "
-          "উইকিমিডিয়া কমন্স থেকে সংগৃহীত — " + "; ".join(items) + "।",
-          title="❖  চিত্রসূত্র")
 
     # ═══════════════════════════════════════════════ summary
     b.h1("সারসংক্ষেপ", "১১.১২")

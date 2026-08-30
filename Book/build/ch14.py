@@ -862,16 +862,6 @@ def build():
         widths=[0.7, 4.4, 3.6, 2.3],
         align=["center", "left", "left", "left"], size=Pt(9.5))
 
-    b.box("note",
-          "সরবরাহ থেকে SDB পর্যন্ত পথের ছবি ও বসতবাড়ির নমুনা লে-আউট "
-          "RAPTI-র নিজস্ব `HW Connection Diagram All` ফাইলের ৩০, ৩৪ ও "
-          "৩৬ নং স্লাইড থেকে নেওয়া; ওয়্যারিং পদ্ধতির আলোকচিত্র "
-          "ইনস্টিটিউটের `Electrical House Wiring book` থেকে। বাকি "
-          "চিত্রগুলো নতুন করে অঙ্কিত। বিএনবিসির ধারা ও সংখ্যাগুলো "
-          "Bangladesh National Building Code, পার্ট ৮, অধ্যায় ১ থেকে "
-          "যাচাই করা।",
-          title="❖  চিত্রসূত্র")
-
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(
         OUT, "অধ্যায়-১৪ — হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট.docx")

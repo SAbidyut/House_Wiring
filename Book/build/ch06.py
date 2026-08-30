@@ -316,17 +316,6 @@ def build():
         widths=[0.8, 4.2, 3.2, 2.4],
         align=["center", "left", "left", "left"], size=Pt(9.5))
 
-    # ── চিত্রসূত্র ─────────────────────────────────────────────────
-    # তালিকাটা `assets_ch06.py`-এর লেখা credits.json থেকেই আসে — হাতে
-    # লেখা তালিকা রাখা যাবে না, অধ্যায় ২২-এ ওটা বাসি হয়ে চারটে ছবির
-    # কৃতজ্ঞতা বাদ পড়েছিল, আর CC BY-SA-তে সেটা লাইসেন্স ভাঙা।
-    creds = json.load(open(os.path.join(A, "credits.json")))
-    lines = [f"**{c['title']}** — {c['author']}, {c['licence']}"
-             for c in creds.values()]
-    b.box("note",
-          "চিত্র ৬.২-এর ছয়টি আলোকচিত্রই উইকিমিডিয়া কমন্স থেকে:",
-          items=lines, title="❖  চিত্রসূত্র")
-
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "অধ্যায়-০৬ — বেল সার্কিট.docx")
     b.save(path)

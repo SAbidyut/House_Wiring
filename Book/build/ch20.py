@@ -955,22 +955,6 @@ def build():
         widths=[3.4, 4.4, 7.6], align=["left", "left", "left"],
         size=Pt(9.5))
 
-    # ── চিত্রসূত্র ─────────────────────────────────────────────────
-    # তালিকাটা `assets_ch20.py`-এর লেখা credits.json থেকেই আসে, যাতে
-    # ছবি বদলালে এখানে হাতে বদলাতে ভুল না হয়।  কেবল যেগুলো অধ্যায়ে
-    # সত্যিই বসেছে, সেগুলোরই নাম।
-    creds = json.load(open(os.path.join(A, "credits.json")))
-    used = ["ph_cut", "ph_cable", "ph_vert", "ph_ballvalve", "ph_contactor",
-            "ph_panel"]
-    lines = [f"**{creds[k]['title']}** — {creds[k]['author']}, "
-             f"{creds[k]['licence']}" for k in used if k in creds]
-    b.box("note",
-          "সার্কিট ও কানেকশন ডায়াগ্রামগুলো ইনস্টিটিউটের নিজস্ব "
-          "`HW Connection Diagram All.pptx` থেকে নেওয়া। আলোকচিত্রগুলো "
-          "উইকিমিডিয়া কমন্স থেকে; নিচে প্রতিটির শিরোনাম, আলোকচিত্রীর "
-          "নাম ও লাইসেন্স:",
-          items=lines, title="❖  চিত্রসূত্র")
-
     path = os.path.join(OUT, "অধ্যায়-২০ — ফ্লোট সুইচ.docx")
     b.save(path)
     return path, b

@@ -1218,21 +1218,6 @@ def build():
         caption="ব্যবহারিক কাজের তালিকা",
         widths=[3.4, 3.6, 6], align=["left", "left", "left"], size=Pt(9.5))
 
-    # ── চিত্রসূত্র ─────────────────────────────────────────────────
-    # কৃতজ্ঞতার তালিকাটা `assets_ch19.py`-এর লেখা credits.json থেকেই আসে,
-    # যাতে ছবি বদলালে এখানে হাতে বদলাতে ভুল না হয়।  কেবল যে ছবিগুলো
-    # অধ্যায়ে সত্যিই বসেছে, সেগুলোরই নাম।
-    creds = json.load(open(os.path.join(A, "credits.json")))
-    used = ["ph_home_ips", "ph_ups_desk", "ph_ups_tower", "ph_ups_big",
-            "ph_ups_rear", "ph_ups_rear2", "ph_batt_label", "ph_batt_smf",
-            "ph_scope"]
-    lines = [f"**{creds[k]['title']}** — {creds[k]['author']}, "
-             f"{creds[k]['licence']}" for k in used if k in creds]
-    b.box("note",
-          "এই অধ্যায়ের আলোকচিত্রগুলো উইকিমিডিয়া কমন্স থেকে নেওয়া। "
-          "নিচে প্রতিটির শিরোনাম, আলোকচিত্রীর নাম ও লাইসেন্স:",
-          items=lines, title="❖  চিত্রসূত্র")
-
     path = os.path.join(OUT, "অধ্যায়-১৯ — আইপিএস ও ইউপিএস.docx")
     b.save(path)
     return path, b

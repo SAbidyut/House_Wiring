@@ -1925,25 +1925,6 @@ def build():
         widths=[3.2, 4.6, 7.6], align=["left", "left", "left"],
         size=Pt(9.5))
 
-    # ── চিত্রসূত্র ─────────────────────────────────────────────────
-    # তালিকাটা `assets_ch23.py`-এর লেখা credits.json থেকেই আসে।
-    # হাতে লেখা কোনো তালিকা এখানে **রাখা যাবে না** — অধ্যায় ২২-এ
-    # ওটা বাসি হয়ে গিয়ে চারটি ছবির কৃতজ্ঞতা বাদ পড়েছিল, আর
-    # CC BY-SA-তে সেটা আইন ভাঙা।
-    creds = json.load(open(os.path.join(A, "credits.json")))
-    seen, lines = set(), []
-    for k, c in creds.items():
-        key = (c["author"], c["licence"], c["title"].split(" (")[0])
-        if key in seen:
-            continue
-        seen.add(key)
-        lines.append(f"**{key[2]}** — {c['author']}, {c['licence']}")
-    b.box("note",
-          "বাজারের নামের ব্লক তিনটি ইনস্টিটিউটের নিজের ফাইল "
-          "`SUPER STAR Cables Technical Catalog (FORCE).pdf` থেকে। "
-          "বাকি সব আলোকচিত্র উইকিমিডিয়া কমন্স থেকে:",
-          items=lines, title="❖  চিত্রসূত্র")
-
     path = os.path.join(OUT, "অধ্যায়-২৩ — ক্যাবল ও ক্যাবল "
                              "ক্যালকুলেশন.docx")
     b.save(path)

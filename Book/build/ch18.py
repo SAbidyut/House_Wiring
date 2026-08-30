@@ -914,16 +914,6 @@ def build():
         caption="অধ্যায় ১৮-এর ব্যবহারিক কাজ",
         widths=[5, 3, 4], align=["left", "left", "left"], size=Pt(10))
 
-    b.box("note",
-          "চিত্র ১৮.১ — Technisches Museum Wien-এর কাটা-মডেলের "
-          "আলোকচিত্র, উইকিমিডিয়া কমন্স, পাবলিক ডোমেইন। চিত্র ১৮.২ — "
-          "স্টেটর: ‘Stator of a 3-phase induction motor’, উইকিমিডিয়া "
-          "কমন্স, CC BY-SA 4.0; রোটর: ‘Wirnik’, User:Zureks, উইকিমিডিয়া "
-          "কমন্স, CC BY-SA 3.0। চিত্র ১৮.৫, ১৮.৬, ১৮.৭-এর কানেকশন "
-          "ডায়াগ্রাম ও চিত্র ১৮.৯ — RAPTI-র নিজস্ব `Motor.docx` থেকে "
-          "নেওয়া। বাকি চিত্রগুলো এই বইয়ের জন্য আঁকা।",
-          title="❖  চিত্রসূত্র")
-
     path = os.path.join(OUT, "অধ্যায়-১৮ — মোটর.docx")
     b.save(path)
     return path, b

@@ -655,13 +655,6 @@ def build():
         widths=[0.7, 4.4, 3.6, 2.3],
         align=["center", "left", "left", "left"], size=Pt(9.5))
 
-    b.box("note",
-          "সার্কিট ও কানেকশন ডায়াগ্রাম RAPTI-র নিজস্ব `Circuit Diagram` ও "
-          "`HW Connection Diagram` ফাইলের ২২ ও ২৩ নং স্লাইড থেকে নেওয়া; "
-          "পিয়ানো ও গ্যাং বোর্ডের ছবি ওই ফাইলের ৩৪ ও ৩৫ নং স্লাইড থেকে "
-          "কাটা। বাকি চিত্রগুলো নতুন করে অঙ্কিত।",
-          title="❖  চিত্রসূত্র")
-
     os.makedirs(OUT, exist_ok=True)
     path = os.path.join(OUT, "অধ্যায়-১৫ — সুইচ বোর্ড.docx")
     b.save(path)

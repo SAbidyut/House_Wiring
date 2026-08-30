@@ -1588,35 +1588,6 @@ def build():
         widths=[5.4, 4.4, 5.6], align=["left", "left", "left"],
         size=Pt(9.5))
 
-    # ── চিত্রসূত্র ─────────────────────────────────────────────────
-    # তালিকাটা `assets_ch24.py`-এর লেখা credits.json থেকেই আসে।
-    # হাতে লেখা কোনো তালিকা এখানে **রাখা যাবে না** — অধ্যায় ২২-এ
-    # ওটা বাসি হয়ে গিয়ে চারটি ছবির কৃতজ্ঞতা বাদ পড়েছিল, আর
-    # CC BY-SA-তে সেটা আইন ভাঙা।
-    # একই আলোকচিত্রীর একাধিক ছবি এক সারিতে জড়ো করা হয় — CC BY-SA-র
-    # শর্ত (শিরোনাম, প্রণেতা, লাইসেন্স) তাতে পুরোপুরি মেটে, আর পাঁচটি
-    # প্রায়-একরকম সারি এক লাইনে নেমে আসায় বাক্সটা পাতার পায়ে ধরে যায়।
-    creds = json.load(open(os.path.join(A, "credits.json")))
-    grouped, order = {}, []
-    for _k, c in creds.items():
-        if "author" not in c:
-            continue
-        key = (c["author"], c["licence"])
-        if key not in grouped:
-            grouped[key] = []
-            order.append(key)
-        title = c["title"].split(" (")[0]
-        if title not in grouped[key]:
-            grouped[key].append(title)
-    lines = [f"**{', '.join(grouped[k])}** — {k[0]}, {k[1]}"
-             for k in order]
-    b.box("note",
-          "চিত্র ২৪.৩-এর সংযোগ-ছকটি ইনস্টিটিউটের নিজের ফাইল "
-          "`HW Connection Diagram All.pptx`-এর ৩০ নং স্লাইড, আর "
-          "বোর্ডের প্রতীকগুলো বিএনবিসির সারণি ৮.১.১৫ দেখে আঁকা। "
-          "বাকি সব আলোকচিত্র উইকিমিডিয়া কমন্স থেকে:",
-          items=lines, title="❖  চিত্রসূত্র")
-
     path = os.path.join(OUT, "অধ্যায়-২৪ — এমডিবি ওয়্যারিং.docx")
     b.save(path)
     return path, b

@@ -1159,21 +1159,6 @@ def build():
         widths=[3.4, 4.4, 7.6], align=["left", "left", "left"],
         size=Pt(9.5))
 
-    # ── চিত্রসূত্র ─────────────────────────────────────────────────
-    # তালিকাটা `assets_ch21.py`-এর লেখা credits.json থেকেই আসে, যাতে
-    # ছবি বদলালে এখানে হাতে বদলাতে ভুল না হয়।
-    creds = json.load(open(os.path.join(A, "credits.json")))
-    used = ["ph_panel", "ph_earth", "ph_trunk", "ph_raw"]
-    lines = [f"**{creds[k]['title']}** — {creds[k]['author']}, "
-             f"{creds[k]['licence']}" for k in used if k in creds]
-    b.box("note",
-          "কানেকশন ডায়াগ্রামগুলো ইনস্টিটিউটের নিজস্ব "
-          "`HW Connection Diagram All.pptx` থেকে, আর বারের ছবি ও "
-          "মাপের তালিকা `Busbar All.pptx` থেকে নেওয়া। আলোকচিত্রগুলো "
-          "উইকিমিডিয়া কমন্স থেকে; নিচে প্রতিটির শিরোনাম, আলোকচিত্রীর "
-          "নাম ও লাইসেন্স:",
-          items=lines, title="❖  চিত্রসূত্র")
-
     path = os.path.join(OUT, "অধ্যায়-২১ — বাসবার ও বাসবার "
                              "ক্যালকুলেশন.docx")
     b.save(path)
