@@ -185,7 +185,42 @@ in ch13; "দোকানে গিয়ে বললে
   ch11–15 24/24/19/29/21 (all match the status table). ch04's pre-existing
   4.78 cm p9 gap is unrelated. In ch13 the longer verb forms pushed
   উদাহরণ ১৩.১ off p10 (10.9 cm gap); fixed by merging its `steps=`
-  ΔE lines — the standing layout fix. Chapters 16+ were **not** touched.
+  ΔE lines — the standing layout fix.
+
+**Chapters 16–23 got the same formality pass on 2026-08-31** ("baki chaper
+15 theke 23 pojonto kore daw" — the user meant a formality pass, not new
+authoring; ch15 was already done). Identical treatment, do not redo or
+revert:
+- Diminutive definite article -টা/-টো/-টে (একটা→একটি, দুটো→দুটি, সেটা→সেটি,
+  কাজটা→কাজটি, ওগুলো→সেগুলো, ওটির/ওদের-of-an-inanimate→সেটির/সেগুলোর …);
+  loan words that merely *end* in -টার/-টা (মিটার, স্টার, ব্যাটারি, ঘণ্টা,
+  কাটা, চেষ্টা, চ্যাপ্টা, এতটাই/অনেকটাই …) left alone. A one-shot helper
+  `_formality.py` with a curated word list did the bulk, then `git diff`
+  reviewed; it was deleted after.
+- Learning objectives "… পারবে।" → "… সক্ষম হবে।" everywhere, including the
+  `পারবে**`/`পারবে,` variants the bare regex missed. Body-prose 3rd-person
+  "সইতে পারবে"/"বইতে পারবে" is correct Bangla — left alone.
+- Step lists, worked-example question/steps, troubleshooting-table
+  প্রতিকার/করণীয়/"যা করতে হবে" columns, and ❖/tip/safety box bodies:
+  তুমি-imperatives → নৈর্ব্যক্তিক (দেখো→দেখতে হবে, বসাও→বসাতে হবে,
+  খোঁজো→খুঁজতে হবে, কোরো না→করা যাবে না, ধরো→ধরা যাক). Box titles that
+  were imperatives → আপনি ("মনে রাখো"→"মনে রাখুন", "দেখো"→"দেখুন").
+- অনুশীলনী খ/গ/ঘ: তুমি → আপনি (লেখো→লিখুন, করো→করুন, দেখাও→দেখান,
+  "করবে?"→"করবেন?"). MCQ stems and the ঙ practical-work tables left alone.
+- "ছবি"/"ছবিটি" in body prose → "চিত্র"/"চিত্রটি" (ch18/19/22/23);
+  chatty asides removed (ch18 "…বললে দোকানদার হাসবেন", ch19 "…বেচো না",
+  ch22 "মজার কথা হলো", narrative "তোমার"→"মিস্ত্রির" where it was an aside).
+- Diagram-internal তুমি text: `dia_ch22` d21_select and `dia_ch23`
+  d12_steps step labels ("লোড যোগ করো" → "লোড যোগ", "বের করো" → "নির্ণয়",
+  "দেখো" → "দেখা"/"যাচাই"); both SVGs re-rendered, `qc.py` clean. No other
+  ch16–23 diagram carried second-person rendered text (dia_ch20/21/23 code
+  *comments* have "রাখো" — not rendered, left).
+- Page counts unchanged: ch16–23 **19 / 19 / 25 / 35 / 24 / 29 / 52 / 49**
+  (all match the status table). ch18's 4.93 cm p8 and ch19's 4.80 cm p5
+  gaps are the pre-existing Open-items gaps, unchanged. ch23's opener grew
+  a page (13 objectives × the longer verb form); reclaimed by collapsing the
+  double "সক্ষম হবে" in compound objectives to one trailing form and merging
+  উদাহরণ ২৩.১/২৩.২ `steps=` lines — the standing layout fix.
 
 Polish towards this:
 - **Ground claims in the field, not in the abstract.** Real sizes, real market
