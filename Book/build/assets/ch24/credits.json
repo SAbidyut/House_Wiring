@@ -1,0 +1,54 @@
+{
+  "ph_start": {
+    "title": "Main panel 1",
+    "author": "Robertbh1984",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_done": {
+    "title": "Main panel and cables",
+    "author": "Robertbh1984",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_ready": {
+    "title": "Main panel ready",
+    "author": "Robertbh1984",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_bars": {
+    "title": "Main panel 1.2",
+    "author": "Robertbh1984",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_lug": {
+    "title": "Main panel bar",
+    "author": "Robertbh1984",
+    "licence": "CC BY-SA 4.0"
+  },
+  "ph_bad": {
+    "title": "Distribution board in Slovakia 01",
+    "author": "Oto Zapletal",
+    "licence": "CC BY 4.0"
+  },
+  "ph_ferrule": {
+    "title": "Wire ferrules with and without insulation",
+    "author": "Simon A. Eugster",
+    "licence": "CC BY-SA 3.0"
+  },
+  "ph_lugkind": {
+    "title": "Kabelschuh",
+    "author": "Ulfbastel",
+    "licence": "পাবলিক ডোমেইন"
+  },
+  "ph_meter": {
+    "title": "Electric meter and the circuit breaker",
+    "author": "Zimin.V.G.",
+    "licence": "CC BY-SA 4.0"
+  },
+  "rapti_slide": {
+    "files": [
+      "h30_tree"
+    ],
+    "source": "RAPTI — HW Connection Diagram All.pptx (slide 30)",
+    "licence": "ইনস্টিটিউটের নিজস্ব উপকরণ"
+  }
+}

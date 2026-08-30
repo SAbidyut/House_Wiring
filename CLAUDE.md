@@ -40,18 +40,19 @@ order *is* the book order — do not regroup chapters by theme.
 | 21 | বাসবার ও বাসবার ক্যালকুলেশন | 30 | ✅ delivered |
 | 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 53 | ✅ delivered |
 | 23 | ক্যাবল ও ক্যাবল ক্যালকুলেশন | 49 | ✅ delivered |
-| 24–28 | — | — | pending |
+| 24 | এমডিবি ওয়্যারিং | 38 | ✅ delivered |
+| 25–28 | — | — | pending |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 14/12 · `ch02` 15/9 · `ch03` 9/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 7/4 ·
 `ch07` 10/9 · `ch08` 11/8 · `ch09` 6/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 11/10 ·
 `ch13` 9/7 · `ch14` 13/8 · `ch15` 8/8 · `ch16` 6/7 · `ch17` 5/8 ·
 `ch18` 9/10 · `ch19` 15/19 · `ch20` 13/10 · `ch21` 14/6 · `ch22` 24/21 ·
-`ch23` 17/26 —
+`ch23` 17/26 · `ch24` 19/14 —
 no gap > 5 cm (ch11's worst is 3.64 cm after the 2026-08-25 rebuild; ch16 one 4.56 cm, ch18 gaps
 of 4.93/4.56/4.55 cm and ch19 one 4.80 cm, see Open
 items; ch20 has none above 4.0 cm, ch21 one 4.12 cm; **ch23 has none above 4.0 cm**;
-ch03's worst is now 4.26 cm since চিত্র ৩.৩ was rebuilt).
+ch03's worst is now 4.26 cm since চিত্র ৩.৩ was rebuilt; **ch24 has none above 3.52 cm**).
 
 Engine API (write a chapter without opening `bookkit.py`): `Book/build/README.md`
 Full chapter plan + numbering conventions: `Book/build/BOOK_INDEX.md`
@@ -152,6 +153,39 @@ never as a licence to rewrite the established style.
 This applies **from chapter 12 onward**. Chapters 1–11 keep their current text;
 the user will ask for a voice pass over them later — do not retrofit them
 unasked.
+
+**Chapters 1–15 had a separate *formality* pass on 2026-08-30** — ch1–10 first,
+then **ch11–15 the same way on the user's explicit instruction** ("chapter 11
+theke 15 pojonto thik koro… avabe") — the opposite
+direction from the humanising notes above. The user found parts had
+drifted too informal/chatty ("অপরিহার্য অনুষঙ্গ" → they wanted "গুরুত্বপূর্ণ
+উপাদান"; clipped rhetorical fragments; diminutive -টা/-টো; a stray "ভাই"
+in ch13; "দোকানে গিয়ে বললে
+হয় না"–type asides). What was changed, do not redo or revert:
+- Expository prose: chatty/clipped/colloquial lines → graceful formal book
+  Bangla (meaning, numbers, IEC/BNBC/BS clauses, figure/table numbers, markup
+  all kept).
+- Hands-on step lists and worked-example phrasing: তুমি-imperatives
+  (লাগাও / যাচাই করো / নির্ণয় করো) → নৈর্ব্যক্তিক ("লাগাতে হবে / যাচাই করতে
+  হবে")। Compressing a worked example's `steps=` lines is the layout fix when
+  the longer verb forms push a page (used in ch09).
+- Learning objectives: "… করতে পারবে।" → "… করতে সক্ষম হবে।" (every chapter).
+- অনুশীলনী short/essay/maths questions: তুমি-imperatives → আপনি
+  (লেখ → লিখুন, ব্যাখ্যা করো → ব্যাখ্যা করুন, উদাহরণ দাও → উদাহরণ দিন,
+  "বলতে কী বোঝ?" → "বলতে কী বোঝায়?")। MCQ stems and the practical-work
+  table were left alone.
+- Diagram-internal text: ch01 (d07/d10/d11/d13, plus a "প্রকৃত অর্থে"
+  trim in d04), ch10 (d05_steps), `dia_ch11` d13_solder_steps (6 sub-lines)
+  and `dia_ch14` d10_estimate_steps (6 sub-lines) had তুমি-imperatives;
+  converted to নৈর্ব্যক্তিক noun/verbal-noun phrases per the diagram rules
+  below. No other ch1–15 diagram carried second-person text.
+- Troubleshooting-table "প্রতিকার"/"করণীয়" columns and connection/estimate
+  step lists in ch11–15: same তুমি → নৈর্ব্যক্তিক treatment.
+- Page counts unchanged: ch1–10 27/20/16/18/14/14/24/20/17/17;
+  ch11–15 24/24/19/29/21 (all match the status table). ch04's pre-existing
+  4.78 cm p9 gap is unrelated. In ch13 the longer verb forms pushed
+  উদাহরণ ১৩.১ off p10 (10.9 cm gap); fixed by merging its `steps=`
+  ΔE lines — the standing layout fix. Chapters 16+ were **not** touched.
 
 Polish towards this:
 - **Ground claims in the field, not in the abstract.** Real sizes, real market
@@ -491,11 +525,81 @@ Check these before rendering — each one shipped once and had to be fixed:
 
 ## Next step
 
-**Chapter 24 — MDB ওয়্যারিং** (module lesson 24, ~18 pages).  Ch21 already
-draws the flat's DB and the busbar arithmetic; ch22 fixes every breaker and
-ch23 every cable of the model flat.  Ch24 must reuse that same 7200 W / 33 A
-chain, not invent a new one.  `HW Connection Diagram All.pptx` s29/s31/s32/s33
-are the four board slides (already used by ch21 — check before re-cropping).
+**Chapter 25 — SDB ওয়্যারিং** (module lesson 25, ~16 pages).  The flat's own
+board, i.e. the box at the *bottom* of ch24's chain: fed by one of the sixteen
+40 A DP ways, 7200 W / 33 A, 10–25 mm² depending on the floor.  Ch22 already
+picked every breaker inside it and ch23 every final-circuit cable, so ch25's
+arithmetic is entirely spent — its job is the **board**: RCCB position, the
+neutral-after-the-RCCB trap, SPD, way ordering, labelling.  `HW Connection
+Diagram All.pptx` **s33** is the full flat SDB (RCCB + SPD + separate N and E
+bars) and **s34/s35/s36** are three flat layouts fed from an SDB box; ch21 used
+s33 once as its চিত্র ২১.১১, so check before re-cropping.  ch24's photo set
+(`assets_ch24.py`) is an MDB, not an SDB — do not reuse it for the flat board.
+
+**Chapter 24's sources and decisions (do not re-discover).**
+
+- **Only slide 30 of `HW Connection Diagram All.pptx` was left unused by
+  ch21**, and it is exactly the distribution chain: pole → main meter → main
+  MCB → sub-meter → MCB → SDB box, plus switchboard and DP-switch-to-motor
+  branches.  That is চিত্র ২৪.৩.  **The slide draws no earth conductor** —
+  only red and black.  §২৪.১.৩ says so in a ⚠ box and cites BNBC 1.3.13.
+  Same handling as ch20's "Magnetic Conductor" and ch21's wrong formula.
+- **Ch21 had already used s29/s31/s32/s33**, so ch24 does not reprint them;
+  its own richer SLD (`d04_sld`) is drawn instead.
+- **The photographs are one job, photographed in sequence.**  Robertbh1984's
+  six Commons pictures (CC BY-SA 4.0) are a villa's main panel being built —
+  empty box with wires hanging, bars on insulators, lugs on the earth bar,
+  the finished dead-front board.  §২৪.৬ is written in that same order, so the
+  pictures read as one continuous job.  `ph_bad` (Oto Zapletal, CC BY 4.0) is
+  the counter-example BNBC 1.3.17.4(b) forbids.
+- **Ch24's arithmetic is ch21's + ch22's + ch23's, not a new chain.**
+  16 flats × 12 kW + lift 22 + pump 11 + common 12 + fire/gen 13 = 250 kW ·
+  diversity 0.7 → 175 kW · 3Φ 400 V, cos φ 0.85 → 297 A → 400 A 4-pole MCCB →
+  50 × 5 Cu busbar (400 / 1.6 = 250 mm²).  Fault level is ch22's 250 kVA /
+  Z 4.5 % → 361 A → 8 kA.  Every flat feeder is ch22/ch23's 7200 W / 32.95 A /
+  40 A DP.  **The 0.7 is checked a second way** — summing the three phases
+  gives 162.8 kW, i.e. an effective 0.65, so 0.7 is realistic and slightly
+  generous.  Say that; it is what makes the assumed number defensible.
+- **The riser table is the chapter's own contribution, and it is a voltage-drop
+  argument, not an ampacity one.**  BNBC 1.3.12.2 measures the 2.5 % "from the
+  main distribution point"; the safe reading is the whole path, so the budget
+  splits 1.31 % feeder + 1.19 % final circuit (ch23's worst circuit).  That
+  forces 10 mm² on floors 1–4, 16 on 5–6, 25 on 7–8 — same current throughout,
+  fatter only because of length.  Ch23's example ২৩.৬ predicted exactly this
+  ("মিটার নিচতলায় আর ফ্ল্যাট ছয়তলায় হলে … ১৬ বর্গমিলিমিটারে তুলতে হয়").
+  Grouping is dodged legitimately: BNBC 1.3.18.2's own 37 mm spacing exceeds
+  2 × cable diameter, so Cg = 1.
+- **Three-phase feeder cable sizes are deliberately blank.**  The book prints
+  IEC 60364-5-52 Table B.52.2 (two loaded conductors) as সারণি ২৩.১৫; a
+  three-phase feeder needs Table B.52.4, which is not printed here and could
+  not be verified from a free source (ANSI/IEC previews are paywalled or
+  JS-gated; ecalpro.com's B.52.2 reproduction *did* verify ch23's numbers and
+  extends them to 240 mm²).  সারণি ২৪.৬ marks those two rows `(ক)` and the
+  paragraph under it says why.  **Do not fill them from memory.**
+- **BNBC's Table 8.1.15 board symbols were redrawn from the source PDF at
+  420 dpi, not guessed** — MDB is a cross with the left and right triangles
+  filled, FDB adds a vertical centre line, DB is a bare cross, SDB one
+  diagonal, BDB one diagonal with the lower triangle filled, SB a brick-hatched
+  bar.  An earlier invented scheme gave FDB and DB the same picture.
+- **The code contradicts itself on sheet thickness and the book says so** —
+  1.3.9.2 wants ≥ 18 SWG (1.22 mm) for a distribution board's box, 1.3.17.1
+  wants ≥ 20 SWG (0.91 mm) for sub-distribution boards inside a building.
+  §২৪.২.৫ names both and takes the stricter one for an MDB.
+- **BNBC sub-item letters were mapped from the source, not assumed.**  In
+  1.3.47.8.4 the run is a=ক … j=ঞ (polarity), k=ট (spare knockouts),
+  n=ঢ (all strands in the terminal), p=ত (flat + spring washers).  The first
+  draft was three letters out.  Extract the clause and count before citing.
+- **Two engine-level traps caught in the build.**  `_n(x, 0)` — the
+  strip-trailing-zeros helper copied forward from ch23 — turned 26400 into 264
+  and 250 into 25, because ch23 only ever called it with d ≥ 1; it now
+  short-circuits at d == 0.  And **Kalpurush has `*` in its cmap but draws it
+  blank** (the `÷` trap again), so a footnote asterisk vanished from two table
+  cells and from the paragraph explaining them; the marker is `(ক)` now.
+- **Counting columns went Latin.**  Kalpurush's ৪-looks-like-8 is not harmless
+  in a table the reader adds up: the riser table's floors ৪ and ৮ both read
+  "8", and in the balance table ০ + ২ + ২ appeared to total "8".  Sizes,
+  counts and floor numbers in ch24's engineering tables are Latin; prose stays
+  Bangla.
 
 **Chapter 23's sources and decisions (do not re-discover).**
 

@@ -812,48 +812,116 @@ def d16_term():
 def d17_gauge():
     """ওয়্যার গেজ প্লেট — খাঁজে খেই ঢুকিয়ে নম্বর পড়া।
 
-    গেজ একটা **নম্বর**, মাপ নয় — আর নম্বর বাড়লে তার সরু হয়।  উল্টো
-    এই সম্পর্কটাই ছাত্রদের গুলিয়ে যায়, তাই ছবিতে খাঁজগুলো বাঁ থেকে
-    ডানে ছোট হতে হতে গেছে আর নিচে প্রতিটির মিলিমিটার লেখা।
+    আগের সংস্করণে খাঁজগুলো চাকতির কিনারায় বসানো আলগা বৃত্ত ছিল, আর
+    ব্যাসার্ধ ছিল `5 + mm × 4.4` — ওই ধ্রুবক ৫-ই অনুপাতটা নষ্ট করত:
+    8 SWG (4.06 মিমি) দেখাত 26 SWG (0.46 মিমি)-এর মাত্র ৩ গুণ, যেখানে
+    আসল অনুপাত প্রায় ৯ গুণ।  ফলে ছবির একমাত্র দাবিটাই — নম্বর বাড়লে
+    তার সরু — চোখে পড়ত না।
+
+    এখন খাঁজ সত্যিকারের খাঁজ:  কিনারা কেটে ভেতরে ঢোকা সমান্তরাল দুই
+    দেয়াল, শেষ মাথায় একটি গোল ছাড়-গর্ত (রিলিফ হোল), আর চওড়া ঠিক
+    `ব্যাস × SC` — কোনো ধ্রুবক যোগ নেই।  চাকতির কিনারার রেখাটাও এক
+    টানা পথ, যা প্রতিটি খাঁজের মুখে ফাঁক রেখে যায়; নইলে খাঁজ খোলা
+    মুখ নয়, বসানো গর্ত মনে হয়।
     """
-    s = SVG(1240, 760)
-    s.title("ওয়্যার গেজ — নম্বর বাড়লে তার সরু", T_TITLE)
-    ar = s.arrow_defs(STEEL, "ar", 14)
-
-    # গেজ প্লেট — গোল চাকতি, কিনারায় খাঁজ
-    cx, cy, R0 = 380, 330, 200
-    s.circle(cx, cy, R0, "#C9D2DB", "#8D9AA8", 3.6)
-    s.circle(cx, cy, 74, "#FCFDFE", "#8D9AA8", 3.0)
-    s.text(cx, cy - 6, "SWG", 30, GREY, 700, "middle")
-    s.text(cx, cy + 30, "গেজ প্লেট", T_SMALL, GREY, 400, "middle")
     import math
-    slots = [(8, 4.06), (10, 3.25), (12, 2.64), (14, 2.03), (16, 1.63),
-             (18, 1.22), (20, 0.91), (22, 0.71), (24, 0.56), (26, 0.46)]
-    for i, (n, mm) in enumerate(slots):
-        a = math.radians(-150 + i * 30)
-        sx, sy = cx + R0 * math.cos(a), cy + R0 * math.sin(a)
-        r = 5 + mm * 4.4                      # খাঁজের ব্যাসার্ধ মাপের অনুপাতে
-        s.circle(sx, sy, r, "#FCFDFE", "#5A6470", 2.4)
-        lx, ly = cx + (R0 - 44) * math.cos(a), cy + (R0 - 44) * math.sin(a)
-        s.text(lx, ly + 7, str(n), T_SMALL, NAVY, 700, "middle")
 
-    # ডান পাশে ব্যাখ্যা
-    x0 = 690
-    head_bar(s, x0, 150, 480, 62, "গেজ যা বলে, যা বলে না", STEEL, T_NODE)
-    rows = [("গেজ নম্বর", "এক গাছি খেইয়ের ব্যাস"),
-            ("নম্বর বড়", "তার সরু"),
-            ("SWG 20", "0.91 মিলিমিটার"),
-            ("AWG 20", "0.81 মিলিমিটার"),
-            ("যা বলে না", "কতটা কারেন্ট বইবে")]
-    for j, (a_, b_) in enumerate(rows):
-        yy = 252 + j * 62
-        s.text(x0 + 26, yy, a_, T_NAME, NAVY, 700)
-        s.text(x0 + 454, yy, b_, T_NAME, GREY, 400, "end")
-        s.path(f"M {x0 + 16} {yy + 18} L {x0 + 464} {yy + 18}", LINE, 1.4)
-    s.path(f"M {x0 + 240} {560} L {x0 + 240} {600}", STEEL, 3, marker=ar)
-    s.box_auto(x0 + 240, 606, "ক্ষেত্রফলে বদলে নিতে হয়", T_NAME,
-               fill=GREENBG, stroke=GREEN, tcolor=GREEN, pad_x=22, pad_y=10)
-    y = note_strip(s, 672, "একই নম্বরে SWG আর AWG এক মাপ নয়")
+    s = SVG(1240, 800)
+    s.title("ওয়্যার গেজ প্লেট — নম্বর বাড়লে তার সরু", T_TITLE)
+
+    PX1, PW1, PX2, PW2 = 46, 520, 590, 604
+    PY, PH = 100, 560
+    panel(s, PX1, PY, PW1, PH, "গেজ প্লেট", STEEL)
+    panel(s, PX2, PY, PW2, PH, "খাঁজের বিবর্ধিত ছবি", STEEL)
+
+    # ── চাকতি ─────────────────────────────────────────────────────────
+    cx, cy, R = PX1 + PW1 / 2, 420, 198
+    # SC আসল চাকতির অনুপাতে:  ৯০ মিমি প্লেটে 4.06 মিমি খাঁজ ব্যাসের
+    # ৪.৫% — এখানে 26/396, প্রায় সেটাই
+    SC = 6.5                      # পিক্সেল/মিলিমিটার — কোনো ধ্রুবক যোগ নয়
+    RIN = R - 42                  # ছাড়-গর্তের কেন্দ্র যত ভেতরে
+    SLOTS = [(8, 4.06), (10, 3.25), (12, 2.64), (14, 2.03), (16, 1.63),
+             (18, 1.22), (20, 0.91), (22, 0.71), (24, 0.56), (26, 0.46)]
+
+    def geom(i, mm):
+        a = math.radians(225 - i * 30)      # ৮ উপরে-বাঁয়ে, ২৬ উপরে-ডানে
+        hw = mm * SC / 2
+        return a, hw, max(hw + 7, 10)
+
+    def outline(rrim):
+        """কিনারার এক টানা পথ — খাঁজের মুখে ফাঁক রেখে।"""
+        items = sorted((geom(i, mm) for i, (_n, mm) in enumerate(SLOTS)),
+                       key=lambda g: g[0])
+        d, first = [], None
+        for a, hw, rr in items:
+            u, v = (math.cos(a), math.sin(a)), (-math.sin(a), math.cos(a))
+            t = math.sqrt(rrim ** 2 - hw ** 2)
+            dx = math.sqrt(rr ** 2 - hw ** 2)
+            px, py = cx + RIN * u[0], cy + RIN * u[1]
+            am = (cx + t * u[0] - hw * v[0], cy + t * u[1] - hw * v[1])
+            ap = (cx + t * u[0] + hw * v[0], cy + t * u[1] + hw * v[1])
+            bm = (px + dx * u[0] - hw * v[0], py + dx * u[1] - hw * v[1])
+            bp = (px + dx * u[0] + hw * v[0], py + dx * u[1] + hw * v[1])
+            if first is None:
+                d.append(f"M {am[0]:.1f} {am[1]:.1f}")
+                first = am
+            else:
+                d.append(f"A {rrim:.1f} {rrim:.1f} 0 0 1 "
+                         f"{am[0]:.1f} {am[1]:.1f}")
+            d.append(f"L {bm[0]:.1f} {bm[1]:.1f}")
+            d.append(f"A {rr:.1f} {rr:.1f} 0 1 0 {bp[0]:.1f} {bp[1]:.1f}")
+            d.append(f"L {ap[0]:.1f} {ap[1]:.1f}")
+        d.append(f"A {rrim:.1f} {rrim:.1f} 0 0 1 "
+                 f"{first[0]:.1f} {first[1]:.1f} Z")
+        return " ".join(d)
+
+    s.path(outline(R + 6), "none", 0, "#9CA8B4")        # কিনারার পুরুত্ব
+    s.path(outline(R), "#77838F", 2.6, "#C6D0D9")       # চাকতির মুখ
+
+    s.circle(cx, cy, 54, "#DEE5EB", "#8D9AA8", 2.6)
+    s.text(cx, cy - 4, "S.W.G.", 26, NAVY, 700, "middle")
+    s.text(cx, cy + 26, "BS 3737", 20.5, GREY, 400, "middle")
+    s.circle(cx, cy - (R - 44), 17, "#FCFDFE", "#5F6B78", 2.2)   # ঝোলানোর গর্ত
+
+    for i, (n, mm) in enumerate(SLOTS):
+        a, _hw, rr = geom(i, mm)
+        rn = RIN - rr - 26                  # নিজের ছাড়-গর্তের ঠিক ভেতরে
+        s.text(cx + rn * math.cos(a), cy + rn * math.sin(a) + 8,
+               str(n), 23, NAVY, 700, "middle")
+
+    # ── বিবর্ধিত খাঁজ ─────────────────────────────────────────────────
+    LX, RX = PX2 + 16, PX2 + PW2 - 16
+    SX, HWM, RRM = 890, 34, 52
+    RY, PYT = 330, 364                  # খাঁজের মুখে ও দুই প্রান্তে কিনারা
+    HY = 540                            # ছাড়-গর্তের কেন্দ্র
+    dxm = math.sqrt(RRM ** 2 - HWM ** 2)
+    s.path(f"M {LX} {PYT} Q 748 334 {SX-HWM} {RY} "
+           f"L {SX-HWM} {HY-dxm:.1f} "
+           f"A {RRM} {RRM} 0 1 0 {SX+HWM} {HY-dxm:.1f} "
+           f"L {SX+HWM} {RY} Q 1032 334 {RX} {PYT} "
+           f"L {RX} 640 L {LX} 640 Z", "#77838F", 3.0, "#C6D0D9")
+    s.path(f"M {LX} {PYT+12} Q 748 346 {SX-HWM-5} {RY+12}", "#AAB5C0", 2.2)
+    s.path(f"M {SX+HWM+5} {RY+12} Q 1032 346 {RX} {PYT+12}", "#AAB5C0", 2.2)
+
+    # খেই শিরোনাম-পট্টির নিচ থেকে শুরু, নইলে চিপের ভেতর দিয়ে যায়
+    # খেই থামে খাঁজের সমান্তরাল দেয়ালেই — গোল গর্ত খালি থাকে
+    WW = 23                             # খাঁজের চেয়ে সামান্য সরু
+    s.rect(SX - WW, 200, 2 * WW, 268, COPPER, "#8A5326", 2, 2)
+    s.rect(SX - WW + 6, 206, 9, 256, COPPERL, "none", 0, 2)
+    s.ellipse(SX, 468, WW, 7, "#CC8B52", "#8A5326", 2)
+
+    def label(x, y, text, tx, ty, anchor):
+        w = tw(text, T_CALL, 700)
+        x0 = x if anchor == "start" else x - w
+        s.rect(x0 - 9, y - 17, w + 18, 34, "#FCFDFE", "none", 0, 7)
+        callout(s, x, y, text, tx, ty, anchor, T_CALL)
+
+    label(772, 252, "খেই", SX + 6, 258, "end")
+    label(772, 420, "খাঁজ", SX - HWM, 420, "end")
+    label(1012, 556, "গোল গর্ত", SX + 12, 556, "start")
+
+    y = note_strip(s, PY + PH + 26,
+                   "মাপ নেয় খাঁজের দুই সমান্তরাল কিনারা — নিচের গোল গর্ত নয়")
     s.fit(y, 24)
     return s.save(f"{OUT}/d17_gauge.svg")
 
