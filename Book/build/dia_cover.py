@@ -4,17 +4,18 @@
 ক্যানভাস ১২৪০ × ১৭৫৪ px = A4-এর অনুপাত (১:১.৪১৪২), পূর্ণ পৃষ্ঠাজুড়ে বসে।
 ১২৪০ px ২১০ মিমি চওড়া হলে ১ px = ০.৪৮ pt — তাই ১০০ px শিরোনাম ছাপে ৪৮ pt।
 
-গঠন
-    · উপরে সাদা মাস্টহেড পটি — RAPTI-র নিজস্ব লোগো (rapti.net) ও প্রতিষ্ঠানের নাম
-    · সোনালি রুল
-    · গাঢ় নেভি ক্ষেত্র — বইয়ের নাম, উপশিরোনাম, সংস্করণ
-    · হালকা রেখায় একটি হাউস-ওয়্যারিং সার্কিট মোটিফ (দুটি বাস, তিনটি প্যারালাল
-      ব্রাঞ্চ — বাতি, ফ্যান, সকেট; সিরিজে নয়, বইয়ের নিয়ম মেনেই আঁকা)
-    · নিচে যোগাযোগ
+ভাবনা — **একটি ড্রয়িং শিট**।  পুরো পৃষ্ঠা এক টানা গাঢ় নীল; তার উপর খুব
+হালকা ব্লুপ্রিন্ট-গ্রিড, সোনালি কিনারার রেখা, আর নিচের অর্ধে ম্লান রেখায়
+একটি হাউস-ওয়্যারিং সার্কিট।  আগের নকশায় উপরে সাদা পটি আর নিচে নীল —
+দুই টুকরো দেখাচ্ছিল বলে ব্যবহারকারী তা বাতিল করেন (২০২৬-০৮-৩১)।  তাই সাদা
+পটি নেই; RAPTI-র লোগো সরাসরি নীলের উপর বসে, "RAPTI" লেখাটি সাদা করে নেওয়া
+হয়েছে (`assets_cover.py`-এর `_light_wordmark`)।
+
+সার্কিট মোটিফ: দুটি বাস, তিনটি প্যারালাল ব্রাঞ্চ — বাতি, ফ্যান, সকেট;
+সিরিজে নয়, বইয়ের নিয়ম মেনেই আঁকা।
 
 প্রচ্ছদটি বইয়ে **PNG হিসেবেই** বসে, SVG নয় — যার কম্পিউটারে কালপুরুষ নেই তার
-কাছেও প্রচ্ছদ হুবহু একই দেখাবে।  ভেতরের চিত্রগুলোর নিয়ম (SVG + PNG) এখানে
-প্রযোজ্য নয়, কারণ প্রচ্ছদ কেউ Word-এ এডিট করবে না।
+কাছেও প্রচ্ছদ হুবহু একই দেখাবে।
 """
 import os
 from svgkit import SVG, tw
@@ -24,74 +25,112 @@ OUT = os.path.join(HERE, "diagrams", "cover")
 IMG = os.path.join(HERE, "assets", "cover")
 
 W, H = 1240, 1754
+CX = W / 2
+INSET = 40                       # শিটের কিনারার রেখা
 
-BAND_H  = 300                     # সাদা মাস্টহেড পটি
 GOLD    = "#C8A64B"
-GOLD_L  = "#DCC176"
+GOLD_L  = "#DFC57E"
 WHITE   = "#FFFFFF"
+NEARW   = "#E9F1F8"
 PALE    = "#A9C8E4"
-PALE2   = "#8FB0CE"
-SUB     = "#C5DAEC"
-NAVY_D  = "#0B2947"
-INKN    = "#0F3357"
-GREYT   = "#5A6470"
-MOTIF   = "#5C9AD4"
+PALE2   = "#8AAECD"
+SUB     = "#C0D6EA"
+NAVY_D  = "#0A2440"
+MOTIF   = "#6FA8DC"
 LATIN   = "Helvetica Neue"
 
-CX = W / 2
+
+def _sheet(s):
+    """পটভূমি — নীল গ্রেডিয়েন্ট, ব্লুপ্রিন্ট-গ্রিড, সোনালি কিনারা।
+
+    গ্রিড দুটি `<pattern>`, `s.add()` দিয়ে সরাসরি বসানো — `s.rect()` দিয়ে নয়।
+    কারণ `qc.py` প্রতিটি রেকর্ড করা রেখাকে লেখার সঙ্গে মিলিয়ে দেখে, আর
+    পটভূমির গ্রিড তো লেখার নিচ দিয়েই যাবে — সেটিই নকশা, ত্রুটি নয়।
+    """
+    s.defs.append(
+        '<linearGradient id="bgg" x1="0" y1="0" x2="0" y2="1">'
+        '<stop offset="0" stop-color="#0A2440"/>'
+        '<stop offset="0.45" stop-color="#133D63"/>'
+        '<stop offset="1" stop-color="#061829"/></linearGradient>')
+    s.defs.append(
+        '<pattern id="grid1" width="62" height="62" patternUnits="userSpaceOnUse">'
+        '<path d="M 62 0 L 0 0 0 62" fill="none" stroke="#7FB3DD" '
+        'stroke-width="1" opacity="0.07"/></pattern>')
+    s.defs.append(
+        '<pattern id="grid2" width="310" height="310" patternUnits="userSpaceOnUse">'
+        '<path d="M 310 0 L 0 0 0 310" fill="none" stroke="#7FB3DD" '
+        'stroke-width="1.5" opacity="0.13"/></pattern>')
+    s.add(f'<rect width="{W}" height="{H}" fill="url(#bgg)"/>')
+    s.add(f'<rect width="{W}" height="{H}" fill="url(#grid1)"/>')
+    s.add(f'<rect width="{W}" height="{H}" fill="url(#grid2)"/>')
+    s.add(f'<rect x="{INSET}" y="{INSET}" width="{W - 2*INSET}" '
+          f'height="{H - 2*INSET}" fill="none" stroke="{GOLD}" '
+          f'stroke-width="1.5" opacity="0.38"/>')
+
+
+def _divider(s, y, half, sw=1.1, op=0.55):
+    """মাঝখানে ছোট সোনালি হীরকসহ একটি সরু রেখা।"""
+    s.add(f'<g opacity="{op}">'
+          f'<line x1="{CX-half:.1f}" y1="{y}" x2="{CX-20:.1f}" y2="{y}" '
+          f'stroke="{GOLD}" stroke-width="{sw}"/>'
+          f'<line x1="{CX+20:.1f}" y1="{y}" x2="{CX+half:.1f}" y2="{y}" '
+          f'stroke="{GOLD}" stroke-width="{sw}"/>'
+          f'<polygon points="{CX:.1f},{y-6} {CX+6:.1f},{y} {CX:.1f},{y+6} '
+          f'{CX-6:.1f},{y}" fill="{GOLD}"/></g>')
 
 
 def _motif(s):
-    """হালকা রেখায় হাউস-ওয়্যারিং সার্কিট — দুটি বাস, তিনটি প্যারালাল ব্রাঞ্চ।
+    """ম্লান রেখায় হাউস-ওয়্যারিং সার্কিট — দুটি বাস, তিনটি প্যারালাল ব্রাঞ্চ।
 
-    গোটা মোটিফ একটি `<g opacity>`-এর ভেতরে আঁকা।  `svgkit.line()`-এ opacity
-    আর্গুমেন্ট নেই, তাই প্রতিটি আকৃতিতে আলাদা করে দিলে রেখা পুরো গাঢ় আর
-    বৃত্ত হালকা হয়ে যেত — গ্রুপে দিলে সব একই ঘনত্বে বসে।
+    গোটা মোটিফ একটি `<g opacity>`-এর ভেতরে।  `svgkit.line()`-এ opacity
+    আর্গুমেন্ট নেই, তাই প্রতিটি আকৃতিতে আলাদা দিলে রেখা পুরো গাঢ় আর বৃত্ত
+    হালকা হয়ে যেত।
+
+    শেষ ব্রাঞ্চেই বাস শেষ — এর পরে টুকরো তার ঝুলে থাকলে অসমাপ্ত কানেকশনের
+    মতো দেখায়।  সুইচের ব্লেডও তাই সব কটি বাঁ দিকে, যাতে কোনোটি বাসের কোণ
+    ছাড়িয়ে না যায়।  পুরো মোটিফ ১৬৫…১০৭৫ — পৃষ্ঠার মাঝবরাবর।
     """
-    sw = 2.4
-    L_Y, N_Y = 1090.0, 1302.0
-    # শেষ ব্রাঞ্চেই বাস শেষ — এর পরে টুকরো তার ঝুলে থাকলে সেটি অসমাপ্ত
-    # কানেকশনের মতো দেখায়।  সুইচের ব্লেডও তাই সব কটি বাঁ দিকে, যাতে কোনোটি
-    # বাসের কোণ ছাড়িয়ে না যায়।  পুরো মোটিফ ২১৫…১০২৫ — মাঝবরাবর।
-    BUS_X0, BUS_X1 = 581.0, 1025.0
+    sw = 2.6
+    L_Y, N_Y = 1080.0, 1310.0
+    BUS_X0, BUS_X1 = 575.0, 1075.0
 
-    s.add('<g opacity="0.42">')
+    s.add('<g opacity="0.30">')
 
     # এনার্জি মিটার
-    s.rect(215, 1150, 130, 92, "none", MOTIF, sw, 6)
-    s.line(215, 1182, 345, 1182, MOTIF, sw * 0.8)
-    s.circle(280, 1214, 15, "none", MOTIF, sw * 0.8)
+    s.rect(165, 1148, 150, 100, "none", MOTIF, sw, 7)
+    s.line(165, 1184, 315, 1184, MOTIF, sw * 0.8)
+    s.circle(240, 1216, 17, "none", MOTIF, sw * 0.8)
 
     # লাইন কন্ডাক্টর: মিটার → MCB → L বাস
-    s.line(345, 1174, 425, 1174, MOTIF, sw)
-    s.rect(425, 1148, 84, 52, "none", MOTIF, sw, 5)
-    s.line(439, 1188, 495, 1158, MOTIF, sw * 0.85)
-    s.line(509, 1174, BUS_X0, 1174, MOTIF, sw)
-    s.line(BUS_X0, 1174, BUS_X0, L_Y, MOTIF, sw)
+    s.line(315, 1176, 395, 1176, MOTIF, sw)
+    s.rect(395, 1150, 100, 52, "none", MOTIF, sw, 5)
+    s.line(411, 1190, 479, 1160, MOTIF, sw * 0.85)
+    s.line(495, 1176, BUS_X0, 1176, MOTIF, sw)
+    s.line(BUS_X0, 1176, BUS_X0, L_Y, MOTIF, sw)
     s.line(BUS_X0, L_Y, BUS_X1, L_Y, MOTIF, sw)
 
     # নিউট্রাল কন্ডাক্টর: মিটার → N বাস
-    s.line(345, 1218, BUS_X0, 1218, MOTIF, sw)
-    s.line(BUS_X0, 1218, BUS_X0, N_Y, MOTIF, sw)
+    s.line(315, 1224, BUS_X0, 1224, MOTIF, sw)
+    s.line(BUS_X0, 1224, BUS_X0, N_Y, MOTIF, sw)
     s.line(BUS_X0, N_Y, BUS_X1, N_Y, MOTIF, sw)
 
-    for x, kind in ((725, "lamp"), (875, "fan"), (1025, "socket")):
-        cy, r = 1215.0, 27.0
-        s.line(x, L_Y, x, 1136, MOTIF, sw)               # L বাস থেকে ড্রপ
-        s.line(x, 1136, x - 26, 1168, MOTIF, sw)         # সুইচের ব্লেড
-        s.circle(x, 1176, 4, MOTIF, "none", 0)
-        s.line(x, 1176, x, cy - r, MOTIF, sw)
+    for x, kind in ((715, "lamp"), (895, "fan"), (1075, "socket")):
+        cy, r = 1212.0, 32.0
+        s.line(x, L_Y, x, 1128, MOTIF, sw)               # L বাস থেকে ড্রপ
+        s.line(x, 1128, x - 30, 1162, MOTIF, sw)         # সুইচের ব্লেড
+        s.circle(x, 1170, 4.5, MOTIF, "none", 0)
+        s.line(x, 1170, x, cy - r, MOTIF, sw)
         s.circle(x, cy, r, "none", MOTIF, sw)
         if kind == "lamp":
-            s.line(x - 19, cy - 19, x + 19, cy + 19, MOTIF, sw * 0.85)
-            s.line(x - 19, cy + 19, x + 19, cy - 19, MOTIF, sw * 0.85)
+            s.line(x - 22, cy - 22, x + 22, cy + 22, MOTIF, sw * 0.85)
+            s.line(x - 22, cy + 22, x + 22, cy - 22, MOTIF, sw * 0.85)
         elif kind == "fan":
-            s.line(x, cy, x, cy + 21, MOTIF, sw * 0.85)
-            s.line(x, cy, x - 18.2, cy - 10.5, MOTIF, sw * 0.85)
-            s.line(x, cy, x + 18.2, cy - 10.5, MOTIF, sw * 0.85)
+            s.line(x, cy, x, cy + 25, MOTIF, sw * 0.85)
+            s.line(x, cy, x - 21.7, cy - 12.5, MOTIF, sw * 0.85)
+            s.line(x, cy, x + 21.7, cy - 12.5, MOTIF, sw * 0.85)
         else:
-            s.circle(x - 9, cy - 5, 4.5, MOTIF, "none", 0)
-            s.circle(x + 9, cy - 5, 4.5, MOTIF, "none", 0)
+            s.circle(x - 10, cy - 6, 5, MOTIF, "none", 0)
+            s.circle(x + 10, cy - 6, 5, MOTIF, "none", 0)
         s.line(x, cy + r, x, N_Y, MOTIF, sw)             # N বাসে ফেরত
 
     s.add("</g>")
@@ -99,58 +138,43 @@ def _motif(s):
 
 def cover():
     s = SVG(W, H, bg=NAVY_D)
-
-    s.defs.append(
-        '<linearGradient id="bgg" x1="0" y1="0" x2="0" y2="1">'
-        '<stop offset="0" stop-color="#0B2947"/>'
-        '<stop offset="0.42" stop-color="#133F67"/>'
-        '<stop offset="1" stop-color="#08203B"/></linearGradient>')
-    s.add(f'<rect x="0" y="{BAND_H}" width="{W}" height="{H - BAND_H}" '
-          f'fill="url(#bgg)"/>')
-
-    # ── মাস্টহেড ────────────────────────────────────────────────────────
-    s.rect(0, 0, W, BAND_H, WHITE, "none", 0, 0)
-    # লোগোর উৎস-ফাইল ৩৫৬ px চওড়া; ২৬৪ px-এ বসালে ছাপে ≈২০৫ dpi — এর চেয়ে
-    # বড় করলে ওয়ার্ডমার্ক নরম দেখাবে।
-    lw, lh = 264.0, 96.4
-    s.image(CX - lw / 2, 54, lw, lh, os.path.join(IMG, "logo_rapti.png"))
-    s.text(CX, 208, "রেজোন্যান্স অটোমেশন প্রফেশনাল ট্রেনিং ইনস্টিটিউট",
-           30, INKN, 700, "middle")
-    s.text(CX, 240,
-           "RESONANCE  AUTOMATION  PROFESSIONAL  TRAINING  INSTITUTE",
-           13.5, GREYT, 500, "middle", family=LATIN, ls=2.6)
-    s.text(CX, 274, "প্রতিষ্ঠাকাল ২০১৯   ·   ভুইঘর, নারায়ণগঞ্জ",
-           17, GREYT, 400, "middle")
-    s.rect(0, BAND_H, W, 5, GOLD, "none", 0, 0)
-
-    # ── নেভি ক্ষেত্রের কিনারার রেখা ────────────────────────────────────
-    s.rect(46, 348, W - 92, 1360, "none", GOLD, 1.4, 0, opacity=0.30)
-
+    _sheet(s)
     _motif(s)
 
-    # ── শিরোনাম ব্লক ───────────────────────────────────────────────────
-    s.text(CX, 452, "প্রশিক্ষণ পাঠ্যপুস্তক", 27, GOLD_L, 700, "middle", ls=12)
-    s.text(CX, 592, "ইলেকট্রিক্যাল", 100, WHITE, 700, "middle")
-    s.text(CX, 720, "হাউস ওয়্যারিং", 100, WHITE, 700, "middle")
-    s.line(CX - 92, 774, CX + 92, 774, GOLD, 3)
-    s.text(CX, 828, "ELECTRICAL HOUSE WIRING", 25, PALE, 300, "middle",
-           family=LATIN, ls=7)
-    s.text(CX, 896, "কোর্স মডিউল অনুযায়ী প্রণীত পূর্ণাঙ্গ পাঠ্যপুস্তক",
-           26, SUB, 400, "middle")
+    # ── প্রতিষ্ঠানের পরিচয় ─────────────────────────────────────────────
+    # উৎস-ফাইল ৩৫৬ px চওড়া; ২৫০ px-এ বসালে ছাপে ≈২১৭ dpi — এর বেশি বড়
+    # করলে ওয়ার্ডমার্ক নরম দেখাবে।
+    lw, lh = 250.0, 91.3
+    s.image(CX - lw / 2, 100, lw, lh, os.path.join(IMG, "logo_rapti_light.png"))
+    s.text(CX, 252, "রেজোন্যান্স অটোমেশন প্রফেশনাল ট্রেনিং ইনস্টিটিউট",
+           29, NEARW, 700, "middle")
+    s.text(CX, 284, "RESONANCE  AUTOMATION  PROFESSIONAL  TRAINING  INSTITUTE",
+           15, PALE2, 500, "middle", family=LATIN, ls=2.8)
+    _divider(s, 326, 290)
+
+    # ── শিরোনাম ────────────────────────────────────────────────────────
+    s.text(CX, 424, "প্রশিক্ষণ পাঠ্যপুস্তক", 25, GOLD_L, 700, "middle", ls=13)
+    s.text(CX, 564, "ইলেকট্রিক্যাল", 104, WHITE, 700, "middle")
+    s.text(CX, 696, "হাউস ওয়্যারিং", 104, WHITE, 700, "middle")
+    s.line(CX - 75, 754, CX + 75, 754, GOLD, 3)
+    s.text(CX, 810, "ELECTRICAL HOUSE WIRING", 24, PALE, 300, "middle",
+           family=LATIN, ls=8)
+    s.text(CX, 872, "কোর্স মডিউল অনুযায়ী প্রণীত পূর্ণাঙ্গ পাঠ্যপুস্তক",
+           25, SUB, 400, "middle")
 
     chip = "অধ্যায় ১–২৩   ·   প্রথম সংস্করণ ২০২৬"
-    cwid = tw(chip, 23, 600) + 76
-    s.rect(CX - cwid / 2, 934, cwid, 52, "none", GOLD, 1.5, 26, opacity=0.55)
-    s.text(CX, 967, chip, 23, GOLD_L, 600, "middle")
+    cwid = tw(chip, 22, 600) + 80
+    s.rect(CX - cwid / 2, 910, cwid, 52, "none", GOLD, 1.5, 26, opacity=0.55)
+    s.text(CX, 943, chip, 22, GOLD_L, 600, "middle")
 
     # ── যোগাযোগ ────────────────────────────────────────────────────────
-    s.line(150, 1432, W - 150, 1432, GOLD, 1.2, dash=None)
-    s.text(CX, 1492, "অ্যাডমিশন হটলাইন   ০১৬১৭-৩৪৫৫৩৪", 27, WHITE, 700, "middle")
-    s.text(CX, 1538, "raptibd@gmail.com     ·     rapti.net", 22, PALE, 400,
+    _divider(s, 1448, 340, sw=1.0, op=0.45)
+    s.text(CX, 1508, "অ্যাডমিশন হটলাইন   ০১৬১৭-৩৪৫৫৩৪", 26, WHITE, 700, "middle")
+    s.text(CX, 1552, "raptibd@gmail.com     ·     rapti.net", 21, PALE, 400,
            "middle", family=LATIN)
-    s.text(CX, 1582,
+    s.text(CX, 1594,
            "২১০১, ভুইঘর, রূপায়ণ টাউন, গেট-১ সংলগ্ন, ফতুল্লা, নারায়ণগঞ্জ-১৪২০",
-           20, PALE2, 400, "middle")
+           19, PALE2, 400, "middle")
 
     return s.save(f"{OUT}/cover.svg")
 

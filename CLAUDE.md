@@ -602,6 +602,22 @@ Check these before rendering — each one shipped once and had to be fixed:
   `wp:anchor` with `behindDoc`, which takes no room in the text flow. It lives
   in its own **zero-margin section**, so the merged book has two sections:
   0 = cover (no header, no footer, no page number), 1 = everything else.
+- **A cover split into a white band over a navy field was rejected**
+  ("cover page upore sada niche nil..amon na", 2026-08-31). The white band
+  existed only because the logo's `RAPTI` wordmark is near-black and vanishes
+  on navy. The fix is `_light_wordmark()` in `assets_cover.py`: it recolours
+  the wordmark's RGB to white while **keeping the alpha untouched**, so the
+  antialiased edges stay correct on any ground, and leaves the emblem alone
+  (the emblem is already white + bright blue and reads fine on navy). The
+  wordmark starts at x = 137 — columns 130–142 of the source PNG are fully
+  transparent, which is how the split point was found, not by eye. The cover
+  is now one continuous navy field: gradient + a faint two-level blueprint
+  grid + a gold sheet border + the circuit motif, i.e. a drawing sheet.
+- **The blueprint grid is two `<pattern>` fills added with `s.add()`, not
+  `s.rect()`.** `qc.py` scores every recorded line against every text box, and
+  a background grid runs under the lettering *by design* — recording it would
+  produce a page of false `line crosses` reports. Same reasoning as the
+  `<g opacity>` wrapper: decoration, not geometry that can collide.
 - **The cover ships as PNG only, no SVG** — unlike every interior figure. A
   reader without Kalpurush would otherwise get a broken cover, and nobody
   edits a cover in Word.

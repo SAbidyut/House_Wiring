@@ -35,6 +35,28 @@ def _download(name, url):
     return dst
 
 
+WORDMARK_X0 = 137          # লোগোর ভেতরে এমব্লেম ও "RAPTI" লেখার মাঝের ফাঁক
+                            # (আলফা-চ্যানেলে ১৩০–১৪২ কলাম পুরো ফাঁকা)
+
+
+def _light_wordmark(im):
+    """গাঢ় নেভি "RAPTI" লেখাটিকে সাদা করে — এমব্লেমে হাত না দিয়ে।
+
+    প্রচ্ছদ গাঢ় নীল, আর ওয়ার্ডমার্কের রং প্রায় কালো-নীল (0,24,32) — সরাসরি
+    বসালে লেখাটি মিলিয়ে যায়।  আলফা অপরিবর্তিত রেখে কেবল RGB সাদা করা হয়,
+    তাই কিনারার অ্যান্টি-অ্যালিয়াসিং যেকোনো পটভূমিতেই ঠিক থাকে।
+    """
+    im = im.copy()
+    px = im.load()
+    w, h = im.size
+    for x in range(WORDMARK_X0, w):
+        for y in range(h):
+            r, g, b, a = px[x, y]
+            if a:
+                px[x, y] = (255, 255, 255, a)
+    return im
+
+
 def build():
     os.makedirs(OUT, exist_ok=True)
     made = []
@@ -49,6 +71,11 @@ def build():
         flat.save(p)
         made.append(p)
         print("✓", os.path.relpath(p, HERE), flat.size)
+        if name == "logo_rapti":
+            q = os.path.join(OUT, "logo_rapti_light.png")
+            _light_wordmark(im).save(q)       # স্বচ্ছ থাকে — নেভির উপর বসবে
+            made.append(q)
+            print("✓", os.path.relpath(q, HERE), "(wordmark → white, RGBA)")
     return made
 
 
