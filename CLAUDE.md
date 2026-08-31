@@ -80,6 +80,8 @@ chNN.py ──(bookkit.py)──► out/অধ্যায়-NN — <title>.doc
 | `qc.py` | Diagram quality gate — text/text, text/graphic, off-canvas. |
 | `layout.py` | Converts DOCX→PDF, reports blank bands at page feet. |
 | `tune.py` | Optional auto-shrink of figures (rarely used; reordering is preferred). |
+| `mkbook.py` | Merges the per-chapter `.docx` into **one delivered book** — full-bleed cover, imprint page, clickable সূচিপত্র, book-wide footer. |
+| `dia_cover.py` · `assets_cover.py` | The cover artwork and RAPTI's own logo (from `rapti.net`). |
 
 ## Directory map
 
@@ -139,6 +141,20 @@ python qc.py dia_ch07                   # MUST report 0 problems
 python ch07.py                          # build the .docx
 python layout.py "out/<file>.docx" 4.5  # report page-foot gaps
 ```
+
+Merging everything delivered so far into one book:
+
+```bash
+python mkbook.py                        # → Book/…সম্পূর্ণ বই (অধ্যায় ১–NN).docx
+```
+
+**The merged `.docx` is not in git** — it is ~263 MB, over GitHub's 100 MB
+per-file limit, and `mkbook.py` rebuilds it in under a minute from the
+per-chapter files that *are* versioned. Only the preview PDF is committed.
+After adding a chapter, bump the `(অধ্যায় ১–NN)` range in `mkbook.DEST` and
+the `assert` on the chapter list, then re-run. The cover art is rebuilt with
+`python dia_cover.py && python render.py 'diagrams/cover/cover.svg'` (the
+PNG is gitignored like every other rendered PNG, but `mkbook.py` needs it).
 
 ## Voice — who is writing this book
 
@@ -564,8 +580,50 @@ Check these before rendering — each one shipped once and had to be fixed:
   35 pages and the artefact is gone; if any chapter still shows a trailing
   header-only page it is harmless and disappears when the chapters are merged.
 - Appendix ক (symbol chart) can reuse the four sheets from `dia_ch05.py`.
-- Once all 28 chapters exist: merge into one file, continuous page numbers,
-  single TOC + চিত্রসূচি + সারণিসূচি.
+- **The merge is done and shipping** — `mkbook.py` (2026-08-31, on the user's
+  request) already produces one file with continuous page numbers and a
+  clickable chapter সূচিপত্র; chapters 1–23 → 556 pages. Still owed once all
+  28 exist: চিত্রসূচি and সারণিসূচি (every chapter's `Book` object already
+  collects `b.figures` / `b.tables`, so both lists can be generated rather
+  than typed), and a section-level TOC if the user wants one.
+
+**What `mkbook.py` had to work around, do not re-derive:**
+- **docxcompose drops every appended document's body `sectPr`.** So the merged
+  file cannot keep per-chapter running headers — it gets one book-wide header
+  instead, set on the front-matter section. Chapters still start on a fresh
+  page because `inject_chapter_start()` prepends a tiny `pageBreakBefore`
+  paragraph carrying `bookmarkStart _chNN`; that bookmark is also what the
+  সূচিপত্র links to (`w:hyperlink w:anchor` + `PAGEREF _chNN \h`, dotted right
+  tab). `<w:updateFields val="true"/>` makes Word offer to refresh the page
+  numbers on open and makes LibreOffice resolve them on PDF export.
+- **The cover is a full-bleed image, and it must be *anchored*.** An inline
+  picture carries line leading, so a page-height one spills onto page 2;
+  `full_page_picture()` rewrites python-docx's `wp:inline` into a page-relative
+  `wp:anchor` with `behindDoc`, which takes no room in the text flow. It lives
+  in its own **zero-margin section**, so the merged book has two sections:
+  0 = cover (no header, no footer, no page number), 1 = everything else.
+- **The cover ships as PNG only, no SVG** — unlike every interior figure. A
+  reader without Kalpurush would otherwise get a broken cover, and nobody
+  edits a cover in Word.
+- **`svgkit.line()` has no `opacity` argument.** Giving each shape its own
+  opacity left the motif's lines solid and only its circles faint; the whole
+  motif goes inside one `<g opacity="0.42">` instead.
+- **`bookkit.Book.spacer(N)` is near-zero-height in LibreOffice** for large N
+  (it is an empty run), so vertical space on a generated page has to come from
+  `space_after` — that is what `vgap()` in `mkbook.py` does.
+- RAPTI's details come from **rapti.net** (about.php / contact.php): est. 2019;
+  `2101, Bhuighar, Rupayan Town, Near Gate-1, Fatullah, Narayanganj-1420` —
+  **Bhuighar is ভুইঘর in Bangla** (the user corrected an earlier ভূঁইগাঁও);
+  hotline 01617-345534, also 01685-953204 and 01766-221733; WhatsApp
+  +8801617345534; `raptibd@gmail.com` (Cloudflare-obfuscated on the page —
+  decode the `data-cfemail` hex: first byte is the XOR key); rapti.net;
+  facebook.com/resonanceautomationbd. The logo is `rapti.net/assets/images/
+  logo_ippi.png` (356×130, transparent) — `assets_cover.py` flattens it onto
+  white and asserts the pixel size. Placed 264 px wide on the 1240 px canvas
+  it prints at ~205 dpi; larger and the wordmark goes soft.
+- Page-foot gaps are **not** re-checked after merging — each chapter was
+  already cleared on its own, and `pageBreakBefore` means no chapter's content
+  can flow into another's.
 
 ## Next step
 

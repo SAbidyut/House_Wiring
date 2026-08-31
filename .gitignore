@@ -9,8 +9,15 @@ __pycache__/
 # --- Regenerable build caches (rebuilt by the pipeline; not worth versioning) ---
 Book/build/.slidepdf/
 Book/build/.commons_ch11/
+Book/build/.coverdl/
 Book/build/.sharp1916.pdf
 Book/build/out/
+
+# --- The merged book (.docx) ---
+# ~263 MB, i.e. over GitHub's 100 MB per-file hard limit, and it is a pure
+# build artefact: `python mkbook.py` rebuilds it in under a minute from the
+# per-chapter .docx files, which ARE versioned. The preview PDF is kept.
+Book/ইলেকট্রিক্যাল হাউস ওয়্যারিং — সম্পূর্ণ বই*.docx
 
 # --- Stray empty git repo, not part of the book ---
 k/
