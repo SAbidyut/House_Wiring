@@ -13,11 +13,13 @@ Book/build/.coverdl/
 Book/build/.sharp1916.pdf
 Book/build/out/
 
-# --- The merged book (.docx) ---
-# ~263 MB, i.e. over GitHub's 100 MB per-file hard limit, and it is a pure
-# build artefact: `python mkbook.py` rebuilds it in under a minute from the
-# per-chapter .docx files, which ARE versioned. The preview PDF is kept.
+# --- The merged books (.docx) ---
+# Both the full book (~506 MB) and the condensed digest (~153 MB) are over
+# GitHub's 100 MB per-file hard limit, and both are pure build artefacts:
+# `python mkbook.py` / `python mkdigest.py` rebuild them from the per-chapter
+# .docx files, which ARE versioned. The preview PDFs are kept.
 Book/ইলেকট্রিক্যাল হাউস ওয়্যারিং — সম্পূর্ণ বই*.docx
+Book/ইলেকট্রিক্যাল হাউস ওয়্যারিং — সংক্ষিপ্ত সংস্করণ*.docx
 
 # --- Stray empty git repo, not part of the book ---
 k/

@@ -11,6 +11,7 @@ from docx.shared import Pt, Cm, Mm, RGBColor, Emu
 from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_LINE_SPACING, WD_BREAK
 from docx.enum.table import WD_TABLE_ALIGNMENT
 from docx.enum.section import WD_SECTION
+from docx.enum.style import WD_STYLE_TYPE
 from docx.oxml.ns import qn, nsmap
 from docx.oxml import OxmlElement
 from docx.opc.part import Part
@@ -308,6 +309,15 @@ class Book:
             s.paragraph_format.keep_with_next = True
             s.paragraph_format.line_spacing = 1.15
 
+        # Distinct from "Heading 1" (used by b.h1() for in-chapter sections)
+        # on purpose — a STYLEREF field in the merged digest's running header
+        # targets this style alone, so it always resolves to the nearest
+        # *chapter* title above the current page, never a section heading.
+        if "RaptiChapterTitle" not in [s.name for s in d.styles]:
+            cs = d.styles.add_style("RaptiChapterTitle", WD_STYLE_TYPE.PARAGRAPH)
+            cs.base_style = d.styles["Normal"]
+            cs.hidden = False
+
     # ── header & footer ───────────────────────────────────────────────────
     def build_header_footer(self):
         sec = self.section
@@ -397,8 +407,14 @@ class Book:
         p0.paragraph_format.space_after = Pt(2)
         set_run_font(p0.add_run(f"অধ্যায়  {bn(self.ch)}"),
                      size=Pt(12), bold=True, color=RGBColor(0x9F, 0xC4, 0xE6), spacing=60)
-        p1 = c.add_paragraph(); p1.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p1 = c.add_paragraph(style="RaptiChapterTitle")
+        p1.alignment = WD_ALIGN_PARAGRAPH.LEFT
         p1.paragraph_format.space_after = Pt(0); p1.paragraph_format.line_spacing = 1.05
+        # invisible "অধ্যায় N · " prefix — adds no height, but the merged
+        # digest's running-header STYLEREF reads the whole paragraph text,
+        # so every page shows the chapter number together with its title.
+        rpre = p1.add_run(f"অধ্যায় {bn(self.ch)} · ")
+        rpre.font.size = Pt(1); rpre.font.hidden = True
         set_run_font(p1.add_run(self.ch_title), size=Pt(26), bold=True,
                      color=RGBColor(0xFF, 0xFF, 0xFF))
         if self.subtitle:
@@ -427,7 +443,7 @@ class Book:
         cell_borders(c, "D5E0EA", 4, edges=("top", "bottom", "right"))
         cell_margins(c, top=140, bottom=140, left=200, right=180)
         p = c.paragraphs[0]; p.paragraph_format.space_after = Pt(5)
-        set_run_font(p.add_run("এই অধ্যায় শেষে শিক্ষার্থী যা পারবে"),
+        set_run_font(p.add_run("এই অধ্যায় শেষে শিক্ষার্থী —"),
                      size=Pt(12), bold=True, color=NAVY)
         for it in items:
             q = c.add_paragraph()

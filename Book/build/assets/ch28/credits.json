@@ -1,0 +1,86 @@
+{
+ "ph_ir_analog": {
+  "file": "Alacsonyfeszültségű szigetelési ellenállás mérő.jpg",
+  "artist": "Tambo",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Alacsonyfesz%C3%BClts%C3%A9g%C5%B1_szigetel%C3%A9si_ellen%C3%A1ll%C3%A1s_m%C3%A9r%C5%91.jpg"
+ },
+ "ph_ir_digital": {
+  "file": "Isolationsmessgerät 1507.jpg",
+  "artist": "Photograph:  wdwd",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Isolationsmessger%C3%A4t_1507.jpg"
+ },
+ "ph_megger": {
+  "file": "Meger M4100 pealt.JPG",
+  "artist": "Akra",
+  "licence": "CC BY-SA 2.5",
+  "page": "https://commons.wikimedia.org/wiki/File:Meger_M4100_pealt.JPG"
+ },
+ "ph_ir_group": {
+  "file": "Insulation testers by Megger.jpg",
+  "artist": "Megger Ltd.",
+  "licence": "CC BY 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Insulation_testers_by_Megger.jpg"
+ },
+ "ph_earth_test": {
+  "file": "Digital Earth resistance tester.jpg",
+  "artist": "Powerfox",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Digital_Earth_resistance_tester.jpg"
+ },
+ "ph_rod_clamp": {
+  "file": "HomeEarthRodAustralia1.jpg",
+  "artist": "অজ্ঞাত",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:HomeEarthRodAustralia1.jpg"
+ },
+ "ph_pit": {
+  "file": "Curtin Building 314 main earth.jpg",
+  "artist": "Orderinchaos",
+  "licence": "CC BY 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Curtin_Building_314_main_earth.jpg"
+ },
+ "ph_bar_panel": {
+  "file": "Dornbirn-modern main earthing busbar (copper)-01ASD - Kopie.jpg",
+  "artist": "Asurnipal",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Dornbirn-modern_main_earthing_busbar_%28copper%29-01ASD_-_Kopie.jpg"
+ },
+ "ph_bar_parts": {
+  "file": "Busbars for earthing.JPG",
+  "artist": "Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Busbars_for_earthing.JPG"
+ },
+ "ph_socket_eu": {
+  "file": "Testavit-Schuki socket tester.jpg",
+  "artist": "Santeri Viinamäki",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Testavit-Schuki_socket_tester.jpg"
+ },
+ "ph_socket_dig": {
+  "file": "Electrical Outlet Tester (55252658366).jpg",
+  "artist": "Tony Webster",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Electrical_Outlet_Tester_%2855252658366%29.jpg"
+ },
+ "ph_neon_on": {
+  "file": "Voltage test light active.jpg",
+  "artist": "Simon A. Eugster",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Voltage_test_light_active.jpg"
+ },
+ "ph_neon_off": {
+  "file": "Voltage test light inactive.jpg",
+  "artist": "Simon A. Eugster",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Voltage_test_light_inactive.jpg"
+ },
+ "ph_testlamp": {
+  "file": "GS38 test lamp.jpg",
+  "artist": "Andy Dingley",
+  "licence": "CC BY-SA 4.0",
+  "page": "https://commons.wikimedia.org/wiki/File:GS38_test_lamp.jpg"
+ }
+}

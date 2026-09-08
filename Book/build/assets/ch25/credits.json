@@ -1,0 +1,64 @@
+{
+ "ph_empty": {
+  "file": "European fuse box inside.JPG",
+  "artist": "Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:European_fuse_box_inside.JPG"
+ },
+ "ph_kit": {
+  "file": "Punane 39 - materials.JPG",
+  "artist": "Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Punane_39_-_materials.JPG"
+ },
+ "ph_comb": {
+  "file": "Fuse box preparing to installation.JPG",
+  "artist": "Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Fuse_box_preparing_to_installation.JPG"
+ },
+ "ph_bridge": {
+  "file": "Wiring of European fuse box.JPG",
+  "artist": "Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Wiring_of_European_fuse_box.JPG"
+ },
+ "ph_work": {
+  "file": "Linnamäe 37 - fuse box wiring process.JPG",
+  "artist": "Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Linnam%C3%A4e_37_-_fuse_box_wiring_process.JPG"
+ },
+ "ph_flat": {
+  "file": "Paekaare 24 - fuse box.JPG",
+  "artist": "designed and assembled by Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Paekaare_24_-_fuse_box.JPG"
+ },
+ "ph_rows": {
+  "file": "Fuse box on hager components.JPG",
+  "artist": "Dmitry G",
+  "licence": "CC BY-SA 3.0",
+  "page": "https://commons.wikimedia.org/wiki/File:Fuse_box_on_hager_components.JPG"
+ },
+ "ph_chart": {
+  "file": "Small house distribution panel 1.jpg",
+  "artist": "Retired electrician",
+  "licence": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Small_house_distribution_panel_1.jpg"
+ },
+ "ph_neat": {
+  "file": "Small house distribution panel 2.jpg",
+  "artist": "Retired electrician",
+  "licence": "CC0",
+  "page": "https://commons.wikimedia.org/wiki/File:Small_house_distribution_panel_2.jpg"
+ },
+ "_rapti_slides": {
+  "files": [
+   "h33_board",
+   "h34_flat",
+   "h36_flat"
+  ],
+  "source": "RAPTI — HW Connection Diagram All.pptx (স্লাইড ৩৩, ৩৪, ৩৬)"
+ }
+}

@@ -1,21 +1,23 @@
 # -*- coding: utf-8 -*-
 """
-mkbook.py — assemble chapters 1–23 into a single delivered book.
+mkbook.py — assemble chapters 1–28 into a single delivered book.
 
   · full-bleed cover page (dia_cover.py artwork, its own borderless section)
   · imprint page — RAPTI details from rapti.net
-  · clickable সূচিপত্র  (internal hyperlink + PAGEREF, auto page numbers)
+  · clickable সূচিপত্র — every chapter AND every in-chapter section, with
+    its page number baked in as static text (see bake_toc_numbers)
   · book-wide footer:  Resonance Automation · <page> · 01617-345534
-  · one running header for the whole book
+  · running header:  book title (left) · অধ্যায় N · chapter title (centre,
+    a STYLEREF field) · rapti.net (right)
   · continuous page numbers throughout
 
 Run:   python assets_cover.py            # once — pulls the RAPTI logo
        python dia_cover.py
        python render.py 'diagrams/cover/cover.svg'
        python mkbook.py [--pdf]
-Out:   ../ইলেকট্রিক্যাল হাউস ওয়্যারিং — সম্পূর্ণ বই (অধ্যায় ১–২৩).docx
+Out:   ../ইলেকট্রিক্যাল হাউস ওয়্যারিং — সম্পূর্ণ বই (অধ্যায় ১–২৮).docx
 """
-import os, re, glob, sys, subprocess
+import os, re, glob, sys, subprocess, tempfile, shutil
 from docx import Document
 from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import (WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT,
@@ -26,14 +28,14 @@ from docx.oxml import OxmlElement, parse_xml
 from docxcompose.composer import Composer
 
 from bookkit import (Book, bn, set_run_font, para_border, cell_shade,
-                     cell_margins, cell_borders, field,
+                     cell_margins, cell_borders, field, keep_with_next,
                      NAVY, STEEL, GREY, INK, NAVY_HEX, STEEL_HEX)
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT  = os.path.join(HERE, "out")
 COVER_PNG = os.path.join(HERE, "diagrams", "cover", "cover.png")
 DEST = os.path.abspath(os.path.join(
-    HERE, "..", "ইলেকট্রিক্যাল হাউস ওয়্যারিং — সম্পূর্ণ বই (অধ্যায় ১–২৩).docx"))
+    HERE, "..", "ইলেকট্রিক্যাল হাউস ওয়্যারিং — সম্পূর্ণ বই (অধ্যায় ১–২৮).docx"))
 
 # ── RAPTI — from rapti.net (about.php / contact.php), Aug 2026 ──────────────
 INST_BN  = "রেজোন্যান্স অটোমেশন প্রফেশনাল ট্রেনিং ইনস্টিটিউট"
@@ -63,13 +65,23 @@ def chapter_list():
             n = int(num.translate(BN2A))
         except ValueError:
             continue
-        if 1 <= n <= 23:
+        if 1 <= n <= 28:
             rows.append((n, title.strip(), f))
     rows.sort(key=lambda r: r[0])
     return rows
 
 
 # ── front matter ──────────────────────────────────────────────────────────
+def chapter_sections(path):
+    """Return the chapter's in-book section headings in document order —
+    the `b.h1()` paragraphs (`১.১  …`), text kept whole (number + title).
+    Same filter `inject_section_bookmarks()` uses, so the k-th here is the
+    k-th there and the সূচিপত্র PAGEREF anchors line up."""
+    doc = Document(path)
+    return [p.text.strip() for p in doc.paragraphs
+            if p.style and p.style.name == "Heading 1" and p.text.strip()]
+
+
 def _link(p, anchor, parts):
     """Append an internal hyperlink (to a bookmark) built from styled runs."""
     hl = OxmlElement("w:hyperlink")
@@ -131,7 +143,7 @@ def full_page_picture(doc, png, page_w, page_h):
     return p
 
 
-def build_front(chaps):
+def build_front(chaps, toc_tree):
     b = Book(0, "front")
     d = b.doc
 
@@ -156,13 +168,41 @@ def build_front(chaps):
     b.section = S
     cw = PW - S.left_margin - S.right_margin
 
+    # One running header line, three columns:
+    #   book title (left) · অধ্যায় N · chapter title (centre) · rapti.net (right)
+    #
+    # The paragraph MUST be style "Normal", not the built-in "Header".
+    # "Header" carries its own tab stops (centre @4680, right @9360 twips)
+    # and OOXML *merges* a style's tabs with the paragraph's own — so the
+    # first \t lands on the style's centre stop and the second on ours,
+    # leaving `rapti.net` floating mid-page instead of at the right margin.
+    # `tab_stops.clear_all()` only clears paragraph-level stops, never a
+    # style's; changing the style is what actually fixes it.
     S.header.is_linked_to_previous = False
     hp = S.header.paragraphs[0]
     hp.text = ""
+    hp.style = "Normal"
     hp.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    hp.paragraph_format.space_before = Pt(0)
+    hp.paragraph_format.space_after = Pt(0)
+    hp.paragraph_format.line_spacing = 1.0
+    hp.paragraph_format.tab_stops.clear_all()
+    hp.paragraph_format.tab_stops.add_tab_stop(int(cw / 2), WD_TAB_ALIGNMENT.CENTER)
     hp.paragraph_format.tab_stops.add_tab_stop(cw, WD_TAB_ALIGNMENT.RIGHT)
-    set_run_font(hp.add_run("ইলেকট্রিক্যাল হাউস ওয়্যারিং"), size=Pt(9), color=GREY)
-    set_run_font(hp.add_run("\t" + INST_BN), size=Pt(9), color=GREY, bold=True)
+    set_run_font(hp.add_run("ইলেকট্রিক্যাল হাউস ওয়্যারিং"), size=Pt(8.5), color=GREY)
+    hp.add_run("\t")
+    # STYLEREF tracks the nearest preceding "RaptiChapterTitle" paragraph —
+    # the navy title block chapter_opener() stamps once per chapter, whose
+    # first (hidden, 1 pt) run is "অধ্যায় N · ".  So this cell shows the
+    # number and the name of whichever chapter's pages the reader is on and
+    # updates by itself, without a header per section — docxcompose drops
+    # every appended chapter's own sectPr, so a real per-chapter header is
+    # not an option here (see the mkbook.py notes in CLAUDE.md).
+    for rr in field(hp, 'STYLEREF "RaptiChapterTitle" \\* MERGEFORMAT',
+                    "অধ্যায় ১ · কর্মক্ষেত্রে নিরাপত্তা"):
+        set_run_font(rr, size=Pt(8.5), color=GREY, bold=True)
+    hp.add_run("\t")
+    set_run_font(hp.add_run(WEB), size=Pt(8.5), color=GREY)
     para_border(hp, "bottom", color="C9D3DC", sz=6, space=3)
 
     # ---------------- IMPRINT ----------------
@@ -197,12 +237,12 @@ def build_front(chaps):
          "IEC, BNBC ও BS মান অনুসরণ করা হয়েছে; দেশীয় প্রচলন যেখানে মান থেকে "
          "আলাদা, সেখানে তা স্পষ্ট করে উল্লেখ করা হয়েছে। চিত্র ও সারণি "
          "অধ্যায়-ভিত্তিক নম্বরে সাজানো (যেমন চিত্র ৩.২, সারণি ৭.১)। এই সংস্করণে "
-         "অধ্যায় ১ থেকে ২৩ অন্তর্ভুক্ত; অবশিষ্ট অধ্যায় ও পরিশিষ্ট পরবর্তী "
-         "সংস্করণে যুক্ত হবে।")
+         "কোর্স মডিউলের সবগুলো অধ্যায় (১ থেকে ২৮) অন্তর্ভুক্ত; পরিশিষ্ট "
+         "পরবর্তী সংস্করণে যুক্ত হবে।")
 
     head("প্রকাশনা ও যোগাযোগ")
     kv("বইয়ের নাম", "ইলেকট্রিক্যাল হাউস ওয়্যারিং (Electrical House Wiring)")
-    kv("সংস্করণ", f"{EDITION}  —  অধ্যায় ১–২৩")
+    kv("সংস্করণ", f"{EDITION}  —  অধ্যায় ১–২৮")
     kv("প্রণয়ন ও প্রকাশনা", f"{INST_BN} (RAPTI)")
     kv("ঠিকানা", ADDR_BN)
     kv("হটলাইন", PHONES)
@@ -227,14 +267,18 @@ def build_front(chaps):
 
     cap = d.add_paragraph(); cap.alignment = WD_ALIGN_PARAGRAPH.LEFT
     cap.paragraph_format.space_before = Pt(2); cap.paragraph_format.space_after = Pt(9)
-    set_run_font(cap.add_run("শিরোনামে ক্লিক করলে সরাসরি সেই অধ্যায়ে যাওয়া যাবে।"),
+    set_run_font(cap.add_run("শিরোনামে ক্লিক করলে সরাসরি সেই অধ্যায়ে বা অংশে যাওয়া যাবে।"),
                  size=Pt(9), italic=True, color=GREY)
 
+    sec_by_n = {n: secs for n, _t, secs in toc_tree}
     for n, title, _ in chaps:
+        # ── chapter line ──────────────────────────────────────────────
         p = d.add_paragraph()
         p.alignment = WD_ALIGN_PARAGRAPH.LEFT
-        p.paragraph_format.space_after = Pt(4)
-        p.paragraph_format.line_spacing = 1.06
+        p.paragraph_format.space_before = Pt(6)
+        p.paragraph_format.space_after = Pt(2)
+        p.paragraph_format.line_spacing = 1.05
+        keep_with_next(p)
         ts = p.paragraph_format.tab_stops
         ts.add_tab_stop(cw, WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
         _link(p, f"_ch{n:02d}", [
@@ -245,15 +289,53 @@ def build_front(chaps):
         for rr in field(p, f" PAGEREF _ch{n:02d} \\h ", "০"):
             set_run_font(rr, size=Pt(11), color=NAVY, bold=True)
 
-    note = d.add_paragraph(); note.alignment = WD_ALIGN_PARAGRAPH.LEFT
-    note.paragraph_format.space_before = Pt(12)
-    set_run_font(note.add_run(
-        "অধ্যায় ২৪–২৮ এবং পরিশিষ্ট (ক–জ) পরবর্তী সংস্করণে যুক্ত হবে।"),
-        size=Pt(9.5), italic=True, color=GREY)
+        # ── one line per in-chapter section ───────────────────────────
+        for k, sec in enumerate(sec_by_n.get(n, []), start=1):
+            q = d.add_paragraph()
+            q.alignment = WD_ALIGN_PARAGRAPH.LEFT
+            q.paragraph_format.space_after = Pt(1)
+            q.paragraph_format.line_spacing = 1.0
+            q.paragraph_format.left_indent = Cm(0.8)
+            qs = q.paragraph_format.tab_stops
+            qs.add_tab_stop(cw, WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+            _link(q, f"_ch{n:02d}_s{k}", [(sec, 9.5, "1A1A1A", False)])
+            q.add_run("\t")
+            for rr in field(q, f" PAGEREF _ch{n:02d}_s{k} \\h ", "০"):
+                set_run_font(rr, size=Pt(9), color=STEEL, bold=False)
 
     front_path = os.path.join(OUT, "_front.docx")
     b.save(front_path)
     return front_path
+
+
+# ── collapse a chapter's trailing spacer paragraph ───────────────────────
+def shrink_trailing_para(doc):
+    """python-docx puts an empty paragraph after the final table (Word needs
+    one). At normal 11 pt that half-line can tip past a page boundary and
+    strand a header-only blank page in the merged book. Squash it to ~1 pt so
+    it never forces a new page — it is the last element in the chapter, so
+    nothing above it moves."""
+    paras = doc.paragraphs
+    if not paras:
+        return
+    last = paras[-1]
+    if last.text.strip():
+        return
+    pf = last.paragraph_format
+    pf.space_before = Pt(0)
+    pf.space_after = Pt(0)
+    pf.line_spacing = Pt(1)
+    for r in last.runs:
+        r.font.size = Pt(1)
+    pPr = last._p.get_or_add_pPr()
+    rPr = pPr.find(qn("w:rPr"))
+    if rPr is None:
+        rPr = OxmlElement("w:rPr"); pPr.append(rPr)
+    for tag in ("w:sz", "w:szCs"):
+        e = rPr.find(qn(tag))
+        if e is None:
+            e = OxmlElement(tag); rPr.append(e)
+        e.set(qn("w:val"), "2")
 
 
 # ── page break + bookmark at each chapter start ───────────────────────────
@@ -273,6 +355,29 @@ def inject_chapter_start(doc, name, bid):
     be = OxmlElement("w:bookmarkEnd"); be.set(qn("w:id"), str(bid))
     p.append(bs); p.append(be)
     body.insert(0, p)
+
+
+def inject_section_bookmarks(doc, n):
+    """Wrap each `Heading 1` paragraph in a bookmark `_chNN_sK` so the
+    সূচিপত্র can point a PAGEREF at every section, not just the chapter.
+    K counts Heading-1 paragraphs in document order — the same order
+    chapter_sections() walks, so the সূচিপত্র's k-th sub-line matches."""
+    k = 0
+    for para in doc.paragraphs:
+        if not (para.style and para.style.name == "Heading 1"
+                and para.text.strip()):
+            continue
+        k += 1
+        bid = 92000 + n * 100 + k
+        name = f"_ch{n:02d}_s{k}"
+        bs = OxmlElement("w:bookmarkStart")
+        bs.set(qn("w:id"), str(bid)); bs.set(qn("w:name"), name)
+        be = OxmlElement("w:bookmarkEnd"); be.set(qn("w:id"), str(bid))
+        pPr = para._p.find(qn("w:pPr"))
+        if pPr is not None:
+            pPr.addnext(be); pPr.addnext(bs)      # → pPr, bs, be, <runs>
+        else:
+            para._p.insert(0, be); para._p.insert(0, bs)
 
 
 # ── book-wide footer ─────────────────────────────────────────────────────
@@ -320,13 +425,108 @@ def enable_update_fields(doc):
         st.insert(0, e)
 
 
+def bake_toc_numbers(dest):
+    """Turn the সূচিপত্র's PAGEREF fields into plain, static page numbers.
+
+    A live `PAGEREF … \\h` field is only as good as the reader's viewer.
+    LibreOffice resolves it on PDF export, but Word/Pages/web viewers each
+    do their own thing on open: some leave the cached result alone, some
+    recompute it without paginating the way the printed book does and put
+    **1** on every line. A delivered, generated book gains nothing from a
+    live field — the numbers are recomputed from scratch on every build.
+
+    So: round-trip a throwaway copy through LibreOffice (which computes
+    every field), read each `PAGEREF _chNN[_sK]` → page out of the
+    round-tripped `document.xml`, write that number (in Bangla) into the
+    shipped file's field-result run, and then **delete the field machinery
+    around it** — begin / instrText / separate / end — leaving one ordinary
+    styled run that nothing can recompute. The round-trip copy is discarded;
+    the shipped .docx stays python-docx's own output."""
+    tmp = tempfile.mkdtemp(prefix="booktoc_")
+    try:
+        r = subprocess.run(
+            ["soffice", "--headless", "--convert-to", "docx",
+             "--outdir", tmp, dest],
+            capture_output=True, text=True, timeout=1800)
+        rt = os.path.join(tmp, os.path.basename(dest))
+        if not os.path.exists(rt):
+            print("  bake: LibreOffice round-trip produced nothing — "
+                  "leaving placeholders\n", r.stdout, r.stderr)
+            return
+        import zipfile
+        with zipfile.ZipFile(rt) as z:
+            xml = z.read("word/document.xml").decode("utf-8")
+        pages = {}
+        pat = re.compile(
+            r'PAGEREF\s+(_ch\d\d(?:_s\d+)?)\s+\\h.*?'
+            r'fldCharType="separate".*?<w:t[^>]*>([^<]*)</w:t>.*?'
+            r'fldCharType="end"', re.S)
+        for m in pat.finditer(xml):
+            pages.setdefault(m.group(1), m.group(2).strip())
+        if not pages:
+            print("  bake: no resolved PAGEREF results found — "
+                  "leaving placeholders")
+            return
+
+        def fld_type(run):
+            fc = run.find(qn("w:fldChar"))
+            return None if fc is None else fc.get(qn("w:fldCharType"))
+
+        doc = Document(dest)
+        baked = 0
+        for para in doc.paragraphs:
+            runs = list(para._p.findall(qn("w:r")))
+            for i, rr in enumerate(runs):
+                it = rr.find(qn("w:instrText"))
+                if it is None or not it.text:
+                    continue
+                mm = re.search(r'PAGEREF\s+(_ch\d\d(?:_s\d+)?)\s+\\h', it.text)
+                if not mm or mm.group(1) not in pages:
+                    continue
+                beg = next((j for j in range(i - 1, -1, -1)
+                            if fld_type(runs[j]) == "begin"), None)
+                sep = next((j for j in range(i + 1, len(runs))
+                            if fld_type(runs[j]) == "separate"), None)
+                end = next((j for j in range(i + 1, len(runs))
+                            if fld_type(runs[j]) == "end"), None)
+                if beg is None or sep is None or end is None or end <= sep:
+                    continue
+                # keep the first result run, restyled with the real number …
+                res = runs[sep + 1] if sep + 1 < end else None
+                if res is None:
+                    continue
+                t = res.find(qn("w:t"))
+                if t is None:
+                    t = OxmlElement("w:t"); res.append(t)
+                t.set(qn("xml:space"), "preserve")
+                t.text = bn(pages[mm.group(1)])
+                # … and drop everything that made it a field
+                drop = [runs[beg], runs[i], runs[sep], runs[end]]
+                drop += [runs[k] for k in range(sep + 2, end)]
+                for el in drop:
+                    par = el.getparent()
+                    if par is not None:
+                        par.remove(el)
+                baked += 1
+                break                       # one PAGEREF per সূচিপত্র line
+        doc.save(dest)
+        print(f"  bake: {baked} সূচিপত্র page numbers written as static text "
+              f"({len(pages)} anchors resolved)")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 # ── main ─────────────────────────────────────────────────────────────────
 def main():
     chaps = chapter_list()
     print(f"chapters found: {len(chaps)}  ->", [n for n, _, _ in chaps])
-    assert [n for n, _, _ in chaps] == list(range(1, 24)), "expected ch 1..23"
+    assert [n for n, _, _ in chaps] == list(range(1, 29)), "expected ch 1..28"
 
-    front_path = build_front(chaps)
+    toc_tree = [(n, title, chapter_sections(path)) for n, title, path in chaps]
+    nsec = sum(len(sx) for _n, _t, sx in toc_tree)
+    print(f"section headings: {nsec}  (সূচিপত্র = 28 chapters + {nsec} sections)")
+
+    front_path = build_front(chaps, toc_tree)
     print("front matter built:", front_path)
 
     master = Document(front_path)
@@ -334,6 +534,8 @@ def main():
     for n, title, path in chaps:
         cdoc = Document(path)
         inject_chapter_start(cdoc, f"_ch{n:02d}", 91000 + n)
+        inject_section_bookmarks(cdoc, n)
+        shrink_trailing_para(cdoc)
         composer.append(cdoc)
         print(f"  + অধ্যায় {n:02d}  {title}")
     composer.save(DEST)
@@ -359,6 +561,9 @@ def main():
     book.save(DEST)
     mb = os.path.getsize(DEST) / 1e6
     print(f"saved: {DEST}  ({mb:.1f} MB)")
+
+    print("baking সূচিপত্র page numbers (LibreOffice field pass)…")
+    bake_toc_numbers(DEST)
 
     if "--pdf" in sys.argv:
         print("rendering PDF (LibreOffice)…")

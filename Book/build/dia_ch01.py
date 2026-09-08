@@ -78,10 +78,26 @@ def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
     s.path(f"M {cx+arm_x:.1f} {sh_y+12*S:.1f} L {cx+arm_x+16*S:.1f} {hip_y+16*S:.1f}",
            cloth, 19 * S)
     gcol = "#E8A33D" if gloves else skin
+    gedge = "#B4761F" if gloves else "#D6A882"
     hand_l = (cx - arm_x - 18 * S, hip_y + 26 * S)
     hand_r = (cx + arm_x + 18 * S, hip_y + 26 * S)
-    for hx_, hy_ in (hand_l, hand_r):
-        s.circle(hx_, hy_, 11.5 * S, gcol, "#B4761F" if gloves else "#D6A882", 1.4)
+    for (hx_, hy_), sgn in ((hand_l, -1), (hand_r, 1)):
+        if gloves:
+            # an insulated glove with SEPARATE FINGERS, not a round blob — a
+            # flared gauntlet cuff, a palm, four fingers pointing down and a
+            # thumb on the body side, so it can never read as a joint circle
+            s.path(f"M {hx_-12*S:.1f} {hy_-6*S:.1f} L {hx_-8.5*S:.1f} {hy_-30*S:.1f} "
+                   f"L {hx_+8.5*S:.1f} {hy_-30*S:.1f} L {hx_+12*S:.1f} {hy_-6*S:.1f} Z",
+                   gedge, 1.6, "#D98A2B")                        # gauntlet cuff
+            s.rect(hx_ - sgn * 12 * S - 3 * S, hy_ - 12 * S, 6.5 * S, 14 * S,
+                   gcol, gedge, 1.4, 3 * S)                      # thumb, body side
+            s.rect(hx_ - 11 * S, hy_ - 14 * S, 22 * S, 15 * S,
+                   gcol, gedge, 1.6, 4 * S)                      # palm
+            for k in (-8.4, -2.8, 2.8, 8.4):                     # four fingers
+                s.rect(hx_ + k * S - 2.5 * S, hy_ - 1 * S, 5 * S, 15 * S,
+                       gcol, gedge, 1.3, 2.5 * S)
+        else:
+            s.circle(hx_, hy_, 11.5 * S, gcol, gedge, 1.4)
     if vest:
         s.path(f"M {cx-body_w/2+7*S:.1f} {sh_y+10*S:.1f} "
                f"L {cx-body_w/2+7*S:.1f} {hip_y+2*S:.1f} "
@@ -179,38 +195,6 @@ def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
             "boot": (cx + 24 * S, foot_y + 6 * S),
             "harness": (cx - 40 * S, hip_y - 7 * S),
             "bottom": foot_y + 20 * S, "scale": S}
-
-
-def victim(s, x, gy, sc=1.0):
-    """Casualty lying on the ground, seen from the side, head at the left.
-
-    Returns anchor points so each CPR panel can put a hand or an arrow on the
-    right part of the body.  Total length is 470·sc.
-    """
-    SK, SKD = "#F0C9A4", "#C79A72"
-    CL, CLD = "#3E6E93", "#25506F"
-    PT, PTD = "#3D4B54", "#26333B"
-    s.line(x - 10, gy, x + 476 * sc, gy, "#B7C1CB", 3.4)
-    s.rect(x + 226 * sc, gy - 58 * sc, 110 * sc, 52 * sc, PT, PTD, 1.6, 14 * sc)
-    s.rect(x + 326 * sc, gy - 46 * sc, 106 * sc, 40 * sc, PT, PTD, 1.6, 12 * sc)
-    s.rect(x + 424 * sc, gy - 50 * sc, 34 * sc, 44 * sc, "#2B2B2B", "#111", 1.4, 9 * sc)
-    s.rect(x + 86 * sc, gy - 78 * sc, 152 * sc, 72 * sc, CL, CLD, 1.8, 18 * sc)
-    s.rect(x + 108 * sc, gy - 32 * sc, 118 * sc, 26 * sc, "#2E5B7E", CLD, 1.4, 13 * sc)
-    s.circle(x + 232 * sc, gy - 19 * sc, 13 * sc, SK, SKD, 1.6)
-    s.rect(x + 66 * sc, gy - 64 * sc, 28 * sc, 32 * sc, SK, "none", 0, 7 * sc)
-    s.circle(x + 48 * sc, gy - 50 * sc, 33 * sc, SK, SKD, 1.8)
-    s.path(f"M {x+34*sc:.1f} {gy-64*sc:.1f} q {7*sc:.1f} {6*sc:.1f} {14*sc:.1f} 0",
-           "#5C4634", 2.6 * sc)          # closed eye
-    s.path(f"M {x+18*sc:.1f} {gy-56*sc:.1f} l {-9*sc:.1f} {7*sc:.1f} l {9*sc:.1f} {5*sc:.1f}",
-           SKD, 2.4 * sc)                # nose
-    s.path(f"M {x+22*sc:.1f} {gy-36*sc:.1f} q {8*sc:.1f} {5*sc:.1f} {16*sc:.1f} {-1*sc:.1f}",
-           "#9C6B4A", 2.4 * sc)          # mouth
-    return {"forehead": (x + 34 * sc, gy - 76 * sc),
-            "mouth": (x + 24 * sc, gy - 40 * sc),
-            "chin": (x + 34 * sc, gy - 26 * sc),
-            "shoulder": (x + 116 * sc, gy - 78 * sc),
-            "chest": (x + 168 * sc, gy - 78 * sc),
-            "chest_bottom": (x + 168 * sc, gy - 6 * sc)}
 
 
 def _stack(anchors, box_h, gap, first_top):
@@ -547,120 +531,6 @@ def d10_rescue():
     return s.save(f"{OUT}/d10_rescue.svg")
 
 
-def d11_cpr():
-    """CPR steps — 2x2 grid so each pictogram is large enough to read in print."""
-    s = SVG(1200, 940)
-    T_T, T_H, T_S = 42, 31, 25
-    s.title("প্রাথমিক চিকিৎসা — CPR-এর ধাপ", T_T)
-    ar_r = s.arrow_defs(RED, "cprR", 15)
-    ar_g = s.arrow_defs(GREEN, "cprG", 15)
-    ar_s = s.arrow_defs(STEEL, "cprS", 15)
-    M, G, PH = 24, 26, 326
-    PW = (1200 - 2 * M - G) / 2
-    steps = [("সাড়া পরীক্ষা", "কাঁধে ঝাঁকি দিয়ে জোরে ডাকা — সাড়া না পেলে দ্রুত সাহায্য ডাকা"),
-             ("শ্বাসনালি খোলা", "এক হাতে কপাল পিছনে হেলিয়ে, অন্য হাতের দুই আঙুলে থুতনি উপরে তোলা"),
-             ("বুকে চাপ", "বুকের মাঝখানে দুই হাত রেখে ৫–৬ সেমি গভীরে, মিনিটে ১০০–১২০ বার"),
-             ("৩০ : ২ অনুপাত", "৩০ বার বুকে চাপের পর ২ বার কৃত্রিম শ্বাস — এই চক্র চলতে থাকবে")]
-    for i, (t, d) in enumerate(steps):
-        px = M + (i % 2) * (PW + G)
-        py = 100 + (i // 2) * (PH + 26)
-        s.rect(px, py, PW, PH, "#F7FAFC", STEEL, 2, 14)
-        s.circle(px + 44, py + 32, 26, NAVY, "#FFFFFF", 3.4)
-        s.text(px + 44, py + 43, ["১", "২", "৩", "৪"][i], 34, "#FFFFFF", 700, "middle")
-        s.text(px + 84, py + 43, t, T_H, NAVY, 700)
-        gy = py + 236
-        vx = px + 40
-
-        if i == 0:
-            v = victim(s, vx, gy)
-            shx, shy = v["shoulder"]
-            # rescuer's two hands gripping the shoulders
-            for dx in (-16, 20):
-                s.rect(shx + dx, shy - 30, 32, 28, "#F0C9A4", "#C79A72", 1.8, 11)
-                s.path(f"M {shx+dx+16:.1f} {shy-30:.1f} L {shx+dx+58:.1f} {shy-74:.1f}",
-                       "#2E5B7E", 17)
-            # shake marks
-            for sx, dr in ((shx - 40, -1), (shx + 74, 1)):
-                for k in (0, 1):
-                    r = 13 + k * 11
-                    s.path(f"M {sx:.1f} {shy-34-r:.1f} "
-                           f"A {r} {r} 0 0 {1 if dr>0 else 0} {sx:.1f} {shy-34+r:.1f}",
-                           STEEL, 3.2, opacity=0.85 - 0.3 * k)
-            s.rect(px + 262, py + 62, 268, 56, "#FFFFFF", NAVY, 2.2, 14)
-            s.path(f"M {px+306:.1f} {py+118:.1f} L {px+282:.1f} {py+148:.1f} "
-                   f"L {px+344:.1f} {py+118:.1f} Z", "none", 0, "#FFFFFF")
-            s.path(f"M {px+306:.1f} {py+118:.1f} L {px+282:.1f} {py+148:.1f} "
-                   f"L {px+344:.1f} {py+118:.1f}", NAVY, 2.2)
-            s.text(px + 396, py + 98, "শুনতে পাচ্ছেন?", T_S, NAVY, 700, "middle")
-
-        elif i == 1:
-            v = victim(s, vx, gy)
-            fx, fy_ = v["forehead"]
-            cx_, cy_ = v["chin"]
-            # palm on the forehead, pressing back — centred on the skull, not
-            # hanging off its right side
-            s.rect(fx - 16, fy_ - 34, 58, 28, "#F0C9A4", "#C79A72", 1.8, 11)
-            s.path(f"M {fx+13:.1f} {fy_-84:.1f} L {fx+13:.1f} {fy_-42:.1f}", RED, 4.4,
-                   marker=ar_r)
-            # two fingers lifting the chin — they follow the jaw and stop well
-            # short of the floor; the lower one used to sit on the ground line
-            s.rect(cx_ - 44, cy_ - 6, 34, 12, "#F0C9A4", "#C79A72", 1.6, 5)
-            s.rect(cx_ - 44, cy_ + 9, 34, 12, "#F0C9A4", "#C79A72", 1.6, 5)
-            s.path(f"M {cx_-64:.1f} {cy_+24:.1f} L {cx_-42:.1f} {cy_+4:.1f}", GREEN, 4.4,
-                   marker=ar_g)
-            # the airway itself — out of the mouth, back through the neck and
-            # down into the chest.  Drawn across the eye and nose it read as a
-            # line ruled over the face instead of a passage inside the head.
-            s.path(f"M {vx+42:.1f} {gy-31:.1f} Q {vx+86:.1f} {gy-40:.1f} "
-                   f"{vx+152:.1f} {gy-52:.1f}", GREEN, 3.4, dash="9 7", marker=ar_g)
-            s.text(px + 300, py + 88, "কপালে চাপ", T_S, RED, 700)
-            s.text(px + 300, py + 122, "থুতনি উপরে", T_S, GREEN, 700)
-            s.text(px + 300, py + 156, "শ্বাসনালি খুলে যায়", T_S, "#39434D", 400)
-
-        elif i == 2:
-            v = victim(s, vx, gy)
-            hx, hy_ = v["chest"]
-            # rescuer's straight arms coming down onto the chest
-            for dx, dy in ((0, 0), (24, 11)):
-                s.path(f"M {hx+80+dx:.1f} {hy_-100+dy:.1f} L {hx+8:.1f} {hy_-26:.1f}",
-                       "#3E6E93", 20)
-            s.rect(hx - 26, hy_ - 30, 62, 28, "#F0C9A4", "#C79A72", 1.8, 12)
-            s.path(f"M {hx-46:.1f} {hy_-88:.1f} L {hx-46:.1f} {hy_-36:.1f}", RED, 5,
-                   marker=ar_r)
-            # depth gauge
-            gx = hx + 34
-            s.path(f"M {gx:.1f} {gy-78:.1f} L {gx:.1f} {gy-38:.1f}", RED, 3,
-                   marker=ar_r)
-            s.line(gx - 11, gy - 80, gx + 11, gy - 80, RED, 2.4)
-            s.line(gx - 11, gy - 36, gx + 11, gy - 36, RED, 2.4)
-            s.text(gx + 26, gy - 92, "৫–৬ সেমি", T_S, RED, 700)
-            s.text(px + PW - 22, py + 76, "কনুই সোজা রাখা", T_S, "#39434D", 400, "end")
-
-        else:
-            dot_x, dot_y = px + 62, py + 104
-            for r_ in range(3):
-                for c_ in range(10):
-                    s.circle(dot_x + c_ * 25, dot_y + r_ * 27, 8.5, NAVY)
-            s.text(dot_x + 112, dot_y + 118, "৩০ বার বুকে চাপ", T_S, NAVY, 700, "middle")
-            s.text(px + 352, dot_y + 40, ":", 46, GREY, 700, "middle")
-            for k, bxx in enumerate((px + 424, px + 494)):
-                s.circle(bxx, dot_y + 34, 21, REDBG, RED, 2.6)
-                s.path(f"M {bxx-9:.1f} {dot_y+40:.1f} q 9 -14 18 0", RED, 3)
-                s.path(f"M {bxx:.1f} {dot_y-2:.1f} L {bxx:.1f} {dot_y-24:.1f}", RED, 3,
-                       marker=ar_r)
-            s.text(px + 459, dot_y + 118, "২ বার শ্বাস", T_S, RED, 700, "middle")
-
-        for j, ln in enumerate(wrap(d, PW - 56, T_S, 400)):
-            s.text(px + PW / 2, py + 272 + j * T_S * 1.35, ln, T_S, "#39434D", 400, "middle")
-
-    fy = 100 + 2 * (PH + 26) + 4
-    s.rect(M, fy, 1200 - 2 * M, 62, "#FFF6E5", AMBER, 2, 12)
-    s.text(600, fy + 40, "চিকিৎসক বা অ্যাম্বুলেন্স না আসা পর্যন্ত CPR চালিয়ে যেতে হবে",
-           T_H, "#7A5200", 600, "middle")
-    s.fit(fy + 62, 24)
-    return s.save(f"{OUT}/d11_cpr.svg")
-
-
 def d12_hierarchy():
     s = SVG(1200, 700)
     s.title("ঝুঁকি নিয়ন্ত্রণের অনুক্রম (Hierarchy of Controls)", T_TITLE)
@@ -806,7 +676,7 @@ def d14_earthing():
 
 
 ALL = [d01_causes, d02_shock_path, d04_safety_types, d05_ppe, d06_loto,
-       d07_five_rules, d08_safety_signs, d10_rescue, d11_cpr, d12_hierarchy,
+       d07_five_rules, d08_safety_signs, d10_rescue, d12_hierarchy,
        d13_dead_test, d14_earthing]
 
 if __name__ == "__main__":

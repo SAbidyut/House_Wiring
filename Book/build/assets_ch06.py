@@ -37,13 +37,39 @@ import time
 import urllib.parse
 import urllib.request
 
-from PIL import Image, ImageEnhance, ImageOps
+from PIL import Image, ImageDraw, ImageEnhance, ImageOps
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT = os.path.join(HERE, "assets", "ch06")
 CACHE = os.path.join(HERE, ".slidepdf")
 os.makedirs(OUT, exist_ok=True)
 os.makedirs(CACHE, exist_ok=True)
+
+# সংক্ষিপ্ত সংস্করণের §৬.১-এ এই চারটি পাশাপাশি (পাশে বর্ণনাসহ) সারিবদ্ধ
+# দেখানো হয় — উৎসের চার আলাদা ছবির অনুপাত 0.51 থেকে 1.11 পর্যন্ত ছড়ানো
+# ছিল বলে সারি চারটি অসমান উঁচু দেখাত (ব্যবহারকারীর অভিযোগ, ২০২৬-০৯-০৫)।
+# `_pad_card()` প্রতিটিকে একই অনুপাতের একটি হালকা কার্ডে বসায় — বিষয়বস্তু
+# ক্রপ করে বাদ না দিয়ে (ছবির বিষয় প্রায়ই একদম কানা পর্যন্ত পৌঁছানো, যেমন
+# ph_bell_open-এ বাঁয়ে কন্টাক্ট স্ক্রু থেকে ডানে গং পর্যন্ত পুরো চওড়াই
+# দরকারি), কেবল ছোট বাহুতে প্যাডিং যোগ করে।
+UNIFORM_CARD = {"ph_bell_open", "ph_bell_gong", "ph_single", "ph_buzzer"}
+CARD_RATIO = 0.875          # height / width
+CARD_BG     = (247, 250, 252)
+CARD_BORDER = (191, 205, 219)
+
+
+def _pad_card(im, ratio=CARD_RATIO, bg=CARD_BG, border=CARD_BORDER, bw=3):
+    """ছবিকে না-কেটে হালকা কার্ডে বসিয়ে একটি নির্দিষ্ট height/width অনুপাতে আনে।"""
+    w, h = im.size
+    if h / w < ratio:
+        new_w, new_h = w, round(w * ratio)
+    else:
+        new_w, new_h = round(h / ratio), h
+    card = Image.new("RGB", (new_w, new_h), bg)
+    card.paste(im, ((new_w - w) // 2, (new_h - h) // 2))
+    d = ImageDraw.Draw(card)
+    d.rectangle([0, 0, new_w - 1, new_h - 1], outline=border, width=bw)
+    return card
 
 UA = {"User-Agent": "rapti-book/1.0 (textbook figure prep)"}
 API = "https://commons.wikimedia.org/w/api.php"
@@ -143,6 +169,8 @@ def build():
                            Image.LANCZOS)
         if contrast != 1.0:
             im = ImageEnhance.Contrast(im).enhance(contrast)
+        if name in UNIFORM_CARD:
+            im = _pad_card(im)
         im.save(os.path.join(OUT, name + ".jpg"), quality=90)
         print("✓", name, im.size, f"({fname})")
 

@@ -291,32 +291,43 @@ def d04_states():
     return s.save(f"{OUT}/d04_states.svg")
 
 
-def d05_inter_inside():
-    """ইন্টারমিডিয়েট সুইচের দুই অবস্থান।"""
-    s = SVG(1240, 660)
+def _inter_panel(fname, head, crossed, col, note):
+    """ইন্টারমিডিয়েট সুইচের একটি অবস্থান — পুরো ক্যানভাস জুড়ে, বড় করে।"""
+    s = SVG(1240, 700)
     s.title("ইন্টারমিডিয়েট সুইচের ভেতরে", T_TITLE)
 
-    PW, PH = 560, 400
-    for px, head, crossed, col in (
-            (46, "সোজা অবস্থান — যেমন এল, তেমন গেল", False, STEEL),
-            (634, "আড়াআড়ি অবস্থান — দুই পথ অদলবদল", True, GREEN)):
-        panel(s, px, 96, PW, PH, head, col)
-        X, Y, WD, SPR = px + 130, 290, 200, 66
-        inter_sym(s, X, Y, crossed, WD, SPR)
-        for dy, left, right in ((-SPR, "A", "C"), (SPR, "B", "D")):
-            s.path(f"M {X-84} {Y+dy} L {X} {Y+dy}", STRAP, SW)
-            s.path(f"M {X+WD} {Y+dy} L {X+WD+84} {Y+dy}", STRAP, SW)
-            s.badge(X - 104, Y + dy, left, 21, STEEL, "#FFFFFF", T_NAME)
-            s.badge(X + WD + 104, Y + dy, right, 21, STEEL, "#FFFFFF", T_NAME)
-        s.text(px + PW / 2, 96 + PH - 40,
-               "A → C · B → D" if not crossed else "A → D · B → C",
-               T_TITLE, col, 700, "middle")
+    PW, PH = 1148, 460
+    panel(s, 46, 96, PW, PH, head, col)
+    WD, SPR, STRAP_LEN, GAP, BR = 320, 106, 134, 32, 34
+    X, Y = 620 - WD // 2, 300
+    inter_sym(s, X, Y, crossed, WD, SPR)
+    for dy, left, right in ((-SPR, "A", "C"), (SPR, "B", "D")):
+        s.path(f"M {X-STRAP_LEN} {Y+dy} L {X} {Y+dy}", STRAP, SW + 0.6)
+        s.path(f"M {X+WD} {Y+dy} L {X+WD+STRAP_LEN} {Y+dy}", STRAP, SW + 0.6)
+        s.badge(X - STRAP_LEN - GAP, Y + dy, left, BR, STEEL, "#FFFFFF", 36)
+        s.badge(X + WD + STRAP_LEN + GAP, Y + dy, right, BR, STEEL,
+                "#FFFFFF", 36)
+    s.text(620, Y + SPR + 34 + 60,
+           "A → C · B → D" if not crossed else "A → D · B → C",
+           T_TITLE, col, 700, "middle")
 
-    y = note_strip(s, 96 + PH + 26,
-                   "ইন্টারমিডিয়েট সুইচ কখনো বর্তনী কাটে না — কেবল দুই "
-                   "স্ট্র্যাপারের পথ বদলে দেয়")
+    y = note_strip(s, 96 + PH + 26, note)
     s.fit(y, 24)
-    return s.save(f"{OUT}/d05_inter_inside.svg")
+    return s.save(f"{OUT}/{fname}.svg")
+
+
+def d05a_inter_straight():
+    return _inter_panel(
+        "d05a_inter_straight", "সোজা অবস্থান — যেমন এল, তেমন গেল", False,
+        STEEL,
+        "এই অবস্থানে A সরাসরি C-তে ও B সরাসরি D-তে যুক্ত থাকে — পথ বদলায় না")
+
+
+def d05b_inter_crossed():
+    return _inter_panel(
+        "d05b_inter_crossed", "আড়াআড়ি অবস্থান — দুই পথ অদলবদল", True, GREEN,
+        "নব চাপলে এই অবস্থানে যায় — A এখন D-তে ও B এখন C-তে; বর্তনী কাটে না, "
+        "কেবল পথ অদলবদল হয়")
 
 
 def d06_three_place():
@@ -530,8 +541,8 @@ def d09_stair_layout():
 
 
 ALL = [d01_2way_inside, d02_symbols, d03_2way_conn, d04_states,
-       d05_inter_inside, d06_three_place, d07_tunnel, d08_tunnel_seq,
-       d09_stair_layout]
+       d05a_inter_straight, d05b_inter_crossed, d06_three_place, d07_tunnel,
+       d08_tunnel_seq, d09_stair_layout]
 
 if __name__ == "__main__":
     import svgkit as K

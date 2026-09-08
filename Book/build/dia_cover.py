@@ -162,7 +162,7 @@ def cover():
     s.text(CX, 872, "কোর্স মডিউল অনুযায়ী প্রণীত পূর্ণাঙ্গ পাঠ্যপুস্তক",
            25, SUB, 400, "middle")
 
-    chip = "অধ্যায় ১–২৩   ·   প্রথম সংস্করণ ২০২৬"
+    chip = "প্রথম সংস্করণ  ·  ২০২৬"
     cwid = tw(chip, 22, 600) + 80
     s.rect(CX - cwid / 2, 910, cwid, 52, "none", GOLD, 1.5, 26, opacity=0.55)
     s.text(CX, 943, chip, 22, GOLD_L, 600, "middle")
