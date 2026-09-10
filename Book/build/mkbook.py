@@ -21,7 +21,7 @@ import os, re, glob, sys, subprocess, tempfile, shutil
 from docx import Document
 from docx.shared import Pt, Cm, RGBColor
 from docx.enum.text import (WD_ALIGN_PARAGRAPH, WD_TAB_ALIGNMENT,
-                            WD_TAB_LEADER)
+                            WD_TAB_LEADER, WD_BREAK)
 from docx.enum.section import WD_SECTION
 from docx.oxml.ns import qn
 from docx.oxml import OxmlElement, parse_xml
@@ -34,6 +34,9 @@ from bookkit import (Book, bn, set_run_font, para_border, cell_shade,
 HERE = os.path.dirname(os.path.abspath(__file__))
 OUT  = os.path.join(HERE, "out")
 COVER_PNG = os.path.join(HERE, "diagrams", "cover", "cover.png")
+# full-page PPE poster that sits right after the cover, in the same
+# borderless (zero-margin) section — supplied by the institute
+FRONT_PPE_PNG = os.path.join(HERE, "assets", "front", "ppe_poster.png")
 DEST = os.path.abspath(os.path.join(
     HERE, "..", "ইলেকট্রিক্যাল হাউস ওয়্যারিং — সম্পূর্ণ বই (অধ্যায় ১–২৮).docx"))
 
@@ -51,6 +54,40 @@ FB       = "facebook.com/resonanceautomationbd"
 ADDR_BN  = "২১০১, ভুইঘর, রূপায়ণ টাউন, গেট-১ সংলগ্ন, ফতুল্লা, নারায়ণগঞ্জ-১৪২০"
 EDITION  = "প্রথম সংস্করণ · আগস্ট ২০২৬"
 BN2A     = str.maketrans("০১২৩৪৫৬৭৮৯", "0123456789")
+
+
+GLOSS_H = "পারিভাষিক শব্দ"          # chapter tail sections that move to the
+EXER_H  = "অনুশীলনী"                # consolidated back-of-book parts
+
+# The অনুশীলনী block of every chapter is broken by question type and each
+# type is consolidated chapter-wise into its own back-of-book part.  Match
+# is on the Heading-2 text ending with the type name (the ক/খ/গ/ঘ/ঙ letter
+# in front is not consistent between chapters).  Order = the in-chapter
+# order.  Not every chapter has গাণিতিক সমস্যা (1,2,3,5,6,8 do not).
+QTYPES = [
+    ("বহুনির্বাচনী প্রশ্ন", "mcq"),
+    ("সংক্ষিপ্ত প্রশ্ন",     "short"),
+    ("রচনামূলক প্রশ্ন",      "essay"),
+    ("গাণিতিক সমস্যা",       "math"),
+    ("ব্যবহারিক কাজ",        "prac"),
+]
+
+
+def unlock_tables(doc):
+    """Drop `w:cantSplit` from every table row in a pruned back-matter
+    fragment.  `bookkit.table()` marks every row cantSplit — fine for the
+    short, hand-placed tables inside a chapter, but a consolidated glossary
+    table runs 40–60 rows and this LibreOffice drops every row past the
+    first page when the whole table is unsplittable and overflows.  Letting
+    it break between (and if need be within) rows paginates it correctly.
+    The repeating header row (`w:tblHeader`) is kept."""
+    for tbl in doc.element.body.iter(qn("w:tbl")):
+        for tr in tbl.findall(qn("w:tr")):
+            trPr = tr.find(qn("w:trPr"))
+            if trPr is None:
+                continue
+            for cs in trPr.findall(qn("w:cantSplit")):
+                trPr.remove(cs)
 
 
 def chapter_list():
@@ -76,10 +113,20 @@ def chapter_sections(path):
     """Return the chapter's in-book section headings in document order —
     the `b.h1()` paragraphs (`১.১  …`), text kept whole (number + title).
     Same filter `inject_section_bookmarks()` uses, so the k-th here is the
-    k-th there and the সূচিপত্র PAGEREF anchors line up."""
+    k-th there and the সূচিপত্র PAGEREF anchors line up.
+
+    Stops at the পারিভাষিক শব্দ heading: in the merged book that section and
+    the অনুশীলনী after it are lifted into the back-of-book parts, so only the
+    body sections up to and including সারসংক্ষেপ stay under the chapter."""
     doc = Document(path)
-    return [p.text.strip() for p in doc.paragraphs
-            if p.style and p.style.name == "Heading 1" and p.text.strip()]
+    out = []
+    for p in doc.paragraphs:
+        if not (p.style and p.style.name == "Heading 1" and p.text.strip()):
+            continue
+        if p.text.strip().endswith(GLOSS_H):
+            break
+        out.append(p.text.strip())
+    return out
 
 
 def _link(p, anchor, parts):
@@ -105,7 +152,7 @@ def _link(p, anchor, parts):
     p._p.append(hl)
 
 
-def full_page_picture(doc, png, page_w, page_h):
+def full_page_picture(doc, png, page_w, page_h, draw_id=9001, draw_name="cover"):
     """Drop a picture on the page as a page-anchored, behind-text image.
 
     An *inline* image cannot bleed to the paper edge: its line box carries
@@ -137,13 +184,13 @@ def full_page_picture(doc, png, page_w, page_h):
         '<wp:positionH relativeFrom="page"><wp:posOffset>0</wp:posOffset></wp:positionH>'
         '<wp:positionV relativeFrom="page"><wp:posOffset>0</wp:posOffset></wp:positionV>'
         '<wp:extent cx="%d" cy="%d"/><wp:effectExtent l="0" t="0" r="0" b="0"/>'
-        '<wp:wrapNone/><wp:docPr id="9001" name="cover"/><wp:cNvGraphicFramePr/>%s'
-        '</wp:anchor>' % (WP, A, int(page_w), int(page_h), gx))
+        '<wp:wrapNone/><wp:docPr id="%d" name="%s"/><wp:cNvGraphicFramePr/>%s'
+        '</wp:anchor>' % (WP, A, int(page_w), int(page_h), draw_id, draw_name, gx))
     inline.getparent().replace(inline, anchor)
     return p
 
 
-def build_front(chaps, toc_tree):
+def build_front(chaps, toc_tree, type_map):
     b = Book(0, "front")
     d = b.doc
 
@@ -157,6 +204,20 @@ def build_front(chaps, toc_tree):
         raise SystemExit("cover art missing — run:  python dia_cover.py  &&  "
                          "python render.py 'diagrams/cover/cover.svg'")
     full_page_picture(d, COVER_PNG, PW, PH)
+
+    # ---------------- PPE POSTER — second full-bleed page ----------------
+    # A page-anchored (behind-text) image attaches to whatever page its
+    # paragraph falls on, so force page 2 with an explicit break, then drop
+    # the poster on it the same way the cover is placed.
+    if not os.path.exists(FRONT_PPE_PNG):
+        raise SystemExit("PPE poster missing: " + FRONT_PPE_PNG)
+    brp = d.add_paragraph()
+    brp.paragraph_format.space_before = brp.paragraph_format.space_after = Pt(0)
+    brp.paragraph_format.line_spacing = 1.0
+    _brk = brp.add_run()
+    _brk.add_break(WD_BREAK.PAGE)
+    set_run_font(_brk, size=Pt(1))
+    full_page_picture(d, FRONT_PPE_PNG, PW, PH, draw_id=9002, draw_name="ppe_poster")
 
     # everything after the cover lives in a normal-margin section
     S = d.add_section(WD_SECTION.NEW_PAGE)
@@ -231,8 +292,9 @@ def build_front(chaps, toc_tree):
          "কোর্স মডিউলের লেসন-ক্রম অনুসরণ করে অধ্যায় সাজানো হয়েছে, যাতে ক্লাসের "
          "পড়া আর বইয়ের অধ্যায় হুবহু মিলে যায়। প্রতিটি অধ্যায়ে তত্ত্বের সঙ্গে "
          "কর্মক্ষেত্রের বাস্তব অভিজ্ঞতা, চিত্র, সারণি ও গাণিতিক উদাহরণ একসঙ্গে "
-         "দেওয়া হয়েছে এবং অধ্যায়ের শেষে সারসংক্ষেপ, পারিভাষিক শব্দ ও অনুশীলনী "
-         "যুক্ত হয়েছে।")
+         "দেওয়া হয়েছে এবং প্রতিটি অধ্যায়ের শেষে সারসংক্ষেপ যুক্ত হয়েছে। প্রতিটি "
+         "অধ্যায়ের পারিভাষিক শব্দ ও অনুশীলনী বইয়ের শেষে ‘পরিভাষা’ ও ‘অনুশীলনী’ "
+         "অংশে অধ্যায়-ক্রমে একত্র করা হয়েছে।")
     body("নিরাপত্তা বিধি, তারের মাপ, সুরক্ষা যন্ত্র ও হিসাব-নিকাশের ক্ষেত্রে "
          "IEC, BNBC ও BS মান অনুসরণ করা হয়েছে; দেশীয় প্রচলন যেখানে মান থেকে "
          "আলাদা, সেখানে তা স্পষ্ট করে উল্লেখ করা হয়েছে। চিত্র ও সারণি "
@@ -257,10 +319,13 @@ def build_front(chaps, toc_tree):
          "(RAPTI)। প্রতিষ্ঠানের লিখিত অনুমতি ছাড়া এই বইয়ের কোনো অংশ যেকোনো "
          "মাধ্যমে পুনরুৎপাদন, অনুলিপি বা বিতরণ করা যাবে না। এটি মূলত RAPTI-এর "
          "প্রশিক্ষণার্থীদের জন্য প্রস্তুত অভ্যন্তরীণ প্রশিক্ষণ উপকরণ।")
-    b.page_break()
 
     # ---------------- সূচিপত্র ----------------
+    # `pageBreakBefore` on this heading rather than a standalone b.page_break()
+    # paragraph — an empty break paragraph landing at the foot of a full
+    # imprint page was stranding a header-only blank page before the সূচিপত্র.
     hp = d.add_paragraph(); hp.alignment = WD_ALIGN_PARAGRAPH.LEFT
+    hp.paragraph_format.page_break_before = True
     hp.paragraph_format.space_before = Pt(2); hp.paragraph_format.space_after = Pt(4)
     set_run_font(hp.add_run("সূচিপত্র"), size=Pt(20), bold=True, color=NAVY)
     para_border(hp, "bottom", color=NAVY_HEX, sz=10, space=4)
@@ -302,6 +367,39 @@ def build_front(chaps, toc_tree):
             q.add_run("\t")
             for rr in field(q, f" PAGEREF _ch{n:02d}_s{k} \\h ", "০"):
                 set_run_font(rr, size=Pt(9), color=STEEL, bold=False)
+
+    # ── back-of-book parts — one সূচিপত্র line each, no per-chapter detail ──
+    def part_line(title, anchor):
+        p = d.add_paragraph()
+        p.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        p.paragraph_format.space_before = Pt(10)
+        p.paragraph_format.space_after = Pt(2)
+        p.paragraph_format.line_spacing = 1.05
+        keep_with_next(p)
+        p.paragraph_format.tab_stops.add_tab_stop(
+            cw, WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+        _link(p, anchor, [(title, 11.5, NAVY_HEX, True)])
+        p.add_run("\t")
+        for rr in field(p, f" PAGEREF {anchor} \\h ", "০"):
+            set_run_font(rr, size=Pt(11), color=NAVY, bold=True)
+
+    def chap_subline(n, title, anchor):
+        q = d.add_paragraph()
+        q.alignment = WD_ALIGN_PARAGRAPH.LEFT
+        q.paragraph_format.space_after = Pt(1)
+        q.paragraph_format.line_spacing = 1.0
+        q.paragraph_format.left_indent = Cm(0.8)
+        q.paragraph_format.tab_stops.add_tab_stop(
+            cw, WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+        _link(q, anchor, [(f"অধ্যায়  {bn('%02d' % n)}    {title}",
+                           9.5, "1A1A1A", False)])
+        q.add_run("\t")
+        for rr in field(q, f" PAGEREF {anchor} \\h ", "০"):
+            set_run_font(rr, size=Pt(9), color=STEEL, bold=False)
+
+    part_line("পরিভাষা", "_partGloss")
+    for qname, slug in QTYPES:
+        part_line(qname, f"_part_{slug}")
 
     front_path = os.path.join(OUT, "_front.docx")
     b.save(front_path)
@@ -380,6 +478,205 @@ def inject_section_bookmarks(doc, n):
             para._p.insert(0, be); para._p.insert(0, bs)
 
 
+# ── split a chapter into core / glossary / exercises ─────────────────────
+def _h1_elem(doc, endswith):
+    for p in doc.paragraphs:
+        if (p.style and p.style.name == "Heading 1"
+                and p.text.strip().endswith(endswith)):
+            return p._p
+    return None
+
+
+def _relabel_h1(p_elem, text):
+    """Swap a Heading-1 paragraph's visible runs for one navy 19 pt run —
+    keeps the paragraph's style and bottom border (its bookmark too, since
+    that sits in pPr, not the runs)."""
+    for r in p_elem.findall(qn("w:r")):
+        p_elem.remove(r)
+    r = OxmlElement("w:r")
+    rPr = OxmlElement("w:rPr")
+    rf = OxmlElement("w:rFonts")
+    for a in ("w:ascii", "w:hAnsi", "w:cs", "w:eastAsia"):
+        rf.set(qn(a), "Kalpurush")
+    rPr.append(rf)
+    for tag in ("w:sz", "w:szCs"):
+        e = OxmlElement(tag); e.set(qn("w:val"), "38"); rPr.append(e)
+    rPr.append(OxmlElement("w:b")); rPr.append(OxmlElement("w:bCs"))
+    col = OxmlElement("w:color"); col.set(qn("w:val"), NAVY_HEX); rPr.append(col)
+    r.append(rPr)
+    t = OxmlElement("w:t"); t.set(qn("xml:space"), "preserve"); t.text = text
+    r.append(t)
+    p_elem.append(r)
+
+
+def _bookmark_elem(p_elem, name, bid):
+    bs = OxmlElement("w:bookmarkStart")
+    bs.set(qn("w:id"), str(bid)); bs.set(qn("w:name"), name)
+    be = OxmlElement("w:bookmarkEnd"); be.set(qn("w:id"), str(bid))
+    pPr = p_elem.find(qn("w:pPr"))
+    if pPr is not None:
+        pPr.addnext(be); pPr.addnext(bs)
+    else:
+        p_elem.insert(0, be); p_elem.insert(0, bs)
+
+
+_H2NUM = re.compile(r'^[০-৯]+(?:\.[০-৯]+)+\s*$')
+
+
+def _strip_h2_numbers(doc):
+    """Drop the `NN.NN.` prefix run from the exercise block's Heading 2s
+    (`১.১৫.১  ক. বহুনির্বাচনী প্রশ্ন` → `ক. বহুনির্বাচনী প্রশ্ন`). Their
+    parent `NN.NN অনুশীলনী` heading is gone in the back-of-book part, so the
+    sub-number is orphaned."""
+    for p in doc.paragraphs:
+        if not (p.style and p.style.name == "Heading 2"):
+            continue
+        runs = p._p.findall(qn("w:r"))
+        if runs:
+            t = runs[0].find(qn("w:t"))
+            if t is not None and t.text and _H2NUM.match(t.text):
+                p._p.remove(runs[0])
+
+
+def _strip_media(doc):
+    """Drop every image relationship from a pruned fragment. The glossary and
+    exercise blocks carry no pictures, so the copies keep the whole chapter's
+    media parts as dead weight — docxcompose would copy them into the merged
+    book. Remove them before the append."""
+    for rid, rel in list(doc.part.rels.items()):
+        if "image" in rel.reltype:
+            doc.part.drop_rel(rid)
+
+
+def _p_style(el):
+    """Style name of a <w:p> element, or None for anything else."""
+    if el.tag != qn("w:p"):
+        return None
+    pPr = el.find(qn("w:pPr"))
+    if pPr is None:
+        return "Normal"
+    ps = pPr.find(qn("w:pStyle"))
+    return ps.get(qn("w:val")) if ps is not None else "Normal"
+
+
+def _p_text(el):
+    return "".join(t.text or "" for t in el.iter(qn("w:t")))
+
+
+def _exer_h2s(kids, ei):
+    """(slug, index) for each Heading-2 in the অনুশীলনী block, in order.
+    `ei` is the index of the অনুশীলনী Heading-1; scan forward to the sectPr."""
+    out = []
+    for i in range(ei + 1, len(kids)):
+        el = kids[i]
+        if el.tag == qn("w:sectPr"):
+            break
+        if _p_style(el) in ("Heading2", "Heading 2"):
+            txt = _p_text(el).strip()
+            for qname, slug in QTYPES:
+                if txt.endswith(qname):
+                    out.append((slug, i))
+                    break
+    return out
+
+
+def chapter_qtypes(path):
+    """Question-type slugs present in a chapter's অনুশীলনী, in order."""
+    doc = Document(path)
+    kids = list(doc.element.body)
+    e = _h1_elem(doc, EXER_H)
+    assert e is not None, f"{path}: no '{EXER_H}' Heading 1"
+    return [slug for slug, _i in _exer_h2s(kids, kids.index(e))]
+
+
+def split_chapter(path, n, title):
+    """Pruned copies of a chapter .docx:
+      core   — chapter body + সারসংক্ষেপ (পারিভাষিক শব্দ … end removed)
+      gloss  — only পারিভাষিক শব্দ … up to অনুশীলনী; heading relabelled
+      qfrags — {slug: Document} one per question type present in অনুশীলনী,
+               each = the relabelled অনুশীলনী Heading-1 + that type's H2
+               block content (the H2 heading itself dropped — the part
+               divider already names the type)
+    Every block in a .docx body is a direct child of <w:body>; the last child
+    is <w:sectPr> and is always kept."""
+    sect = qn("w:sectPr")
+    label = f"অধ্যায় {bn('%02d' % n)} — {title}"
+
+    core = Document(path)
+    g = _h1_elem(core, GLOSS_H)
+    assert g is not None, f"ch{n:02d}: no '{GLOSS_H}' Heading 1"
+    kids = list(core.element.body)
+    for el in kids[kids.index(g):]:
+        if el.tag != sect:
+            core.element.body.remove(el)
+
+    gloss = Document(path)
+    g = _h1_elem(gloss, GLOSS_H); e = _h1_elem(gloss, EXER_H)
+    assert e is not None, f"ch{n:02d}: no '{EXER_H}' Heading 1"
+    kids = list(gloss.element.body)
+    gi, ei = kids.index(g), kids.index(e)
+    for el in kids[:gi] + [x for x in kids[ei:] if x.tag != sect]:
+        gloss.element.body.remove(el)
+    _relabel_h1(g, label)
+    _bookmark_elem(g, f"_gloss{n:02d}", 93000 + n)
+    unlock_tables(gloss)
+    _strip_media(gloss)
+
+    qfrags = {}
+    order = chapter_qtypes(path)
+    assert order, f"ch{n:02d}: no recognised অনুশীলনী question types"
+    for qi, (qname, slug) in enumerate(QTYPES):
+        if slug not in order:
+            continue
+        frag = Document(path)
+        kids = list(frag.element.body)
+        e = kids.index(_h1_elem(frag, EXER_H))
+        h2s = _exer_h2s(kids, e)
+        pos = {s: idx for s, idx in h2s}
+        start = pos[slug]
+        later = [idx for s, idx in h2s if idx > start]
+        end = min(later) if later else next(
+            i for i, el in enumerate(kids) if el.tag == sect)
+        keep = {id(kids[e])} | {id(kids[j]) for j in range(start + 1, end)}
+        for el in kids:
+            if el.tag == sect:
+                continue
+            if id(el) not in keep:
+                frag.element.body.remove(el)
+        eh1 = _h1_elem(frag, EXER_H)
+        _relabel_h1(eh1, label)
+        _bookmark_elem(eh1, f"_{slug}{n:02d}", 96000 + n * 10 + qi)
+        _strip_h2_numbers(frag)
+        shrink_trailing_para(frag)
+        unlock_tables(frag)
+        _strip_media(frag)
+        qfrags[slug] = frag
+
+    return core, gloss, qfrags
+
+
+def add_part_divider(master, title, anchor, bid):
+    """A back-of-book part opener: page break, big navy heading with a
+    bookmark for the সূচিপত্র, and a hidden 1 pt RaptiChapterTitle paragraph
+    so the running-header STYLEREF shows the part name instead of trailing
+    'অধ্যায় ২৮' across the part's pages."""
+    ph = master.add_paragraph(style="RaptiChapterTitle")
+    ph.paragraph_format.page_break_before = True
+    ph.paragraph_format.space_before = Pt(0)
+    ph.paragraph_format.space_after = Pt(0)
+    ph.paragraph_format.line_spacing = 1.0
+    rh = ph.add_run(title)
+    rh.font.size = Pt(1); rh.font.hidden = True
+
+    p = master.add_paragraph(style="Heading 1")
+    p.paragraph_format.space_before = Pt(6)
+    p.paragraph_format.space_after = Pt(12)
+    keep_with_next(p)
+    _bookmark_elem(p._p, anchor, bid)
+    set_run_font(p.add_run(title), size=Pt(24), bold=True, color=NAVY)
+    para_border(p, "bottom", NAVY_HEX, 12, 6)
+
+
 # ── book-wide footer ─────────────────────────────────────────────────────
 def fill_footer(ftr, sec, page_number=True):
     for extra in list(ftr.paragraphs)[1:]:
@@ -442,6 +739,8 @@ def bake_toc_numbers(dest):
     around it** — begin / instrText / separate / end — leaving one ordinary
     styled run that nothing can recompute. The round-trip copy is discarded;
     the shipped .docx stays python-docx's own output."""
+    anchor = (r'(_ch\d\d(?:_s\d+)?|_partGloss|_part_(?:mcq|short|essay|math|prac)'
+              r'|_gloss\d\d|_(?:mcq|short|essay|math|prac)\d\d)')
     tmp = tempfile.mkdtemp(prefix="booktoc_")
     try:
         r = subprocess.run(
@@ -458,7 +757,7 @@ def bake_toc_numbers(dest):
             xml = z.read("word/document.xml").decode("utf-8")
         pages = {}
         pat = re.compile(
-            r'PAGEREF\s+(_ch\d\d(?:_s\d+)?)\s+\\h.*?'
+            r'PAGEREF\s+' + anchor + r'\s+\\h.*?'
             r'fldCharType="separate".*?<w:t[^>]*>([^<]*)</w:t>.*?'
             r'fldCharType="end"', re.S)
         for m in pat.finditer(xml):
@@ -480,7 +779,7 @@ def bake_toc_numbers(dest):
                 it = rr.find(qn("w:instrText"))
                 if it is None or not it.text:
                     continue
-                mm = re.search(r'PAGEREF\s+(_ch\d\d(?:_s\d+)?)\s+\\h', it.text)
+                mm = re.search(r'PAGEREF\s+' + anchor + r'\s+\\h', it.text)
                 if not mm or mm.group(1) not in pages:
                     continue
                 beg = next((j for j in range(i - 1, -1, -1)
@@ -518,26 +817,66 @@ def bake_toc_numbers(dest):
 
 # ── main ─────────────────────────────────────────────────────────────────
 def main():
+    global DEST
     chaps = chapter_list()
+    only = os.environ.get("MKBOOK_ONLY")
+    if only:                                   # dev: subset build, small + fast
+        keep = {int(x) for x in only.split(",")}
+        chaps = [c for c in chaps if c[0] in keep]
+        DEST = os.path.join(OUT, "_subset_book.docx")
+        print("SUBSET build ->", [n for n, _, _ in chaps], "->", DEST)
     print(f"chapters found: {len(chaps)}  ->", [n for n, _, _ in chaps])
-    assert [n for n, _, _ in chaps] == list(range(1, 29)), "expected ch 1..28"
+    if not only:
+        assert [n for n, _, _ in chaps] == list(range(1, 29)), "expected ch 1..28"
 
     toc_tree = [(n, title, chapter_sections(path)) for n, title, path in chaps]
     nsec = sum(len(sx) for _n, _t, sx in toc_tree)
     print(f"section headings: {nsec}  (সূচিপত্র = 28 chapters + {nsec} sections)")
 
-    front_path = build_front(chaps, toc_tree)
+    # which chapters carry which অনুশীলনী question type, in QTYPES order
+    type_map = {slug: [] for _q, slug in QTYPES}
+    for n, title, path in chaps:
+        for slug in chapter_qtypes(path):
+            type_map[slug].append((n, title))
+    for _q, slug in QTYPES:
+        print(f"  {slug}: {len(type_map[slug])} chapters")
+
+    front_path = build_front(chaps, toc_tree, type_map)
     print("front matter built:", front_path)
 
     master = Document(front_path)
     composer = Composer(master)
+
+    # split every chapter first: core keeps সারসংক্ষেপ; the পারিভাষিক শব্দ tail
+    # becomes the পরিভাষা part; the অনুশীলনী tail is broken by question type
+    # into five parts, each consolidated chapter-wise.
+    cores, glosses = [], []
+    qfrag_by_slug = {slug: [] for _q, slug in QTYPES}
     for n, title, path in chaps:
-        cdoc = Document(path)
-        inject_chapter_start(cdoc, f"_ch{n:02d}", 91000 + n)
-        inject_section_bookmarks(cdoc, n)
-        shrink_trailing_para(cdoc)
-        composer.append(cdoc)
+        core, gloss, qfrags = split_chapter(path, n, title)
+        inject_chapter_start(core, f"_ch{n:02d}", 91000 + n)
+        inject_section_bookmarks(core, n)
+        shrink_trailing_para(core)
+        cores.append((n, title, core))
+        glosses.append((n, title, gloss))
+        for slug, frag in qfrags.items():
+            qfrag_by_slug[slug].append((n, title, frag))
+
+    for n, title, core in cores:
+        composer.append(core)
         print(f"  + অধ্যায় {n:02d}  {title}")
+
+    add_part_divider(master, "পরিভাষা", "_partGloss", 93000)
+    for n, title, gloss in glosses:
+        composer.append(gloss)
+        print(f"  + পরিভাষা · অধ্যায় {n:02d}  {title}")
+
+    for qi, (qname, slug) in enumerate(QTYPES):
+        add_part_divider(master, qname, f"_part_{slug}", 95000 + qi)
+        for n, title, frag in qfrag_by_slug[slug]:
+            composer.append(frag)
+            print(f"  + {qname} · অধ্যায় {n:02d}  {title}")
+
     composer.save(DEST)
     print("composed:", DEST)
 

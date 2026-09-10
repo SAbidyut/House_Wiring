@@ -17,16 +17,16 @@ order *is* the book order — do not regroup chapters by theme.
 
 | Chapter | Title | Pages | State |
 |---|---|---|---|
-| 01 | কর্মক্ষেত্রে নিরাপত্তা | 31 | ✅ delivered |
-| 02 | ইলেকট্রিক্যাল টুলস | 21 | ✅ delivered |
+| 01 | কর্মক্ষেত্রে নিরাপত্তা | 32 | ✅ delivered |
+| 02 | ইলেকট্রিক্যাল টুলস | 23 | ✅ delivered |
 | 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 17 | ✅ delivered |
-| 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 20 | ✅ delivered |
-| 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 14 | ✅ delivered |
+| 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 21 | ✅ delivered |
+| 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 15 | ✅ delivered |
 | 06 | বেল সার্কিট (৬–৯) | 14 | ✅ delivered |
 | 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 24 | ✅ delivered |
 | 08 | মেজারিং ইন্সট্রুমেন্টস | 21 | ✅ delivered |
 | 09 | মাল্টিপ্লাগ সার্কিট | 18 | ✅ delivered |
-| 10 | সিরিজ বোর্ড | 17 | ✅ delivered |
+| 10 | সিরিজ বোর্ড | 18 | ✅ delivered |
 | 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 24 | ✅ delivered |
 | 12 | ফ্যান ও ফ্যান রেগুলেটর | 25 | ✅ delivered |
 | 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 21 | ✅ delivered |
@@ -1896,6 +1896,67 @@ because `dia_ch11` was found still printing "স্তম্ভিত".  Rebuild
 its deliverable to `Book/`, *then* merge; a merge already in flight is using whatever
 was in `out/` when it started.
 
+## Chapters 16–22 recheck, 2026-09-09 (full book only — the digest was NOT touched)
+
+Same ask as the 1–10 and 11–15 rechecks ("chapter 16-22 recheck daw … kothin word
+… sohoj koro … onek sentence … purno koro … fact vul hole thik koro … topic missing
+thakle add koro … final book e merge kore daw").  `smNN.py` left alone.  **No chapter's
+page count moved** — ch16–22 stayed **19 / 19 / 26 / 36 / 24 / 29 / 52**, figures/tables
+unchanged (6/7 · 5/8 · 9/10 · 16/19 · 13/10 · 14/6 · 24/21), no diagram touched, every
+pre-existing page-foot gap unchanged (ch16 p11 4.56 · ch18 4.93/4.56/4.55 · ch19 p5
+4.80), no new gap.  This range had already had the 2026-09-05 digest accuracy review's
+"fixes applied to BOTH books" — but several of those never actually reached the full
+book, and this pass closed them:
+
+- **ch16 উদাহরণ ১৬.১ note** still said a 2000 W / 8.7 A immersion rod needs "১৫A সকেট"
+  — the digest reconciliation settled on "১৩A বা তার বেশি রেটিংয়ের সকেট, আর নিজস্ব
+  একটি সার্কিট" (BNBC 1.3.9.3.6).  Now matches.
+- **ch17 সারণি ১৭.৩** ষষ্ঠ ধাপ read "৬০০-এর ঊর্ধ্বে" → "৬০০-এর বেশি" (the digest's
+  sm17 ঊর্ধ্বে→বেশি swap, full book had missed it).
+- **ch22 উদাহরণ ২২.১ note** jumped 10.9 → 16 A with no mention of **13 A** (which is in
+  IEC 60898-1's series and in the book's own সারণি ২২.১২.২).  Note now says 13 A is
+  enough but is not stocked in Bangladesh, so 16 A.
+- **ch19 সারণি ১৯.১ cell** "দ্রুত বদল, নিরবচ্ছিন্নতা" → "দ্রুত বদল, লোড একটানা চলা".
+
+**Two genuine errors fixed:**
+- **ch22 সারসংক্ষেপ** printed `I = P ÷ (V × cos φ)` — Kalpurush renders `÷` as `+`, so
+  the summary formula was literally wrong on the page.  → `I = P / (V × cos φ)` (the
+  same fix ch18's summary already carries).
+- **ch22 §২২.৫.৫** pointed at "২২.১২.৭-এ ওই হিসাবটি উদাহরণসহ" for the fault-current
+  calculation — that example (উদাহরণ ৫) is in **§২২.১২.৬**; §২২.১২.৭ is সিলেক্টিভিটি.
+  Cross-ref corrected.
+
+**Formality slips fixed** (regressions the 2026-08-31 pass missed — অনুশীলনী গ/ঘ are
+আপনি):  ch19 গ.২ "ব্যাখ্যা করো" → "করুন"; ch21 ঘ.৪ "বের করো" → "করুন"; ch22 গ.৯
+"করে দেখাও" → "করে দেখান".
+
+**Missing topic added:**  ch18's nameplate সারণি has an RPM row but the chapter never
+said why it reads 1440/2880 and not 1500/3000 — the RPM cell now names **স্লিপ** in
+one clause (no new paragraph, no page growth).
+
+**Hard words simplified** (sentence-level, not a script — a normalized sweep of ~45
+candidates found them sparse):  পরিপার্শ্ব → চারপাশের তাপমাত্রা (ch21 §২১.৬.১, ch22
+§২২.৫.৩ + two marking-table cells) · ষড়ভুজ মাথা → ছয় কোণা মাথা (ch21) · দ্বিরঙা →
+দুই রঙের (ch21) · অনাবৃত → একখণ্ড … খোলা পড়ে থাকা (ch21) · সংকীর্ণ → তালিকা আরও ছোট
+(ch22) · বাধ্যবাধকতা → বাধ্যতামূলক করা হয়নি (ch22) · কেন্দ্রাতিগ বল → ঘোরার টান
+(ch18) · সারচিত্র → এক নজরে সাজানো, অবহেলিত → সবচেয়ে কম যত্ন পায়, বণ্টিত → ভাগ করা
+(ch16) · গৌণ → তত জরুরি নয় (ch19).  `নিরবচ্ছিন্ন` kept once in ch19's পারিভাষিক table
+(it *is* the meaning of "Uninterruptible").
+
+**ch18 §১৮.৯.৪ note** ("অথচ ১ অশ্বশক্তির ০.৭০ দক্ষতা ধরে কষলে আসে ১০.৯ A") was
+telegraphic — reworded to say plainly it is *the same 2 HP motor* recomputed with the
+1 HP's 0.70 efficiency, which is what অধ্যায় ২০ uses.  The 10.2-vs-10.9 A gap stays
+disclosed, table unchanged (do not "fix" to one number — standing rule).
+
+**Verified:** all 7 rebuilt, `mathguard` clean, no `§`, `layout.py` shows the same
+page counts and the same pre-existing gaps, MCQ keys untouched (all already balanced),
+every cross-chapter `অধ্যায় N` reference checked valid.  Re-merged twice (the ch22
+পরিপার্শ্ব cell was caught after the first merge started — the standing "rebuild,
+re-copy, then merge" rule).  **Merged book unchanged at 803 pages** (506.3 MB `.docx`,
+45.1 MB PDF); `bake:` 392 anchors resolved; shipped `document.xml` has 0 PAGEREF, 0
+fldChar; STYLEREF header intact.  Deliverables + preview PDFs for ch16–22 copied to
+`Book/`.
+
 ## Chapter 1 — "English terms in table name-columns" + plain-language edits, 2026-09-09
 
 User asked for a set of ch01 fixes, then **explicitly scoped it to ch01 only** —
@@ -1952,6 +2013,111 @@ one 4.25 cm foot-gap on p13, `mathguard` clean, no `§`):
   fix; the per-chapter files carry no body fields/links/widgets, only the footer
   `PAGE` field and one OMML `I = V/R`.
 
+## Chapters 2–10 — English terms added to the পারিভাষিক শব্দ tables only, 2026-09-09
+
+Follow-up to the ch01 edit above.  The user's instruction: **"chapter 2-10 e
+english korte hobe na .. tumi porivasa part e english ta add kore daw ..
+equipment er name guloo english lekhe dio porivasa part e"** — i.e. do **not**
+touch ch2–10 body/tables the way ch01's name-columns were changed; instead, in
+each chapter's **পারিভাষিক শব্দ table only**, make sure every transliterated
+English technical term **and every equipment/tool name** used in the chapter is
+listed, with the English form (Latin) in the "ইংরেজি পরিভাষা" column.  Nothing
+else in ch2–10 changed — no body prose, no other tables, no diagrams.
+
+Rows added per chapter (existing rows kept, new ones interleaved by first
+appearance):
+- **ch02** (tools) 13 → ~55 rows — every hand tool, power tool, measuring/marking
+  tool and wiring aid (Screwdriver, Line Tester, Combination/Diagonal/Long-nose
+  Pliers, Wire Stripper, Crimping Pliers, Ball Pein/Claw/Cross Pein Hammer,
+  Mallet, Adjustable Wrench, Allen Key, Bench Vice, Hacksaw Frame, Junior
+  Hacksaw, Hand Saw, File, Cold Chisel, Measuring Tape, Spirit Level, Try
+  Square, Plumb Bob, Wire Gauge, Tool Box, Spring Wire, Work Light, Electric
+  Drill, Rotary Hammer, Angle Grinder, Wall Chaser, Cordless Driver, Heat Gun,
+  Blower, Vacuum Cleaner, Voltage Detector, Heat-shrink Sleeve, Conduit, SWG,
+  SELV, BS 7671, Two-pole Voltage Detector).  **21 → 23 pp.**  *2026-09-09,
+  user review:* `Cross Pein Hammer`/`Ball Pein Hammer` → `Cross Pin Hammer`/
+  `Ball Pin Hammer` (the book's Bangla is ক্রস/বল পিন, so "Pin" not the
+  standard "Pein").  And §২.৩.৭'s `স্প্রিং ওয়্যার` entry was a naming error —
+  `assets/ch02/spring_wire.png` is a blue coiled **draw-wire/fish-wire**, but the
+  table's description ("কন্ডুইট বাঁকানোর আগে পাইপের ভেতরে ঢুকিয়ে… পাইপ চ্যাপ্টা
+  হয়ে না যায়") is a **bending spring**'s job.  Relabelled to `স্প্রিং বেন্ডার`
+  (Bending Spring) in the সারণি, MCQ option and glossary; its description was
+  already correct and stays.  *Follow-up:* the user then supplied a bending-
+  spring product photo (`sys-master_root_h2b_h5b_…jpeg` at the project root) and
+  asked to keep **spring wire too** — `assets/ch02/spring_bender.png` was cropped
+  from it (PIL white-bg autocrop), and §২.৩.৭ now shows **both**: ফিশ ওয়্যার ·
+  স্প্রিং ওয়্যার (the blue coil `spring_wire.png`, description restored — a
+  spring-steel draw-wire, same job as fish wire) · স্প্রিং বেন্ডার (the new
+  photo) · ওয়ার্ক লাইট, at per_row=4 (মই moved to the সারণি only, to keep the
+  figure_row one line).  The user then asked for the মই tile back too, so
+  §২.৩.৭'s figure_row is now **5 tiles at per_row=5** (ফিশ ওয়্যার · স্প্রিং
+  ওয়্যার · স্প্রিং বেন্ডার · মই · ওয়ার্ক লাইট) — one row, ~2.6 cm thumbs, no
+  page growth (per_row=3's 3+2 layout was what opened the 6.5 cm gap on the
+  fussy `d05_drill_zones` p15).  Glossary has both `Spring Wire` and `Bending
+  Spring` rows.  ch02 stays **23 pp**, `layout.py` clean.
+- **ch03** 12 → 25 (Lamp, Angle Holder, Bayonet Cap/Edison Screw, Ceiling Rose,
+  Terminal Block, Flexible Cord, One-way Switch, Phase/Neutral, Earth Busbar,
+  Earth Electrode, Ceiling Fan).  17 pp unchanged.
+- **ch04** 16 → 35 (Cycle, Hertz, Coulomb, Conductor, Insulator, Semiconductor,
+  Resistor, Capacitor, Inductor, Battery, Generator, Transformer, Solar Cell,
+  Multimeter, Ammeter, Voltmeter, Ohmmeter, Energy Meter, Phase, Neutral,
+  Ground/Earth).  **20 → 21 pp.**
+- **ch05** 12 → 36 (Copper, Aluminium, Mica, Porcelain, Silicone Rubber,
+  Bakelite, Bi-metal Lug, Galvanic Corrosion, and the standard IEC 60617 symbol
+  devices — One-/Two-way Switch, Push Button, Regulator, Fuse, MCB, Socket,
+  Bell, Buzzer, Indicator Lamp, Motor, Cell/Battery, Ammeter, Voltmeter, Earth
+  Symbol, Connection Diagram).  **14 → 15 pp.**
+- **ch06** 10 → 20 (Make-and-break, Leaf Spring, Calling Bell, Chime, Siren,
+  Bell Transformer, Terminal, Series/Parallel Connection, Annunciator).  14 pp
+  unchanged.
+- **ch07** 14 → 20 (Multimeter, Lamp/Bulb, Resistor, Battery/Cell, Switch,
+  Fuse).  24 pp unchanged.
+- **ch08** 16 → 27 (Analog/Digital/Panel Meter, Ammeter, Voltmeter, Ohmmeter,
+  Galvanometer, Current Transformer, Test Lead/Probe, Insulation Tester, Earth
+  Tester, Earth Resistance).  21 pp unchanged.
+- **ch09** 12 → 18 (Extension Board, Terminal, Rocker Switch, Shutter, Surge
+  Protector, Rating, Neon Lamp).  18 pp unchanged.
+- **ch10** 12 → 22 (Test Board, Lamp Holder, LED Lamp, CFL, Plug, Socket,
+  Switch, Terminal, Crocodile Clip, Multimeter, Megger).  **17 → 18 pp.**
+
+All nine rebuilt, `layout.py` clean at 4.5 cm on every one (ch04's pre-existing
+p9 4.78 cm gap is unrelated to the glossary, which sits at chapter end);
+`mathguard` clean.  Deliverables copied to `Book/`.  **Merged book +5 pp overall
+(2×ch02, 1× each ch04/ch05/ch10) — re-run `mkbook.py`.**
+
+## Chapter 1 — table English swap reverted, glossary kept + extended, 2026-09-09
+
+The user changed the call on ch01 the day after: **"chapter 1 ew same kaj kore
+daw .. bangla rakho .. kintu porivasay sob add rakho"** — i.e. treat ch01 like
+ch2–10: **body/tables back to Bangla, English only in the পারিভাষিক শব্দ table.**
+So the 2026-09-09 "English terms in table name-columns" work above was **reverted**:
+
+- All 29 table name-column Latin swaps undone (সারণি ১.১/১.২/১.৩/১.৫/১.৮/১.৯ and
+  the ১.১৫.৪ practical-work equipment column back to `সেফটি হেলমেট`, `নাইট্রিল
+  গ্লাভস`, `জীবাণুমুক্ত ভেজা ওয়াইপস`, `আর্ক ফ্ল্যাশ`, `বৈদ্যুতিক শক`, …).
+- The prose `(English)` parentheticals I had added (শাট-ডাউন, ফেজিং টেস্ট,
+  ভোল্টেজ টেস্টার, গ্রাউন্ডিং, ক্যাপাসিটর ডিসচার্জ, ফিউজ কাট-আউট, ফিডার,
+  কন্ডাক্টর, লুজ কানেকশন, ইনসুলেশন রেজিস্ট্যান্স, প্রোব, রিকভারি পজিশন, স্প্লিন্ট,
+  and the §১.৭.৩ Line Clearance / Permit to Work brackets) all removed.  The
+  pre-existing `(Right of Way)` / `(Overloaded)` / `(Red-hot)` / `(Risk
+  Assessment)` brackets that were in ch01 before this session are untouched.
+- **Kept**: every non-English content fix — `পায়ে পেরেক ঢোকা`, `বাতিল করে নতুন
+  আরেকটি ব্যবহার করতে হবে`, the ladder rewording + `সবচেয়ে উপরের তিনটি ধাপে …`,
+  the ১.৪.১ dress-code bullets, the new **§১.৭.৩ লাইন ক্লিয়ারেন্স ও রাইট অব ওয়ে**
+  (headings/prose all Bangla now), the `রাইট অফ ওয়ে → রাইট অব ওয়ে` fix, and the
+  short question.
+- **পারিভাষিক শব্দ (১.১৪) kept and extended to ~61 rows** — the earlier 37-row
+  expansion plus the ch2–10-style equipment/PPE/first-aid names (Safety Helmet,
+  Safety Goggles, Insulated Hand Gloves, Ear Plug/Muff, Safety Shoes, Reflective
+  Apron, Dust Mask, Ladder, Line Tester, Padlock, Lockout Device, Tag, Fire
+  Extinguisher, CO₂ Extinguisher, Fire Class, Ventricular Fibrillation, First
+  Aid Box, Bandage/Gauze, Adhesive Dressing, Antiseptic, Microporous Tape,
+  Nitrile Gloves, Tweezers, Triangular Bandage).
+- **Layout:** the bigger glossary + Bangla-again first-aid table stranded
+  `d10_rescue` (6.2 cm gap on the উদ্ধার page); fixed by moving `d10_rescue` up
+  to right after the ⚠ box, before the 5-step list.  ch01 **31 → 32 pp**;
+  `layout.py` clean bar the pre-existing p13 4.25 cm.
+
 ## Open items
 
 - ch18 has three ~4.5–5 cm page-foot gaps (4.93 / 4.56 / 4.55 cm),
@@ -1973,11 +2139,13 @@ one 4.25 cm foot-gap on p13, `mathguard` clean, no `§`):
   (2026-08-31; extended to 1–28 on 2026-09-04, section-level সূচিপত্র and
   running header added 2026-09-08) produces one file with continuous page
   numbers and a clickable chapter-**and-section** সূচিপত্র whose page numbers
-  are baked in as static text; **chapters 1–28 → 797 pages** (506.2 MB `.docx`,
-  44.8 MB PDF).  (786 → 787 on 2026-09-08 when ch01's CPR figure became
+  are baked in as static text; **chapters 1–28 → 803 pages** (506.2 MB `.docx`,
+  45.1 MB PDF).  (786 → 787 on 2026-09-08 when ch01's CPR figure became
   step-by-step prose; 787 → 793 with the chapters 1–10 recheck; 793 → 795 with
-  the chapters 11–15 recheck on 2026-09-09; 795 → 797 with the ch01-only
-  "English terms in table name-columns" edit on 2026-09-09, see the dated note
+  the chapters 11–15 recheck on 2026-09-09; 795 → 797 with the ch01
+  "English terms in table name-columns" edit, then 797 → 803 when that ch01 edit
+  was reverted to Bangla and the পারিভাষিক শব্দ tables of ch01–ch10 were given
+  the English equipment names instead — all 2026-09-09, see the two dated notes
   below.  `bake:` reports 392 anchors every time — the section count has not
   moved, since none of these were section changes.)
   `DEST`, `chapter_list()`'s `1 <= n <= 28`, and `main()`'s
