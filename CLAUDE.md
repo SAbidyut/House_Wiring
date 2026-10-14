@@ -2144,7 +2144,27 @@ Full book e thik kore daw … diagram change korte hobe na"):
 - `render.py`/`svgkit.py` read Chrome from `$CHROME_BIN` (cloud container:
   `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`); Kalpurush must be
   installed system-wide (`/usr/local/share/fonts`) for LibreOffice.
-- Chapters 7–28 are reviewed but **not yet applied**; the review files list
+- **Chapters 7–14 applied the same way on 2026-10-14** (user: "chapter 6 theke
+  chapter 14 koro … sob kisu ready kore rakhba … ami ekbare sese merge korte
+  bolle merge korba"). Per-chapter `.docx` + preview PDFs in `Book/` are
+  rebuilt; **the full book was NOT re-merged**, the user will ask. Pages
+  ch07–14: 24 / 22 / 18 / 18 / 26 / 26 / 21 / 32 (ch08 +1, ch11 +2, ch12 +1,
+  ch14 +1; ch13 21 with its three old ~4.8 cm gaps gone). `layout.py` clean on
+  all eight. Fact fixes worth keeping: ch07 mixed-circuit rule ("innermost part
+  first", not "parallel first"), series-board row (indicator is the parallel
+  part), bell transformer is not DC; ch08 CAT categories are IEC 61010-2-030,
+  body on a probe is in *parallel* (reading drops), clamp-meter leakage needs a
+  mA leakage clamp, RCCB (not MCB) row; ch09 gang board gets a fuse in text
+  (figure is the institute's slide, unchanged), one heat-appliance rule;
+  ch10 definition box no longer puts the indicator in series, the test-lamp
+  "dim = OK" rule is conditional on load ≤ lamp, insulation 1 MΩ (IEC) vs
+  5 MΩ (BNBC, book takes 5); ch11 copper "ক্ষয়" not "মরিচা", married-joint
+  centre strand cut *shorter*; ch12 coil regulator saves "little", not
+  nothing, 90° is electrical; ch13 intermediate-switch miswire gives erratic
+  control, not an MCB trip; ch14 diversity vs demand factor noted in prose,
+  chase depth 1/3 vertical vs 1/6 horizontal. ch08's chapter title keeps
+  "ইন্সট্রুমেন্টস" (file name / TOC decision pending), body uses ইনস্ট্রুমেন্ট.
+- Chapters 15–28 are reviewed but **not yet applied**; the review files list
   ~12 open book-wide decisions (acronym script, থ্রি-ওয়ে meaning, diversity vs
   demand factor, SPD position in ch22 vs ch25, insulation test values …).
 
