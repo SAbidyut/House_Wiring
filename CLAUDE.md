@@ -2164,7 +2164,30 @@ Full book e thik kore daw … diagram change korte hobe na"):
   control, not an MCB trip; ch14 diversity vs demand factor noted in prose,
   chase depth 1/3 vertical vs 1/6 horizontal. ch08's chapter title keeps
   "ইন্সট্রুমেন্টস" (file name / TOC decision pending), body uses ইনস্ট্রুমেন্ট.
-- Chapters 15–28 are reviewed but **not yet applied**; the review files list
+- **Chapters 15–21 applied the same way on 2026-10-14** (user: "ekhon 15
+  theke 21 kore daw,, merge korte bolbo pore ami"). Per-chapter `.docx` +
+  previews in `Book/` rebuilt; **full book NOT re-merged**. Pages ch15–21:
+  24 / 19 / 19 / 27 / 36 / 25 / 30 (ch18 +1, ch19 ±0, ch20 +1, ch21 +1;
+  each +1 is new content), `layout.py` clean on all seven. Fact fixes worth
+  keeping: ch17 example notes (fan load is mostly *watts*, 18.52 Tk, average
+  7.80 vs 12.58 Tk/unit), LED tube ≈ one-third, prepaid VAT per recharge +
+  rebate "check current order", BERC not "সরকার"; ch18 10 A breaker → 2.5 RM
+  (BNBC 1.3.12.2), starting current 5–7× everywhere, 5 HP single-phase ≈ 22 A,
+  direction change by swapping the starting coil only on a 4-lead motor, start
+  capacitor/centrifugal-switch paragraph added; ch19 165 AH → 3.8 h, inverter
+  makes *low-voltage* AC, hum from harmonics not heat, IPS neutral only
+  separate in backup mode, fridge never on the IPS DB, DoD table relabelled
+  "লেড-অ্যাসিড, আনুমানিক", internal changeover ≠ external bypass switch
+  (diagram keeps "চেঞ্জওভার"); ch20 wrong "অধ্যায় ২২" contactor reference
+  removed, MCQ 4 reworded and key rebalanced (৪-ক), টিদার→টেদার,
+  ইনডাক্টিভ→ইন্ডাক্টিভ; **ch20 keeps "কেবল" for cable** because its
+  diagrams say কেবল — every "only" use became "শুধু" instead; ch21 next bar
+  after 223 mm² is 30 × 8, 50 × 5 chosen for cooling, diversity vs demand
+  factor note, current-density definition fixed, crimp (earth bar) vs
+  solder/weld (1.3.17.4(গ)) reconciled. `postpass.py` turned the `OUT` path
+  dash into a colon in ch21 once — fixed; **check the saved file name after
+  every postpass**.
+- Chapters 22–28 are reviewed but **not yet applied**; the review files list
   ~12 open book-wide decisions (acronym script, থ্রি-ওয়ে meaning, diversity vs
   demand factor, SPD position in ch22 vs ch25, insulation test values …).
 
