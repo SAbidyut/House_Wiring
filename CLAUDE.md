@@ -2222,6 +2222,13 @@ Full book e thik kore daw … diagram change korte hobe na"):
     old tail in the next literal (a duplicated colour line). An n-gram
     repeat check over each string constant caught it. Run it on every
     chapter.
+- **Full book re-merged on 2026-10-14** after the ch1–28 language pass and the
+  BNBC change (user: "ekhon full book merge kore daw … docx, pdf duitay").
+  **812 pages**, 482.3 MB `.docx`, 46.5 MB PDF; `bake:` 342 anchors resolved
+  (28 chapters + 308 sections, down from 364 because some h1 sections were
+  merged in the review); 0 PAGEREF in the shipped docx. The 32 "বিএনবিসি"
+  still in the PDF are all inside diagram artwork (dia_ch14–28), left
+  untouched by instruction.
 - **ch25 re-laid out after the BNBC change** (the shorter text opened an
   8 cm gap on p16): চিত্র ২৫.৮ moved after the ⚠ box, চিত্র ২৫.৯ after
   §২৫.৭.১'s first paragraph, the SLD figure back before its reading
