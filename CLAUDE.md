@@ -2118,6 +2118,36 @@ So the 2026-09-09 "English terms in table name-columns" work above was **reverte
   to right after the ⚠ box, before the 5-step list.  ch01 **31 → 32 pp**;
   `layout.py` clean bar the pre-existing p13 4.25 cm.
 
+## Full-book language review + chapters 1–6 applied, 2026-10-14
+
+The user asked for the whole book to read as human, formal, student-friendly
+prose (no AI tells, no hard words, no broken sentences, better headings), and
+explicitly forbade using any "human Bangla" skill. Every chapter was reviewed
+line by line; the findings (exact «বর্তমান» → «প্রস্তাব» pairs, heading tables,
+fact flags) are committed in `docs/review/পর্যালোচনা — অধ্যায় *.md`.
+**Chapters 1–6 were then applied** (user: "1 theke 6 pojonto change kore amar
+Full book e thik kore daw … diagram change korte hobe na"):
+- Only `chNN.py` text changed — no artwork. Em-dashes 334 → ~10 across ch1–6
+  (list labels `**X:**`, box titles `সংজ্ঞা: X`, table cells `X: Y`), headings
+  as noun phrases, সার্কিট over বর্তনী (defined once), বেল over ঘণ্টা,
+  শ্রেণি/রং/শুকনো/পুরোনো, ক্যাবল for cable, future-tense refs to later
+  chapters, plus the review's fact fixes (arc flash, socket "earth pin",
+  foam MCQ → বালু, ch02 §২.৬.২ "অনুমোদিত অঞ্চল", ch03 সুইচ অন/অফ and earth-pin
+  logic, ch04 run capacitor + 350–450 V reasoning + heater example, ch05
+  valence 5–8 and doping, ch06 indicator-lamp tip).
+- ch01's user-written fuse box, ladder lines, «পায়ে পেরেক ঢোকা» and rule ৭ were
+  deliberately left untouched. ch03/ch06's circuit loops now take the figure
+  caption with `title.split(": ", 1)[1]` (headings use a colon, not a dash).
+- Page counts unchanged (32/23/17/21/15/14); only ch04 has a new 4.60 cm gap
+  (p8) beside its old 4.78 cm. ch05's four symbol charts again pack two per
+  page — the text before them had to be trimmed back to fit.
+- `render.py`/`svgkit.py` read Chrome from `$CHROME_BIN` (cloud container:
+  `/opt/pw-browsers/chromium-1194/chrome-linux/chrome`); Kalpurush must be
+  installed system-wide (`/usr/local/share/fonts`) for LibreOffice.
+- Chapters 7–28 are reviewed but **not yet applied**; the review files list
+  ~12 open book-wide decisions (acronym script, থ্রি-ওয়ে meaning, diversity vs
+  demand factor, SPD position in ch22 vs ch25, insulation test values …).
+
 ## Open items
 
 - ch18 has three ~4.5–5 cm page-foot gaps (4.93 / 4.56 / 4.55 cm),
