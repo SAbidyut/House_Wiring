@@ -2246,6 +2246,77 @@ Full book e thik kore daw … diagram change korte hobe na"):
   - The word **থ্রি-ওয়ে** stays as it is.
   - The **diversity vs demand factor** wording stays as it is.
 
+## Diagram pass over chapters 1–9, 2026-10-14
+
+User: "Chapter 1 theke 9 pojonto joto diagram ase egulo check diye Bangla lekha
+gulo ager moto thik koro … lekha overlap … line mismatch … quality o improve
+koro … all digram folder w update kore dio". All 72 figures in `dia_ch01–09`
+were looked at, fixed, re-rendered, `qc.py`-clean, and copied into
+`Book/অধ্যায়-NN/ডায়াগ্রাম-সোর্স (SVG)/`. Chapter page counts are unchanged
+(32 / 23 / 17 / 21 / 15 / 14 / 24 / 22 / 18). ch04 keeps its old 4.60 / 4.78 cm
+gaps, and every other chapter has no gap above 4.5 cm. **The full book was not
+re-merged.**
+
+- **`render.py` had been cutting off the foot of every PNG.** In this
+  container's new-style headless Chrome, `--window-size` is the *outer* window,
+  so the viewport is shorter than the SVG and the bottom ~90 px went missing
+  (boxes without a lower edge, missing note strips). It now renders into a
+  window `PAD` = 400 px taller and crops back to the exact size with PIL. The
+  delivered PDFs were never affected: LibreOffice draws figures from the
+  embedded **SVG**, and only the PNG fallback was clipped. **Look at PNGs only
+  after re-rendering with the fixed `render.py`.**
+- **Language, same rules as the prose pass:**
+  - Titles, chips and note strips use no em-dashes; a colon or semicolon
+    takes their place.
+  - Word choices: বর্তনী → সার্কিট; জীবন্ত → লাইভ/চালু; অন্তরক/অন্তরণ →
+    ইনসুলেটেড/ইনসুলেশন; ঘণ্টা → বেল; কেবল (only) → শুধু; শুকনা → শুকনো;
+    সবসময় → সব সময়; দ্বৈত ত্রিভুজ → দুই ত্রিভুজ; diminutive -টা → -টি.
+  - Figure wording now matches the prose:
+    - LOTO step ৫ = জমে থাকা শক্তি সরানো.
+    - The five golden rules carry their §১.৭.১ names.
+    - ঝুঁকি নিয়ন্ত্রণের ধাপক্রম.
+    - Insulator ৫–৮টি ইলেকট্রন.
+    - সুইচ অন/অফ in চিত্র ৩.২.
+    - The earth pin is thick so the plug cannot go in upside down.
+    - "ফেজ (বাদামি)" was dropped from circuit 2's note, because the slide
+      shows a red wire.
+- **Type:** every chapter's `T_SMALL`/`T_BODY` was raised, so the smallest
+  label prints at ≥ 7.5 pt (`N × P(pt) / W`). The only exceptions are letters
+  inside symbols, such as FD, SD, TV and kWh. `ch01.W["d07"]` went from 12.6 to
+  14.0 cm once the five-rules figure's dead space was cut.
+- **Drawing faults fixed (all were invisible to `qc.py`):**
+  - ch01 d05: leaders now run round the figure. The goggles leader used to run
+    through the ear plug, and the mask and harness leaders crossed the arm and
+    glove. The figure itself was untouched (the standing "do not redraw
+    d05_ppe" rule).
+  - ch01 d14: `worker(reach_l=…)` raises the left arm, so the person really
+    touches the appliance. The current path was redrawn hand → body → feet.
+  - ch01 d04, ch02 d04, ch04 d06: the card headers showed a pale band. The
+    corner-squaring rect was painted in the body colour instead of the header
+    colour.
+  - ch02 d03: `×৪` printed as "×8" (Kalpurush ৪); the label now reads
+    "বড় করে দেখানো". The jaw and blade arrows now sit beside the blades.
+  - ch02 d05: "কোনাকুনি নয়" now sits beside its own diagonal.
+  - ch03 d02: the lit-lamp rays were moved off the wire's own axis (the ch10
+    lesson), and the short-circuit label was moved clear of the lamp.
+  - ch04 d03: the battery was not connected to anything. The loop is now
+    closed: the − terminal goes into the conductor and the load returns to +.
+  - ch04 d01: the atom now has 2 + 8 + 1 electrons. 10⁻¹⁹ uses a real `tspan`
+    superscript, because Kalpurush has no ⁻¹⁹ glyphs.
+  - ch04 d08: the figure showed IEC only although its caption says "IEC ও
+    BNBC". It now shows both columns, with the blue rows flagged and a note on
+    the blue-wire trap.
+  - ch07 d02/d07: the return wire was itself drawn as the red current arrow.
+    The wire is now a wire, and the current is a separate arrow beside it.
+  - ch08 d02: the port leaders stopped on the frame below the meter; they now
+    end on the sockets. The display and button leaders end on the parts.
+  - ch09 d01/d02: the cord entered the plug on the pin side. `plug2(up=False)`
+    now brings the cord into the back. The board-body leader no longer crosses
+    its own label, and the extension-board plug sits inside its card.
+- `ch01.py`: an earlier replace had turned "অস্থায়ী আর্থিং সংযোগ" into
+  "ধাপক্রম" in three places (§১.৭ lists and the LOTO table). All three were
+  restored.
+
 ## Open items
 
 - ch18 has three ~4.5–5 cm page-foot gaps (4.93 / 4.56 / 4.55 cm),

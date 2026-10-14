@@ -15,9 +15,9 @@ IMG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "ch09")
 
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_NAME = 25.5
+T_BODY = 22.5
+T_SMALL = 22.5
 T_CALL = 25          # d01 ~14 cm চওড়া বসে বলে লেবেল একটু বড় (≈8 pt)
 LH = 1.42
 
@@ -117,14 +117,15 @@ def fuse_body(s, cx, cy):
     s.path(f"M {cx} {cy-26} L {cx} {cy+26}", "#8A6D00", 3)
 
 
-def plug2(s, cx, cy, scale=1.0):
-    """২-পিন প্লাগ, পিন উপরের দিকে।"""
+def plug2(s, cx, cy, scale=1.0, up=True):
+    """২-পিন প্লাগ।  `up=False` হলে পিন নিচের দিকে, কর্ড ঢোকে উপর দিয়ে —
+    কর্ড সব সময় পিনের উল্টো দিক থেকে আসে, পিনের পাশ থেকে নয়।"""
     k = scale
     s.rect(cx - 46 * k, cy - 34 * k, 92 * k, 68 * k, "#FFFFFF", "#7C8794", 2.6, 9)
     for dx in (-19, 19):
-        s.rect(cx + dx * k - 5 * k, cy - 78 * k, 10 * k, 44 * k,
-               METAL, "#6B7684", 2, 3)
-    return cy - 78 * k
+        y_ = cy - 78 * k if up else cy + 34 * k
+        s.rect(cx + dx * k - 5 * k, y_, 10 * k, 44 * k, METAL, "#6B7684", 2, 3)
+    return cy - 78 * k if up else cy - 34 * k
 
 
 def plug3(s, cx, cy, scale=1.0):
@@ -166,16 +167,18 @@ def d01_parts():
         s.circle(cx, BY + 30, 5, STEEL)
 
     # flexible cord out of the left end, down and along to a 2-pin plug
-    s.path(f"M {BX} {cy} L 150 {cy} L 150 706 L 232 706", "#3B4550", 9)
-    plug2(s, 274, 706, 0.9)
+    # flexible cord out of the left end, down into the BACK of the plug —
+    # the pins point away from the cord, as on a real plug
+    s.path(f"M {BX} {cy} L 150 {cy} L 150 650", "#3B4550", 9)
+    plug2(s, 150, 682, 0.9, up=False)
 
-    callout(s, 470, 572, "বোর্ড বডি (অগ্নিরোধী PVC)", BX + BW / 2, BY + BH, "start")
-    callout(s, 420, 634, "ফ্লেক্সিবল কর্ড", 160, 634, "start")
-    callout(s, 420, 726, "২-পিন প্লাগ", 320, 722, "start")
+    callout(s, 760, 600, "বোর্ড বডি (অগ্নিরোধী PVC)", BX + BW / 2, BY + BH + 2, "start")
+    callout(s, 330, 580, "ফ্লেক্সিবল কর্ড", 156, 580, "start")
+    callout(s, 330, 690, "২-পিন প্লাগ", 194, 690, "start")
 
     y = note_strip(s, 790,
                    "ফিউজ মেইন লাইনে সিরিজে, প্রতিটি সকেট নিজের সুইচসহ "
-                   "পরস্পর প্যারালালে — তাই এটি একটি মিশ্র সার্কিট")
+                   "পরস্পর প্যারালালে; তাই এটি একটি মিশ্র সার্কিট")
     s.fit(y, 24)
     return s.save(f"{OUT}/d01_parts.svg")
 
@@ -193,7 +196,7 @@ def d02_types():
         ("গ্যাং মাল্টিপ্লাগ", "Gang Multiplug",
          "একই প্লেটে একাধিক ৩-পিন সকেট, প্রতিটির সঙ্গে সুইচ", "gang"),
         ("এক্সটেনশন মাল্টিপ্লাগ", "Extension Multiplug",
-         "লম্বা কর্ডসহ বহনযোগ্য বোর্ড, ইচ্ছেমতো সরানো যায়", "ext"),
+         "লম্বা কর্ডসহ বহনযোগ্য বোর্ড, ইচ্ছামতো সরানো যায়", "ext"),
     ]
     for i, (bn_, en, note, kind) in enumerate(cards):
         x = x0 + i * (cw + gapx)
@@ -215,12 +218,11 @@ def d02_types():
                 face_socket3(s, cx + dx - 22, 226)
                 face_switch(s, cx + dx + 34, 226, dx > 0)
         else:
-            s.rect(cx - 118, 172, 236, 108, "#E7ECF1", "#7C8794", 2.6, 12)
+            s.rect(cx - 84, 172, 236, 108, "#E7ECF1", "#7C8794", 2.6, 12)
             for k in range(3):
-                face_socket2(s, cx - 74 + k * 74, 226)
-            s.path(f"M {cx-118} 226 L {cx-176} 226 L {cx-176} 316", "#3B4550", 8)
-            plug2(s, cx - 176, 356, 0.62)
-            s.path(f"M {cx-176} 316 L {cx-176} 308", "#3B4550", 8)
+                face_socket2(s, cx - 40 + k * 74, 226)
+            s.path(f"M {cx-84} 226 L {cx-140} 226 L {cx-140} 284", "#3B4550", 8)
+            plug2(s, cx - 140, 302, 0.55, up=False)
 
         s.text(cx, 350, bn_, T_NAME, NAVY, 700, "middle")
         s.text(cx, 380, en, T_SMALL, STEEL, 600, "middle")
@@ -228,7 +230,7 @@ def d02_types():
             s.text(cx, 412 + j * T_SMALL * 1.34, ln, T_SMALL, GREY, 400, "middle")
 
     y = note_strip(s, 486,
-                   "প্রকার যা-ই হোক, ভেতরের সংযোগনীতি একই — "
+                   "প্রকার যা-ই হোক, ভেতরের সংযোগনীতি একই: "
                    "মেইন সুইচ ও ফিউজ সিরিজে, সকেটগুলো প্যারালালে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d02_types.svg")
@@ -246,7 +248,7 @@ def d03_pins():
     # ── two-pin ────────────────────────────────────────────────────────
     cx = 46 + PW / 2 - 40
     plug2(s, cx, 300, 1.0)
-    s.text(cx, 380, "প্লাগ", T_BODY, NAVY, 700, "middle")
+    s.text(cx, 412, "প্লাগ", T_BODY, NAVY, 700, "middle")
     s.text(cx - 19, 196, "L", T_NAME, BROWN, 700, "middle")
     s.text(cx + 19, 196, "N", T_NAME, BLUE, 700, "middle")
 
@@ -258,14 +260,14 @@ def d03_pins():
     s.text(sx, 412, "সকেট", T_BODY, NAVY, 700, "middle")
 
     s.text(46 + PW / 2, 460,
-           "কেবল ফেজ ও নিউট্রাল — আর্থ নেই", T_BODY, RED, 700, "middle")
+           "শুধু ফেজ ও নিউট্রাল, আর্থ নেই", T_BODY, RED, 700, "middle")
     s.text(46 + PW / 2, 496,
            "ধাতব বডির যন্ত্রে ব্যবহার করা যাবে না", T_SMALL, GREY, 400, "middle")
 
     # ── three-pin ──────────────────────────────────────────────────────
     cx = 634 + PW / 2 - 40
     plug3(s, cx, 300, 1.0)
-    s.text(cx, 380, "প্লাগ", T_BODY, NAVY, 700, "middle")
+    s.text(cx, 412, "প্লাগ", T_BODY, NAVY, 700, "middle")
     s.text(cx, 172, "E", T_NAME, EGREEN, 700, "middle")
     s.text(cx - 28, 200, "L", T_NAME, BROWN, 700, "middle")
     s.text(cx + 28, 200, "N", T_NAME, BLUE, 700, "middle")
@@ -275,10 +277,10 @@ def d03_pins():
     s.rect(sx - 7, 264, 14, 30, "#3B4550")
     s.rect(sx - 34, 314, 12, 28, "#3B4550")
     s.rect(sx + 22, 314, 12, 28, "#3B4550")
-    s.text(sx, 400, "সকেট", T_BODY, NAVY, 700, "middle")
+    s.text(sx, 412, "সকেট", T_BODY, NAVY, 700, "middle")
 
     s.text(634 + PW / 2, 460,
-           "আর্থ পিন লম্বা ও মোটা — আগে ঢোকে, পরে বের হয়",
+           "আর্থ পিন লম্বা ও মোটা; আগে ঢোকে, পরে বের হয়",
            T_BODY, EGREEN, 700, "middle")
     s.text(634 + PW / 2, 496,
            "লম্বা পিনই সকেটের শাটার খুলে দেয়", T_SMALL, GREY, 400, "middle")
@@ -301,7 +303,7 @@ def d05_gang():
     return _sheet("d05_gang", "গ্যাং মাল্টিপ্লাগ (৩-পিন) সার্কিট",
                   "d05_gang_schem.png", "d05_gang_conn.png",
                   "প্রতিটি সকেটের L, N ও E আলাদা বাসে প্যারালালে; "
-                  "সুইচ বসে কেবল ফেজ তারে", 600)
+                  "সুইচ বসে শুধু ফেজ তারে", 600)
 
 
 def d06_three():
@@ -311,7 +313,7 @@ def d06_three():
     panel(s, 46, 96, 1148, 588, "কানেকশন ডায়াগ্রাম", GREEN)
     s.image_fit(70, 158, 1100, 508, f"{IMG}/d06_three_conn.png", 8)
     y = note_strip(s, 712,
-                   "সকেটের সংখ্যা বাড়লেও নিয়ম একই — প্রতিটি নতুন সুইচ-সকেট "
+                   "সকেটের সংখ্যা বাড়লেও নিয়ম একই; প্রতিটি নতুন সুইচ-সকেট "
                    "শাখা আগের শাখার সঙ্গে প্যারালালে বসে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d06_three.svg")
