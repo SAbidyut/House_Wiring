@@ -17,7 +17,7 @@ T_NODE = 28
 T_LBL = 25
 T_NAME = 24.5
 T_TAG = 22
-T_BODY = 21.5
+T_BODY = 22.5
 T_SMALL = 20
 LH = 1.42
 
@@ -245,7 +245,7 @@ def d01_bell_parts():
     পেছনে থাকে, আর বর্তনীর কথা ডান প্যানেলেই বলা।
     """
     s = SVG(1240, 1000)
-    s.title("বৈদ্যুতিক ঘণ্টার গঠন ও কার্যপ্রণালি", T_TITLE)
+    s.title("বৈদ্যুতিক বেলের গঠন ও কার্যপ্রণালি", T_TITLE)
     ar = s.arrow_defs(STEEL, "ar", 13)
     arR = s.arrow_defs(RED, "arR", 13)
     arG = s.arrow_defs(GREEN, "arG", 13)
@@ -370,14 +370,14 @@ def d01_bell_parts():
                T_TAG, GREEN if live else GREY, 700)
 
     state(82, 630, "১ · কন্টাক্ট লাগানো", True)
-    state(674, 630, "২ · কন্টাক্ট ছোটা", False)
+    state(674, 630, "২ · কন্টাক্ট খুলে যাওয়া", False)
 
     # দুই অবস্থার চক্র
     s.path("M 592 706 A 40 40 0 0 1 648 706", STEEL, 3.4, marker=ar)
     s.path("M 648 774 A 40 40 0 0 1 592 774", STEEL, 3.4, marker=ar)
     s.text(620, 668, "চক্র", T_TAG, NAVY, 700, "middle")
 
-    y = note_strip(s, 872, "কয়েল, কোর আর গং স্থির — নড়ে কেবল "
+    y = note_strip(s, 872, "কয়েল, কোর আর গং স্থির থাকে; নড়ে শুধু "
                            "আর্মেচার ও হ্যামার")
     s.fit(y, 22)
     return s.save(f"{OUT}/d01_bell_parts.svg")
@@ -402,7 +402,7 @@ def d02_bell_types():
     W_, M, GAP, IH, COLS = 1240, 26, 16, 250, 3
     tile = (W_ - 2 * M - GAP * (COLS - 1)) / COLS
     s = SVG(W_, 1000)
-    s.title("বেল, বাজার ও চাইম — বাস্তবের যন্ত্র", T_TITLE)
+    s.title("বেল, বাজার ও চাইম: বাস্তব যন্ত্র", T_TITLE)
     for i, (img, name, role) in enumerate(items):
         x = M + (i % COLS) * (tile + GAP)
         top = 100 + (i // COLS) * (IH + 84 + 24)
@@ -430,8 +430,8 @@ def d03_simple():
     def conn(s, cx):
         image_panel(s, cx, 150, 406, f"{IMG}/d03_simple_conn.png")
 
-    return _sheet("d03_simple", "বেল সার্কিট ৬ — সাধারণ কলিং বেল", circ, conn,
-                  "পুশ সুইচ ফেজ তারে বসে; চাপ দিলে বর্তনী সম্পূর্ণ হয়ে বেল বাজে")
+    return _sheet("d03_simple", "বেল সার্কিট ৬: সাধারণ কলিং বেল", circ, conn,
+                  "পুশ সুইচ ফেজ তারে বসে; চাপ দিলে সার্কিট সম্পূর্ণ হয়ে বেল বাজে")
 
 
 def d04_two_switch():
@@ -441,9 +441,9 @@ def d04_two_switch():
     def conn(s, cx):
         image_panel(s, cx, 150, 466, f"{IMG}/d04_two_switch_conn.png")
 
-    return _sheet("d04_two_switch", "বেল সার্কিট ৭ — দুই স্থান থেকে একটি বেল",
+    return _sheet("d04_two_switch", "বেল সার্কিট ৭: দুই স্থান থেকে একটি বেল",
                   circ, conn,
-                  "দুটি পুশ সুইচ প্যারালালে — যেকোনো একটি চাপলেই বেল বাজবে", 620)
+                  "দুটি পুশ সুইচ প্যারালালে, তাই যেকোনো একটি চাপলেই বেল বাজে", 620)
 
 
 def d05_series():
@@ -453,8 +453,8 @@ def d05_series():
     def conn(s, cx):
         image_panel(s, cx, 150, 406, f"{IMG}/d05_series_conn.png")
 
-    return _sheet("d05_series", "বেল সার্কিট ৮ — সিরিজ বেল সার্কিট", circ, conn,
-                  "সুইচ, বাতি ও বেল একই সিরিজে — একসঙ্গে চালু হয়, একটি নষ্ট হলে সব বন্ধ")
+    return _sheet("d05_series", "বেল সার্কিট ৮: সিরিজ বেল সার্কিট", circ, conn,
+                  "সুইচ, বাতি ও বেল একই সিরিজে; একটি নষ্ট হলে সবই বন্ধ")
 
 
 def d06_emergency():
@@ -464,9 +464,9 @@ def d06_emergency():
     def conn(s, cx):
         image_panel(s, cx, 150, 426, f"{IMG}/d06_emergency_conn.png")
 
-    return _sheet("d06_emergency", "বেল সার্কিট ৯ — ইমার্জেন্সি অ্যালার্ম",
+    return _sheet("d06_emergency", "বেল সার্কিট ৯: ইমার্জেন্সি অ্যালার্ম",
                   circ, conn,
-                  "দুটি সুইচ, দুটি বেল প্যারালালে — যেকোনো একটি চাপলেই সব বেল বাজে", 580)
+                  "দুটি সুইচ ও দুটি বেল প্যারালালে; যেকোনো সুইচ চাপলে দুটি বেলই বাজে", 580)
 
 
 def d07_indicator():
@@ -478,8 +478,7 @@ def d07_indicator():
         image_panel(s, cx, 150, 466, f"{IMG}/d07_indicator_conn.png")
 
     return _sheet("d07_indicator", "তিন স্থান থেকে বেল ও ইন্ডিকেটর বাতি", circ, conn,
-                  "প্রতিটি সুইচ-বাতি শাখা সিরিজে, শাখাগুলো পরস্পর প্যারালালে — "
-                  "যেকোনো একটি চাপলে সেই কক্ষের বাতিসহ বেল বাজে", 620)
+                  "সুইচ চাপলে সেই কক্ষের বাতি জ্বলে ও বেল বাজে; শাখাগুলো প্যারালালে", 620)
 
 
 ALL = [d01_bell_parts, d02_bell_types, d03_simple, d04_two_switch,

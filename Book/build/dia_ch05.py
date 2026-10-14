@@ -13,9 +13,9 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "diagrams", "ch05
 
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_NAME = 25.5
+T_BODY = 23
+T_SMALL = 22.5
 LH = 1.42
 SYM = "#12324D"          # symbol ink — heavier than body text
 
@@ -300,8 +300,8 @@ def symbol_sheet(fname, title, items, cols=3):
 
 def d03_symbols_switch():
     return symbol_sheet(
-        "d03_symbols_switch", "ইলেকট্রিক্যাল প্রতীক — সুইচ ও নিয়ন্ত্রণ (IEC 60617)",
-        [(sym_spst, "এক-মুখী সুইচ", "SPST Switch"),
+        "d03_symbols_switch", "ইলেকট্রিক্যাল প্রতীক: সুইচ ও নিয়ন্ত্রণ (IEC 60617)",
+        [(sym_spst, "ওয়ান-ওয়ে সুইচ", "SPST / One-way Switch"),
          (sym_spdt, "টু-ওয়ে সুইচ", "SPDT / Two-way Switch"),
          (sym_intermediate, "ইন্টারমিডিয়েট সুইচ", "Intermediate Switch"),
          (sym_push, "পুশ সুইচ", "Push Switch"),
@@ -309,12 +309,12 @@ def d03_symbols_switch():
          (sym_ceiling_rose, "সিলিং রোজ", "Ceiling Rose"),
          (sym_mdb, "মেইন ডিস্ট্রিবিউশন বোর্ড", "MDB"),
          (sym_sdb, "সাব ডিস্ট্রিবিউশন বোর্ড", "SDB"),
-         (sym_sb, "সুইচ বোর্ড", "SB — Switch Board")])
+         (sym_sb, "সুইচ বোর্ড", "SB (Switch Board)")])
 
 
 def d04_symbols_light():
     return symbol_sheet(
-        "d04_symbols_light", "ইলেকট্রিক্যাল প্রতীক — আলো, ফ্যান ও আউটলেট",
+        "d04_symbols_light", "ইলেকট্রিক্যাল প্রতীক: আলো, ফ্যান ও আউটলেট",
         [(sym_lamp, "বাতি", "Lamp"),
          (sym_tube, "টিউব লাইট", "Tube Light"),
          (sym_choke, "চোক কয়েল", "Choke Coil"),
@@ -328,11 +328,11 @@ def d04_symbols_light():
 
 def d05_symbols_safety():
     return symbol_sheet(
-        "d05_symbols_safety", "ইলেকট্রিক্যাল প্রতীক — সুরক্ষা, আর্থিং ও সংকেত",
+        "d05_symbols_safety", "ইলেকট্রিক্যাল প্রতীক: সুরক্ষা, আর্থিং ও সংকেত",
         [(sym_fuse, "ফিউজ", "Fuse"),
          (sym_earthing, "আর্থিং", "Earthing"),
          (sym_earth_electrode, "আর্থ ইলেকট্রোড", "Earth Electrode"),
-         (sym_bell, "বৈদ্যুতিক ঘণ্টা", "Bell"),
+         (sym_bell, "বৈদ্যুতিক বেল", "Bell"),
          (sym_fire_bell, "ফায়ার অ্যালার্ম বেল", "Fire Alarm Bell"),
          (sym_fire_detector, "ফায়ার ডিটেক্টর", "Fire Detector"),
          (sym_smoke_detector, "স্মোক ডিটেক্টর", "Smoke Detector"),
@@ -342,7 +342,7 @@ def d05_symbols_safety():
 
 def d06_symbols_machine():
     return symbol_sheet(
-        "d06_symbols_machine", "ইলেকট্রিক্যাল প্রতীক — যন্ত্র ও পরিমাপক",
+        "d06_symbols_machine", "ইলেকট্রিক্যাল প্রতীক: যন্ত্র ও পরিমাপক",
         [(sym_capacitor, "ক্যাপাসিটর", "Capacitor"),
          (sym_inductor, "ইন্ডাক্টিভ কয়েল", "Inductive Coil"),
          (sym_transformer, "ট্রান্সফরমার", "Transformer"),
@@ -370,14 +370,14 @@ def d01_material_classes():
           "সোনা, রুপা, তামা, অ্যালুমিনিয়াম",
           "তার ও বাসবার তৈরিতে ব্যবহৃত"]),
         ("অর্ধপরিবাহী", "Semiconductor", "#FFF6E5", AMBER,
-         ["আংশিক বাধা দেয় — মাঝামাঝি অবস্থা",
+         ["আংশিক বাধা দেয়, মাঝামাঝি অবস্থা",
           "বাইরের কক্ষপথে ৪টি ইলেকট্রন",
           "তাপ বাড়লে পরিবাহিতা বাড়ে",
           "সিলিকন, জার্মেনিয়াম, কার্বন",
           "ডায়োড, LED, ট্রানজিস্টরে ব্যবহৃত"]),
         ("অপরিবাহী", "Insulator", "#EAF6EF", GREEN,
          ["বিদ্যুৎ চলাচল করতে দেয় না",
-          "বাইরের কক্ষপথে ৮টি ইলেকট্রন",
+          "বাইরের কক্ষপথে ৫–৮টি ইলেকট্রন",
           "মুক্ত ইলেকট্রন প্রায় নেই",
           "রাবার, PVC, কাচ, চিনামাটি, কাঠ",
           "ইনসুলেশন ও আবরণে ব্যবহৃত"]),
@@ -398,7 +398,7 @@ def d01_material_classes():
         bot = max(bot, bullet_panel(s, x0 + i * (cw + gapx), ytop + 94, cw,
                                     items, T_BODY, bg, br, INK, br))
     s.text(650, bot + 46,
-           "একই পদার্থ অবস্থাভেদে আচরণ বদলাতে পারে — যেমন শুকনা কাঠ অপরিবাহী, ভেজা কাঠ নয়",
+           "একই পদার্থ অবস্থাভেদে আচরণ বদলাতে পারে: শুকনো কাঠ অপরিবাহী, ভেজা কাঠ নয়",
            T_SMALL, GREY, 400, "middle")
     s.fit(bot + 46, 26)
     return s.save(f"{OUT}/d01_material_classes.svg")
@@ -407,7 +407,7 @@ def d01_material_classes():
 def d02_energy_band():
     """Valence band / forbidden gap / conduction band for the three classes."""
     s = SVG(1240, 660)
-    s.title("এনার্জি ব্যান্ড — তিন শ্রেণির পার্থক্য", T_TITLE)
+    s.title("এনার্জি ব্যান্ড: তিন শ্রেণির পার্থক্য", T_TITLE)
     panels = [("পরিবাহী", STEEL, "#EAF2FA", 0),
               ("অর্ধপরিবাহী", AMBER, "#FFF6E5", 58),
               ("অপরিবাহী", GREEN, "#EAF6EF", 150)]
@@ -434,9 +434,9 @@ def d02_energy_band():
             s.path(f"M {x+pw-56} {cb_bot} L {x+pw-56} {cb_bot+gap}", GREY, 2, dash="7 5")
             s.text(x + pw / 2, cb_bot + gap / 2 + 7,
                    "ফরবিডেন গ্যাপ", T_SMALL, GREY, 600, "middle")
-        note = ["দুই ব্যান্ড পরস্পরকে স্পর্শ করে — ইলেকট্রন সহজেই চলে",
-                "গ্যাপ ছোট — তাপ বা আলো পেলে ইলেকট্রন লাফ দিতে পারে",
-                "গ্যাপ অনেক বড় — ইলেকট্রন লাফ দিতে পারে না"][i]
+        note = ["দুই ব্যান্ড পরস্পরকে ছুঁয়ে থাকে, তাই ইলেকট্রন সহজেই চলে",
+                "গ্যাপ ছোট; তাপ বা আলো পেলে ইলেকট্রন লাফ দিতে পারে",
+                "গ্যাপ অনেক বড়, তাই ইলেকট্রন লাফ দিতে পারে না"][i]
         for j, ln in enumerate(wrap(note, pw - 56, T_SMALL, 400)):
             s.text(x + pw / 2, BASE + 22 + j * T_SMALL * 1.34, ln, T_SMALL,
                    "#39434D", 400, "middle")
@@ -449,7 +449,7 @@ def d02_energy_band():
 def d07_diagram_types():
     """The same lamp circuit shown three ways."""
     s = SVG(1240, 620)
-    s.title("একই বর্তনীর তিন ধরনের অঙ্কন", T_TITLE)
+    s.title("একই সার্কিটের তিন ধরনের নকশা", T_TITLE)
     pw, gapx = 372, 34
     x0 = (1240 - (3 * pw + 2 * gapx)) / 2
     heads = [("সার্কিট ডায়াগ্রাম", "Circuit Diagram",
@@ -489,10 +489,13 @@ def d07_diagram_types():
                 s.path(f"M {L-ww/2} {cy+dy} L {L+ww/2} {cy+dy}", SYM, 3.2)
             s.text(cx, B + 34, "প্রতীকভিত্তিক", T_SMALL, GREY, 400, "middle")
         elif i == 1:
-            s.rect(cx - 108, cy - 56, 70, 46, "none", SYM, 3, 4)
-            s.text(cx - 73, cy - 26, "সুইচ", 17, SYM, 600, "middle")
+            s.rect(cx - 112, cy - 58, 78, 48, "none", SYM, 3, 4)
+            s.text(cx - 73, cy - 26, "সুইচ", 22, SYM, 600, "middle")
             s.circle(cx + 86, cy - 34, 22, "none", SYM, 3)
-            s.text(cx + 86, cy - 28, "বাতি", 15, SYM, 600, "middle")
+            k = 22 * .707
+            s.path(f"M {cx+86-k} {cy-34-k} L {cx+86+k} {cy-34+k}", SYM, 2.4)
+            s.path(f"M {cx+86-k} {cy-34+k} L {cx+86+k} {cy-34-k}", SYM, 2.4)
+            s.text(cx + 86, cy - 68, "বাতি", 22, SYM, 600, "middle")
             s.path(f"M {cx-108} {cy+40} L {cx+120} {cy+40}", "#B32A22", 3.2)
             s.path(f"M {cx-108} {cy+58} L {cx+120} {cy+58}", "#1E63B5", 3.2)
             s.path(f"M {cx-90} {cy+40} L {cx-90} {cy-10}", "#B32A22", 3.2)
@@ -517,7 +520,7 @@ def d07_diagram_types():
                    "#39434D", 400, "middle")
     s.rect(40, 540, 1160, 56, "#EAF2FA", STEEL, 2, 11)
     s.text(620, 575,
-           "তিনটিই এক বর্তনীর ভিন্ন উপস্থাপন — উদ্দেশ্য অনুযায়ী বেছে নিতে হয়",
+           "তিনটিই একই সার্কিটের ভিন্ন রূপ; কাজ অনুযায়ী বেছে নিতে হয়",
            T_NAME, NAVY, 700, "middle")
     s.fit(596, 22)
     return s.save(f"{OUT}/d07_diagram_types.svg")
