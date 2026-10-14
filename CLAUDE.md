@@ -39,11 +39,11 @@ order *is* the book order — do not regroup chapters by theme.
 | 20 | ফ্লোট সুইচ | 24 | ✅ delivered |
 | 21 | বাসবার ও বাসবার ক্যালকুলেশন | 29 | ✅ delivered |
 | 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 52 | ✅ delivered |
-| 23 | ক্যাবল ও ক্যাবল ক্যালকুলেশন | 49 | ✅ delivered |
-| 24 | এমডিবি ওয়্যারিং | 40 | ✅ delivered |
-| 25 | এসডিবি ওয়্যারিং | 45 | ✅ delivered |
+| 23 | ক্যাবল ও ক্যাবল ক্যালকুলেশন | 48 | ✅ delivered |
+| 24 | এমডিবি ওয়্যারিং | 41 | ✅ delivered |
+| 25 | এসডিবি ওয়্যারিং | 44 | ✅ delivered |
 | 26 | কন্ডুইট পাইপ ওয়্যারিং | 45 | ✅ delivered |
-| 27 | চ্যানেল ওয়্যারিং | 32 | ✅ delivered |
+| 27 | চ্যানেল ওয়্যারিং | 33 | ✅ delivered |
 | 28 | আর্থিং ও ওয়্যারিং টেস্ট | 49 | ✅ delivered |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
@@ -2187,9 +2187,43 @@ Full book e thik kore daw … diagram change korte hobe na"):
   solder/weld (1.3.17.4(গ)) reconciled. `postpass.py` turned the `OUT` path
   dash into a colon in ch21 once — fixed; **check the saved file name after
   every postpass**.
-- Chapters 22–28 are reviewed but **not yet applied**; the review files list
-  ~12 open book-wide decisions (acronym script, থ্রি-ওয়ে meaning, diversity vs
-  demand factor, SPD position in ch22 vs ch25, insulation test values …).
+- **Chapters 22–28 applied the same way on 2026-10-14** (user: "ekhon 22
+  theke 28 kore daw, merge pore korte bolbo ami"). Per-chapter `.docx` +
+  previews in `Book/` rebuilt; **full book NOT re-merged**. Pages ch22–28:
+  52 / 48 / 41 / 44 / 45 / 33 / 49 (vs the status table: ch23 −1, ch24 +1, ch25 −1, ch27 +1;
+  every + is new content). Remaining gaps: ch22 p8 4.57, ch24 p20 5.02,
+  ch25 p25 4.80 / p26 4.63, ch26 p25 5.03 / p26 5.26, ch27 p10 5.50,
+  ch28 p30 4.71; many reorderings were tried and these were the best.
+  Fact fixes worth keeping:
+  - ch22: SPD before the RCCB (IEC) while the figure shows it on the
+    busbar, and the text says so; K curve 8–14×; 10/350 vs 8/20.
+  - ch23: A1 vs B1 wording; Ex 23.1 note (2.5 mm² passes thermally,
+    BNBC asks for 4); IEC 60228 classes 1/2/5/6.
+  - ch24: `RISERS` floor 7 → 16 mm² so the total drop stays ≤ 2.45 %;
+    sheet 2 mm (1.3.32); insulation 500 V (1000 V on a bare run), 5 MΩ.
+  - ch25: RCBO naming; 5 A → 6 A MCB note; Energypac removed.
+  - ch26: **"কেবল ফ্যাক্টর" → "ক্যাবল ফ্যাক্টর"** everywhere (plus
+    ক্যাবল-লুব্রিকেন্ট/ডাক্ট). Notes say a 4 mm² ECC changes no conduit size
+    (Ex 26.2 becomes F = 87, so 16 mm fails and 20 mm is needed). BNBC's
+    40 % is telecom-only. "৬৫০ m — ch14 says the same" was removed. The
+    junction-box photo now has a paragraph limiting it to repairs.
+  - ch27: ঢাকনা typo; %, degrees and 3.6 × 4.5 in Latin digits; ¼ ½
+    (not in Kalpurush) written as words. Ex 27.4's fittings were recounted
+    (1 internal corner, 5 tees, 1 end cap). An ECC note was added. The
+    run-position contradiction was resolved.
+  - ch28: cross-refs (২৮.৮.৪, ২৮.৪.২–৩); polarity step 2 now measures the
+    switch's load side to earth; "সামনে থেকে দেখলে ডানে L"; the live test
+    is noted as unable to catch an N–E swap. The 62 % spread is defined
+    (≈5 % accepted, stated as field practice). Wet-vs-dry soil in the
+    summary. The 5 Ω origin was softened; ρ replaces "রহো"; জীবন্ত →
+    লাইভ.
+  - In ch25–28, "কেবল" = only → শুধু.
+  - **Check after apply_edits:** in ch28 one replaced sentence left its
+    old tail in the next literal (a duplicated colour line). An n-gram
+    repeat check over each string constant caught it. Run it on every
+    chapter.
+  - The review files still list open book-wide decisions: acronym script,
+    the meaning of থ্রি-ওয়ে, and diversity vs demand factor.
 
 ## Open items
 
