@@ -14,9 +14,9 @@ IMG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "ch08")
 
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_NAME = 25.5
+T_BODY = 22.5
+T_SMALL = 22.5
 T_CALL = 26          # অংশ-পরিচিতির লেবেল — ছবিটি ছোট বসে বলে বড় টাইপ
 LH = 1.42
 
@@ -77,9 +77,9 @@ def d01_classification():
               "উদাহরণ: ট্যানজেন্ট গ্যালভানোমিটার, অ্যাবসলিউট ইলেকট্রোমিটার",
               "মূলত গবেষণাগারে মানক যন্ত্র হিসেবে ব্যবহৃত"]),
             (RX, "সেকেন্ডারি ইনস্ট্রুমেন্ট", GREEN,
-             ["ইন্ডিকেটিং — তাৎক্ষণিক মান দেখায় (অ্যামিটার, ভোল্টমিটার, ওয়াটমিটার)",
-              "রেকর্ডিং — সময়ের সঙ্গে মান কাগজে এঁকে রাখে",
-              "ইন্টিগ্রেটিং — নির্দিষ্ট সময়ের মোট পরিমাণ যোগ করে দেখায় (এনার্জি মিটার)"])]
+             ["ইন্ডিকেটিং: তাৎক্ষণিক মান দেখায় (অ্যামিটার, ভোল্টমিটার, ওয়াটমিটার)",
+              "রেকর্ডিং: সময়ের সঙ্গে মান কাগজে এঁকে রাখে",
+              "ইন্টিগ্রেটিং: নির্দিষ্ট সময়ের মোট পরিমাণ যোগ করে দেখায় (এনার্জি মিটার)"])]
 
     bottom = 0
     for cx, head, col, leaves in cols:
@@ -114,13 +114,15 @@ def d02_multimeter_parts():
     s.rect(x0 - 16, y0 - 16, IW + 32, IH + 32, "#FCFDFE", LINE, 1.8, 14)
     s.image(x0, y0, IW, IH, f"{IMG}/m_multimeter_face.png")
 
-    callout(s, 430, y0 + 0.17 * IH, "ডিসপ্লে — মান ও AC/DC দেখায়",
-            x0 + 6, y0 + 0.17 * IH)
-    callout(s, 430, y0 + 0.32 * IH, "অন/অফ বোতাম", x0 + 24, y0 + 0.325 * IH)
+    # leaders end ON the part (the display window, the button), not on the
+    # white margin of the picture beside it
+    callout(s, 430, y0 + 0.17 * IH, "ডিসপ্লে: মান ও AC/DC দেখায়",
+            x0 + 0.24 * IW, y0 + 0.215 * IH)
+    callout(s, 430, y0 + 0.32 * IH, "অন/অফ বোতাম", x0 + 0.188 * IW, y0 + 0.325 * IH)
     callout(s, 430, y0 + 0.60 * IH, "ভোল্টেজ পরিমাপের অবস্থান",
             x0 + 30, y0 + 0.635 * IH)
     callout(s, 810, y0 + 0.30 * IH, "রেঞ্জ সিলেক্টর নব",
-            x0 + IW - 40, y0 + 0.50 * IH, anchor="start")
+            x0 + 0.62 * IW, y0 + 0.50 * IH, anchor="start")   # on the knob itself
     callout(s, 810, y0 + 0.62 * IH, "কারেন্ট পরিমাপের অবস্থান",
             x0 + IW - 26, y0 + 0.635 * IH, anchor="start")
 
@@ -128,15 +130,16 @@ def d02_multimeter_parts():
              (0.78, 816, "Ω/V পোর্ট")]
     for fx, lx, name in ports:
         px = x0 + fx * IW
-        s.path(f"M {px} {y0+IH+14} L {lx} {y0+IH+44}", STEEL, 2.2)
-        s.circle(px, y0 + IH + 14, 5, STEEL)
+        py = y0 + 0.85 * IH            # the socket itself, not the frame below it
+        s.path(f"M {px} {py} L {lx} {y0+IH+44}", STEEL, 2.2)
+        s.circle(px, py, 5, STEEL)
         s.text(lx, y0 + IH + 70, name, T_CALL, NAVY, 700, "middle")
 
     y = note_strip(s, y0 + IH + 96,
-                   "কালো প্রোব সবসময় com-এ; ভোল্ট ও রোধে লাল প্রোব Ω/V পোর্টে, "
-                   "কারেন্টে লাল প্রোব A পোর্টে", size=T_CALL)
+                   "কালো প্রোব সব সময় com-এ; ভোল্ট ও রোধে লাল প্রোব Ω/V পোর্টে, "
+                   "কারেন্টে A পোর্টে", size=T_CALL)
     y = note_strip(s, y + 12,
-                   "সিলেক্টরের অবস্থান — V(DC) ডিসি ভোল্ট, V(AC) এসি ভোল্ট, "
+                   "সিলেক্টরের অবস্থান: V(DC) ডিসি ভোল্ট, V(AC) এসি ভোল্ট, "
                    "A(DC) ডিসি কারেন্ট, A(AC) এসি কারেন্ট, Ω রোধ",
                    fill="#FFF6E5", stroke=AMBER, tcolor="#7A5200", size=T_CALL)
     s.fit(y, 24)
@@ -153,9 +156,9 @@ def d03_clamp_parts():
     s.rect(x0 - 16, y0 - 16, IW + 32, IH + 32, "#FCFDFE", LINE, 1.8, 14)
     s.image(x0, y0, IW, IH, f"{IMG}/m_clamp_face.png")
 
-    callout(s, 462, y0 + 0.10 * IH, "ক্ল্যাম্প জ — তারকে ঘিরে ধরে",
+    callout(s, 462, y0 + 0.10 * IH, "ক্ল্যাম্প জ: তারকে ঘিরে ধরে",
             x0 + 0.32 * IW, y0 + 0.10 * IH)
-    callout(s, 462, y0 + 0.40 * IH, "ট্রিগার — চোয়াল খোলার লিভার",
+    callout(s, 462, y0 + 0.40 * IH, "ট্রিগার: চোয়াল খোলার লিভার",
             x0 + 0.14 * IW, y0 + 0.40 * IH)
     callout(s, 462, y0 + 0.62 * IH, "টর্চ ও হোল্ড বোতাম",
             x0 + 0.42 * IW, y0 + 0.615 * IH)
@@ -166,10 +169,10 @@ def d03_clamp_parts():
             x0 + 0.62 * IW, y0 + 0.90 * IH, anchor="start")
 
     y = note_strip(s, y0 + IH + 34,
-                   "ক্ল্যাম্প মিটারে বর্তনী কাটতে হয় না — চোয়ালের ভেতর কেবল "
-                   "একটিমাত্র তার রেখে কারেন্ট পড়া যায়", size=T_CALL)
+                   "ক্ল্যাম্প মিটারে সার্কিট কাটতে হয় না; চোয়ালের ভেতর শুধু "
+                   "একটি তার রেখে কারেন্ট মাপা যায়", size=T_CALL)
     y = note_strip(s, y + 12,
-                   "সিলেক্টরের অবস্থান — A(AC) এসি কারেন্ট, V(AC) এসি ভোল্ট, "
+                   "সিলেক্টরের অবস্থান: A(AC) এসি কারেন্ট, V(AC) এসি ভোল্ট, "
                    "V(DC) ডিসি ভোল্ট, Ω রোধ ও কন্টিনিউইটি",
                    fill="#FFF6E5", stroke=AMBER, tcolor="#7A5200", size=T_CALL)
     s.fit(y, 24)
@@ -187,7 +190,7 @@ def d04_voltage():
 def d05_current_series():
     return sheet1("d05_current_series", "মাল্টিমিটার দিয়ে কারেন্ট পরিমাপ",
                   "d05_amp_series.png",
-                  "বর্তনী কেটে মিটারকে লোডের সঙ্গে সিরিজে বসাতে হয়; "
+                  "সার্কিট কেটে মিটারকে লোডের সঙ্গে সিরিজে বসাতে হয়; "
                   "লাল প্রোব A পোর্টে, সিলেক্টর A-তে",
                   ph=430, panel_title="সিরিজে অ্যামিটার সংযোগ")
 
@@ -195,7 +198,7 @@ def d05_current_series():
 def d06_current_clamp():
     return sheet1("d06_current_clamp", "ক্ল্যাম্প মিটার দিয়ে কারেন্ট পরিমাপ",
                   "d06_amp_clamp.png",
-                  "বর্তনী কাটার দরকার নেই — চোয়ালের ভেতর কেবল ফেজ তারটি "
+                  "সার্কিট কাটার দরকার নেই; চোয়ালের ভেতর শুধু ফেজ তারটি "
                   "রেখে সরাসরি পাঠ নেওয়া যায়",
                   ph=440, panel_title="ক্ল্যাম্প মিটারে কারেন্ট পরিমাপ")
 
@@ -203,7 +206,7 @@ def d06_current_clamp():
 def d07_resistance():
     return sheet1("d07_resistance", "মাল্টিমিটার দিয়ে রেজিস্ট্যান্স পরিমাপ",
                   "d07_resistance.png",
-                  "সুইচ খোলা — সরবরাহ বন্ধ রেখে উপাদানের দুই প্রান্তে প্রোব "
+                  "সুইচ খোলা ও সরবরাহ বন্ধ রেখে উপাদানের দুই প্রান্তে প্রোব "
                   "ধরে Ω মোডে পাঠ নিতে হয়",
                   ph=420, panel_title="রেজিস্ট্যান্স পরিমাপ")
 
