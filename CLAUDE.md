@@ -2222,8 +2222,17 @@ Full book e thik kore daw … diagram change korte hobe na"):
     old tail in the next literal (a duplicated colour line). An n-gram
     repeat check over each string constant caught it. Run it on every
     chapter.
-  - The review files still list open book-wide decisions: acronym script,
-    the meaning of থ্রি-ওয়ে, and diversity vs demand factor.
+- **Book-wide decisions settled by the user, 2026-10-14** ("BNBC te thakbe,
+  three way switch e thakuk, diversity factor ar demand factor avabey
+  thakuk"):
+  - **BNBC is written in Latin script in every `chNN.py`** (394
+    replacements across 23 chapters). Suffixes are hyphenated:
+    বিএনবিসির → `BNBC-র`, বিএনবিসিতে → `BNBC-তে`. Diagrams were not
+    touched; any বিএনবিসি inside SVG artwork stays. Do not reintroduce
+    "বিএনবিসি" in prose. Other acronyms (IEC/আইইসি …) were not part of this
+    decision and are unchanged.
+  - The word **থ্রি-ওয়ে** stays as it is.
+  - The **diversity vs demand factor** wording stays as it is.
 
 ## Open items
 
