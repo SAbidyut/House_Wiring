@@ -41,7 +41,7 @@ order *is* the book order — do not regroup chapters by theme.
 | 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 52 | ✅ delivered |
 | 23 | ক্যাবল ও ক্যাবল ক্যালকুলেশন | 48 | ✅ delivered |
 | 24 | এমডিবি ওয়্যারিং | 41 | ✅ delivered |
-| 25 | এসডিবি ওয়্যারিং | 44 | ✅ delivered |
+| 25 | এসডিবি ওয়্যারিং | 43 | ✅ delivered |
 | 26 | কন্ডুইট পাইপ ওয়্যারিং | 45 | ✅ delivered |
 | 27 | চ্যানেল ওয়্যারিং | 33 | ✅ delivered |
 | 28 | আর্থিং ও ওয়্যারিং টেস্ট | 49 | ✅ delivered |
@@ -2222,6 +2222,11 @@ Full book e thik kore daw … diagram change korte hobe na"):
     old tail in the next literal (a duplicated colour line). An n-gram
     repeat check over each string constant caught it. Run it on every
     chapter.
+- **ch25 re-laid out after the BNBC change** (the shorter text opened an
+  8 cm gap on p16): চিত্র ২৫.৮ moved after the ⚠ box, চিত্র ২৫.৯ after
+  §২৫.৭.১'s first paragraph, the SLD figure back before its reading
+  paragraph, and the comb-bar photo (d13) after the ⚠ box. Result: **43 pp,
+  no gap above 4.5 cm**.
 - **Book-wide decisions settled by the user, 2026-10-14** ("BNBC te thakbe,
   three way switch e thakuk, diversity factor ar demand factor avabey
   thakuk"):
