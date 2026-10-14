@@ -14,9 +14,9 @@ IMG = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets", "ch03")
 
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_NAME = 25.5
+T_BODY = 23
+T_SMALL = 22.5
 LH = 1.42
 
 SYM = "#12324D"          # symbol ink
@@ -152,13 +152,12 @@ def plug_supply(s, x, cy, ytop, ybot, pins=2):
 # ═══════════════════════════════════════════════════════════════════════
 def d01_circuit_parts():
     s = SVG(1240, 640)
-    s.title("একটি আদর্শ বৈদ্যুতিক বর্তনীর উপাদান", T_TITLE)
+    s.title("একটি আদর্শ বৈদ্যুতিক সার্কিটের উপাদান", T_TITLE)
     L, R_, T, B = 250, 900, 210, 430
     cx = (L + R_) / 2
     s.path(f"M {L} {T} L {cx-26} {T}", SYM, SW)
     s.path(f"M {cx+26} {T} L {R_} {T}", SYM, SW)
     s.path(f"M {R_} {T} L {R_} {B-24}", SYM, SW)
-    s.path(f"M {R_} {B+24} L {R_} {B}", SYM, SW) if False else None
     s.path(f"M {R_} {320-24+48} L {R_} {B}", SYM, SW)
     s.path(f"M {R_} {B} L {L} {B}", SYM, SW)
     s.path(f"M {L} {B} L {L} {340}", SYM, SW)
@@ -169,7 +168,7 @@ def d01_circuit_parts():
         s.path(f"M {L-ww/2} {320+dy} L {L+ww/2} {320+dy}", SYM, 3.4)
 
     labels = [("উৎস (Source)", "বিদ্যুৎ সরবরাহ করে", L, 320, "end", -60),
-              ("সুইচ (Control)", "বর্তনী চালু-বন্ধ করে", cx, T, "middle", -70),
+              ("সুইচ (Control)", "সার্কিট চালু-বন্ধ করে", cx, T, "middle", -70),
               ("লোড (Load)", "বিদ্যুৎ ব্যবহার করে", R_, 320, "start", 60),
               ("পরিবাহী (Conductor)", "বিদ্যুৎ বহন করে", cx, B, "middle", 44)]
     for name, sub, px, py, anc, off in labels:
@@ -178,26 +177,26 @@ def d01_circuit_parts():
         else:
             tx, ty = px + off, py
         s.text(tx, ty, name, T_BODY, NAVY, 700, anc)
-        s.text(tx, ty + 26, sub, T_SMALL, GREY, 400, anc)
+        s.text(tx, ty + 28, sub, T_SMALL, GREY, 400, anc)
 
-    s.rect(60, 526, 1120, 62, "#EAF2FA", STEEL, 2, 11)
-    s.text(620, 554, "চারটি উপাদানের যেকোনো একটি না থাকলে বর্তনী অসম্পূর্ণ",
+    s.rect(60, 522, 1120, 72, "#EAF2FA", STEEL, 2, 11)
+    s.text(620, 552, "চারটি উপাদানের যেকোনো একটি না থাকলে সার্কিট অসম্পূর্ণ থাকে",
            T_NAME, NAVY, 700, "middle")
-    s.text(620, 580, "উৎস → পরিবাহী → সুইচ → লোড → আবার উৎসে ফিরে আসা",
+    s.text(620, 582, "উৎস → পরিবাহী → সুইচ → লোড → আবার উৎসে ফিরে আসা",
            T_SMALL, GREY, 400, "middle")
-    s.fit(588, 22)
+    s.fit(594, 22)
     return s.save(f"{OUT}/d01_circuit_parts.svg")
 
 
 def d02_circuit_states():
     s = SVG(1240, 600)
-    s.title("বর্তনীর তিন অবস্থা", T_TITLE)
+    s.title("সার্কিটের তিন অবস্থা", T_TITLE)
     pw, gapx = 372, 34
     x0 = (1240 - (3 * pw + 2 * gapx)) / 2
     states = [
-        ("ক্লোজ সার্কিট", GREEN, "সুইচ বন্ধ — বর্তনী সম্পূর্ণ, বাতি জ্বলে", "close"),
-        ("ওপেন সার্কিট", AMBER, "সুইচ খোলা বা তার ছেঁড়া — কারেন্ট চলে না", "open"),
-        ("শর্ট সার্কিট", RED, "লোড বাদ দিয়ে দুই তার লেগে যাওয়া — বিপজ্জনক", "short"),
+        ("ক্লোজ সার্কিট", GREEN, "সুইচ অন, সার্কিট সম্পূর্ণ, বাতি জ্বলে", "close"),
+        ("ওপেন সার্কিট", AMBER, "সুইচ অফ বা তার ছেঁড়া, কারেন্ট চলে না", "open"),
+        ("শর্ট সার্কিট", RED, "দুই তার সরাসরি লেগে যাওয়া, বিপজ্জনক", "short"),
     ]
     for i, (name, col, note, kind) in enumerate(states):
         x = x0 + i * (pw + gapx)
@@ -209,12 +208,12 @@ def d02_circuit_states():
             s.path(f"M {R_} {T} L {R_} {B}", SYM, SW)
             s.path(f"M {R_} {B} L {L} {B}", SYM, SW)
             s.path(f"M {L} {B} L {L} {T}", SYM, SW)
-            s.path(f"M {cx-40} {T} L {cx-40} {B}", RED, 4.4)
+            s.path(f"M {cx-72} {T} L {cx-72} {B}", RED, 4.4)
             # লেবেলটা লাইনের ডানপাশে — শর্ট পথ আর বাতির মাঝের ফাঁকা
             # জায়গাটাই এখানে একমাত্র জায়গা যেখানে লেখা কোনো তারের
             # গায়ে পড়ে না
-            s.text(cx - 26, (T + B) / 2 - 12, "শর্ট পথ", T_SMALL, RED, 700, "start")
-            s.text(cx - 26, (T + B) / 2 + 14, "রোধ প্রায় শূন্য", T_SMALL - 2,
+            s.text(cx - 58, (T + B) / 2 - 12, "শর্ট পথ", T_SMALL, RED, 700, "start")
+            s.text(cx - 58, (T + B) / 2 + 16, "রোধ প্রায় শূন্য", T_SMALL - 1,
                    "#9A4038", 400, "start")
             sym_lamp(s, R_, (T + B) / 2, 20)
         else:
@@ -228,7 +227,7 @@ def d02_circuit_states():
             if kind == "close":
                 s.path(f"M {cx-26} {T} Q {cx} {T-16} {cx+26} {T}", NAVY, SW + 1.4)
                 s.circle(R_, (T + B) / 2, 20, "#FFF3C4", "#B08C00", 3)
-                for a in range(0, 360, 45):
+                for a in (0, 45, 135, 180, 225, 315):   # none on the wire's own axis
                     r = math.radians(a)
                     s.path(f"M {R_+26*math.cos(r):.1f} {(T+B)/2+26*math.sin(r):.1f} "
                            f"L {R_+36*math.cos(r):.1f} {(T+B)/2+36*math.sin(r):.1f}",
@@ -236,20 +235,20 @@ def d02_circuit_states():
             else:
                 s.path(f"M {cx-26} {T} L {cx+20} {T-26}", SYM, SW)
                 sym_lamp(s, R_, (T + B) / 2, 20)
-        for j, ln in enumerate(wrap(note, pw - 48, T_SMALL, 400)):
-            s.text(cx, 386 + j * T_SMALL * 1.34, ln, T_SMALL, "#39434D", 400, "middle")
-    s.rect(60, 452, 1120, 62, REDBG, RED, 2, 11)
-    s.text(620, 480, "শর্ট সার্কিটে রোধ প্রায় শূন্য হয়ে কারেন্ট বহুগুণ বেড়ে যায়",
+        for j, ln in enumerate(wrap(note, pw - 40, T_SMALL, 400)):
+            s.text(cx, 382 + j * T_SMALL * 1.34, ln, T_SMALL, "#39434D", 400, "middle")
+    s.rect(60, 452, 1120, 72, REDBG, RED, 2, 11)
+    s.text(620, 482, "শর্ট সার্কিটে রোধ প্রায় শূন্য হয়ে কারেন্ট বহুগুণ বেড়ে যায়",
            T_NAME, "#7A1810", 700, "middle")
-    s.text(620, 506, "ফলে তার গরম হয়ে পুড়ে যায় — এ কারণেই ফিউজ ও ব্রেকার লাগে",
+    s.text(620, 512, "ফলে তার গরম হয়ে পুড়ে যায়; এ কারণেই ফিউজ ও ব্রেকার লাগে",
            T_SMALL, "#7A1810", 400, "middle")
-    s.fit(514, 22)
+    s.fit(524, 22)
     return s.save(f"{OUT}/d02_circuit_states.svg")
 
 
 # ── হোল্ডার : আসল ছবি + বসানোর ধরন ──────────────────────────────────
 T_TILE = 23          # টাইলের নাম     → 23 × 436.5 / 1240 ≈ ৮.১ পয়েন্ট
-T_TSUB = 21          # টাইলের উপশিরোনাম → ≈ ৭.৪ পয়েন্ট
+T_TSUB = 22          # টাইলের উপশিরোনাম → ≈ ৭.৪ পয়েন্ট
 
 WOOD = "#C8A272"     # কাঠের বোর্ড / ছাদের পাটাতন
 WOODL = "#8A6437"
@@ -366,7 +365,7 @@ def d03_holders():
     বসে, কোনটা দেয়ালে কোণ করে, কোনটা সিলিং রোজ থেকে ঝোলে।
     """
     s = SVG(1240, 960)
-    s.title("হোল্ডার — আসল চেহারা ও বসানোর ধরন", T_TITLE)
+    s.title("হোল্ডার: আসল চেহারা ও বসানোর ধরন", T_TITLE)
 
     # ── সারি ১ : আসল ছবি ───────────────────────────────────────────
     s.box_auto(620, 92, "আসল হোল্ডার", T_NAME, fill=STEEL, stroke=STEEL,
@@ -444,10 +443,10 @@ def d03_holders():
 
 def d04_plug_socket():
     s = SVG(1240, 640)
-    s.title("প্লাগ ও সকেট — ২-পিন ও ৩-পিন", T_TITLE)
+    s.title("প্লাগ ও সকেট: ২-পিন ও ৩-পিন", T_TITLE)
     for i, (title, pins, col) in enumerate((("২-পিন", 2, STEEL), ("৩-পিন", 3, GREEN))):
         x = 70 + i * 570
-        panel(s, x, 96, 530, 330, title + " প্লাগ ও সকেট", col)
+        panel(s, x, 96, 530, 280, title + " প্লাগ ও সকেট", col)
         cx = x + 150
         s.rect(cx - 44, 210, 88, 96, "#FFFFFF", "#7C8794", 2.6, 8)
         if pins == 2:
@@ -464,14 +463,14 @@ def d04_plug_socket():
         pic_socket(s, sx, 250, pins)
         s.text(sx, 336, "সকেট", T_BODY, NAVY, 700, "middle")
 
-    s.rect(70, 452, 1100, 130, "#FFF6E5", AMBER, 2, 12)
-    s.text(620, 488, "৩-পিন প্লাগের আর্থ পিন লম্বা ও মোটা কেন?",
+    s.rect(70, 402, 1100, 130, "#FFF6E5", AMBER, 2, 12)
+    s.text(620, 438, "৩-পিন প্লাগের আর্থ পিন লম্বা ও মোটা কেন?",
            T_NAME, "#7A5200", 700, "middle")
     for j, ln in enumerate([
-            "লম্বা — প্লাগ লাগানোর সময় আর্থ সংযোগ সবার আগে হয়, খোলার সময় সবার শেষে ছোটে;",
-            "মোটা — ২-পিন প্লাগ যেন ভুল করে আর্থ ছিদ্রে ঢুকে না যায়, আর ফল্ট কারেন্ট বইতে পারে।"]):
-        s.text(620, 522 + j * 28, ln, T_SMALL, "#7A5200", 400, "middle")
-    s.fit(582, 22)
+            "লম্বা: লাগানোর সময় আর্থ সংযোগ সবার আগে হয়, খোলার সময় সবার শেষে ছোটে।",
+            "মোটা: আর্থ পিন ফেজ বা নিউট্রাল ছিদ্রে ঢোকে না, তাই প্লাগ উল্টো লাগানো যায় না।"]):
+        s.text(620, 474 + j * 31, ln, T_SMALL, "#7A5200", 400, "middle")
+    s.fit(532, 22)
     return s.save(f"{OUT}/d04_plug_socket.svg")
 
 
@@ -504,8 +503,8 @@ def d05_circuit1():
         image_panel(s, cx, 150, 406, f"{IMG}/d05_circuit1_conn.png")
 
     return _circuit_sheet(
-        "d05_circuit1", "সার্কিট ১ — ২-পিন প্লাগ দিয়ে বাতি সংযোগ", circ, conn,
-        "সুইচ নেই — প্লাগ লাগালেই বাতি জ্বলে, খুললেই নেভে")
+        "d05_circuit1", "সার্কিট ১: ২-পিন প্লাগ দিয়ে বাতি সংযোগ", circ, conn,
+        "সুইচ নেই, তাই প্লাগ লাগালেই বাতি জ্বলে, খুললেই নেভে")
 
 
 def d06_circuit2():
@@ -516,8 +515,8 @@ def d06_circuit2():
         image_panel(s, cx, 150, 406, f"{IMG}/d06_circuit2_conn.png")
 
     return _circuit_sheet(
-        "d06_circuit2", "সার্কিট ২ — সুইচ দিয়ে একটি বাতি নিয়ন্ত্রণ", circ, conn,
-        "সুইচ সব সময় ফেজ (বাদামি) তারে বসাতে হয় — নিউট্রালে নয়")
+        "d06_circuit2", "সার্কিট ২: সুইচ দিয়ে একটি বাতি নিয়ন্ত্রণ", circ, conn,
+        "সুইচ সব সময় ফেজ তারে বসাতে হয়, নিউট্রালে নয়")
 
 
 def d07_circuit3():
@@ -528,7 +527,7 @@ def d07_circuit3():
         image_panel(s, cx, 150, 426, f"{IMG}/d07_circuit3_conn.png")
 
     return _circuit_sheet(
-        "d07_circuit3", "সার্কিট ৩ — ২-পিন সকেট সংযোগ", circ, conn,
+        "d07_circuit3", "সার্কিট ৩: ২-পিন সকেট সংযোগ", circ, conn,
         "সকেটের দুই টার্মিনালে সরাসরি ফেজ ও নিউট্রাল যায়", 580)
 
 
@@ -540,7 +539,7 @@ def d08_circuit4():
         image_panel(s, cx, 150, 426, f"{IMG}/d08_circuit4_conn.png")
 
     return _circuit_sheet(
-        "d08_circuit4", "সার্কিট ৪ — সুইচ দিয়ে সকেট নিয়ন্ত্রণ", circ, conn,
+        "d08_circuit4", "সার্কিট ৪: সুইচ দিয়ে সকেট নিয়ন্ত্রণ", circ, conn,
         "সুইচ ফেজ তারে বসে; নিউট্রাল সরাসরি সকেটে যায়", 580)
 
 
@@ -552,7 +551,7 @@ def d09_circuit5():
         image_panel(s, cx, 150, 486, f"{IMG}/d09_circuit5_conn.png")
 
     return _circuit_sheet(
-        "d09_circuit5", "সার্কিট ৫ — ৩-পিন সকেট সংযোগ (আর্থসহ)", circ, conn,
+        "d09_circuit5", "সার্কিট ৫: ৩-পিন সকেট সংযোগ (আর্থসহ)", circ, conn,
         "ধাতব বডির যন্ত্রের জন্য আর্থ সংযোগ বাধ্যতামূলক", 640)
 
 

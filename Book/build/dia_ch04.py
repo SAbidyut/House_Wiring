@@ -8,9 +8,9 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "diagrams", "ch04
 
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_NAME = 25.5
+T_BODY = 23
+T_SMALL = 22.5
 LH = 1.42
 
 
@@ -37,15 +37,16 @@ def d01_atom():
     s.title("পরমাণুর গঠন ও মুক্ত ইলেকট্রন", T_TITLE)
     cx, cy = 430, 380
 
-    for i, r in enumerate((92, 150, 210)):
+    for i, r in enumerate((108, 158, 210)):
         s.circle(cx, cy, r, "none", "#C3CEDA", 2, 0.9 if i < 2 else 0.6)
     # nucleus
-    s.circle(cx, cy, 54, "#F2C200", "#B08C00", 2.6)
-    s.text(cx, cy - 6, "নিউক্লিয়াস", 17, "#5A4200", 700, "middle")
-    s.text(cx, cy + 18, "প্রোটন + নিউট্রন", 15, "#5A4200", 400, "middle")
+    s.circle(cx, cy, 74, "#F2C200", "#B08C00", 2.6)
+    s.text(cx, cy - 4, "নিউক্লিয়াস", 23, "#5A4200", 700, "middle")
+    s.text(cx, cy + 26, "প্রোটন ও নিউট্রন", 21, "#5A4200", 400, "middle")
 
     # bound electrons
-    for r, angles in ((92, (35, 145, 255)), (150, (10, 80, 165, 250, 320))):
+    # 2 + 8 in the inner shells and one lone electron outside (sodium/copper-like)
+    for r, angles in ((108, (40, 220)), (158, tuple(10 + 45 * k for k in range(8)))):
         for a in angles:
             ex = cx + r * math.cos(math.radians(a))
             ey = cy + r * math.sin(math.radians(a))
@@ -65,13 +66,16 @@ def d01_atom():
             "তাই সহজেই পরমাণু ছেড়ে বেরিয়ে যেতে পারে", 420, T_SMALL, 400)):
         s.text(770, 250 + j * T_SMALL * 1.34, ln, T_SMALL, "#39434D", 400)
 
-    bullet_panel(s, 770, 342, 440,
+    bullet_panel(s, 766, 342, 462,
                  ["পরিবাহীতে মুক্ত ইলেকট্রনের সংখ্যা অনেক বেশি",
                   "অপরিবাহীতে ইলেকট্রন শক্তভাবে আবদ্ধ থাকে",
                   "মুক্ত ইলেকট্রনের সুশৃঙ্খল প্রবাহই কারেন্ট"],
                  T_BODY, "#EAF2FA", STEEL, INK, STEEL)
-    s.text(620, 660, "একটি ইলেকট্রনের চার্জ = ১.৬ × ১০⁻¹⁹ কুলম্ব (ঋণাত্মক)",
-           T_SMALL, GREY, 400, "middle")
+    # the exponent is a real raised tspan: Kalpurush has no ⁻¹⁹ glyphs
+    s.add('<text x="620" y="660" font-family="Kalpurush" font-size="22.5" fill="#5A6470" '
+          'text-anchor="middle">একটি ইলেকট্রনের চার্জ = 1.6 × 10'
+          '<tspan dy="-10" font-size="16">−19</tspan>'
+          '<tspan dy="10" font-size="22.5"> কুলম্ব (ঋণাত্মক)</tspan></text>')
     s.fit(660, 24)
     return s.save(f"{OUT}/d01_atom.svg")
 
@@ -92,16 +96,17 @@ def d02_types():
                    tcolor="#FFFFFF", pad_x=28, pad_y=13, min_w=260)
     bullet_panel(s, 130, y1 + 66, 400,
                  ["উৎপত্তিস্থলেই স্থির থাকে, প্রবাহিত হয় না",
-                  "ঘর্ষণে সৃষ্টি হয় — যেমন চিরুনি ও কাগজ",
+                  "ঘর্ষণে সৃষ্টি হয়, যেমন চিরুনি ও কাগজ",
                   "বজ্রপাত এর সবচেয়ে বড় উদাহরণ"],
                  T_BODY, "#FFF6E5", AMBER, INK, AMBER)
 
     y2 = 430
+    bot = 0
     for cx, name, col, items in (
             (760, "এসি (AC)", GREEN,
              ["নির্দিষ্ট নিয়মে দিক বদলায়",
               "মান প্রতি মুহূর্তে পরিবর্তনশীল",
-              "গৃহস্থালি সরবরাহ — ২৩০ V, ৫০ Hz"]),
+              "বাসার সরবরাহ: ২৩০ V, ৫০ Hz"]),
             (1060, "ডিসি (DC)", RED,
              ["সব সময় একই দিকে প্রবাহিত",
               "মান নির্দিষ্ট থাকে",
@@ -110,9 +115,9 @@ def d02_types():
                f"L {cx:.1f} {y2-14:.1f}", STEEL, 2.4, marker=ar)
         s.box_auto(cx, y2 - 4, name, T_BODY, fill=col, stroke=col,
                    tcolor="#FFFFFF", pad_x=24, pad_y=11, min_w=200)
-        bullet_panel(s, cx - 140, y2 + 56, 280, items, T_SMALL,
-                     GREENBG if col == GREEN else REDBG, col, INK, col)
-    s.fit(660, 24)
+        bot = max(bot, bullet_panel(s, cx - 145, y2 + 56, 290, items, T_SMALL,
+                                    GREENBG if col == GREEN else REDBG, col, INK, col))
+    s.fit(bot, 24)
     return s.save(f"{OUT}/d02_types.svg")
 
 
@@ -126,9 +131,12 @@ def d03_current():
     # battery
     s.rect(96, 258, 34, 130, "#3A4750", "#222C33", 2, 5)
     s.rect(96, 240, 34, 20, "#B7C1CB", "#7C8794", 2, 4)
-    s.text(113, 226, "+", 30, RED, 700, "middle")
-    s.text(113, 424, "−", 30, STEEL, 700, "middle")
-    s.text(113, 468, "ব্যাটারি", T_SMALL, "#39434D", 600, "middle")
+    s.text(76, 262, "+", 30, RED, 700, "middle")
+    s.text(76, 386, "−", 30, STEEL, 700, "middle")
+    s.text(113, 470, "ব্যাটারি", T_SMALL, "#39434D", 600, "middle")
+    # the loop is closed: − terminal into the conductor, load back to +
+    s.path("M 113 388 L 113 418 L 145 418 L 145 323 L 160 323", NAVY, 3)
+    s.path("M 1166 323 L 1204 323 L 1204 190 L 113 190 L 113 240", NAVY, 3)
 
     # conductor
     s.rect(160, 286, 900, 74, "#E5D3B3", "#B08C60", 2.4, 10)
@@ -155,12 +163,12 @@ def d03_current():
     s.text(610, 494, "প্রচলিত কারেন্টের দিক  ←  ধনাত্মক থেকে ঋণাত্মক",
            T_BODY, RED, 700, "middle")
 
-    s.rect(60, 526, 1120, 62, "#EAF2FA", STEEL, 2, 11)
-    s.text(620, 554, "ইলেকট্রন ও প্রচলিত কারেন্ট — দিক দুটি পরস্পর বিপরীত",
+    s.rect(60, 522, 1120, 72, "#EAF2FA", STEEL, 2, 11)
+    s.text(620, 552, "ইলেকট্রন প্রবাহ ও প্রচলিত কারেন্টের দিক পরস্পর বিপরীত",
            T_NAME, NAVY, 700, "middle")
-    s.text(620, 580, "হিসাব-নিকাশ ও বর্তনী অঙ্কনে সর্বদা প্রচলিত দিকই ব্যবহার করা হয়",
+    s.text(620, 582, "হিসাবে ও সার্কিট ডায়াগ্রামে সব সময় প্রচলিত দিকই ধরা হয়",
            T_SMALL, GREY, 400, "middle")
-    s.fit(588, 22)
+    s.fit(594, 22)
     return s.save(f"{OUT}/d03_current.svg")
 
 
@@ -201,7 +209,7 @@ def d04_ac_dc():
     s.text(620, 632, "ফ্রিকোয়েন্সি = প্রতি সেকেন্ডে সম্পন্ন সাইকেলের সংখ্যা",
            T_NAME, "#7A5200", 700, "middle")
     s.text(620, 666,
-           "বাংলাদেশে সরবরাহ ফ্রিকোয়েন্সি ৫০ হার্জ — প্রতি সেকেন্ডে ৫০ বার সাইকেল সম্পন্ন হয়",
+           "বাংলাদেশে সরবরাহ ফ্রিকোয়েন্সি ৫০ হার্জ, অর্থাৎ প্রতি সেকেন্ডে ৫০টি সাইকেল",
            T_SMALL, "#7A5200", 400, "middle")
     s.text(620, 698, "একটি সাইকেলের সময় = ১ / ৫০ = ০.০২ সেকেন্ড",
            T_SMALL, "#7A5200", 400, "middle")
@@ -212,7 +220,7 @@ def d04_ac_dc():
 def d05_ohm():
     """Ohm's law triangle beside the circuit it describes."""
     s = SVG(1240, 640)
-    s.title("ওহমের সূত্র — V, I ও R-এর সম্পর্ক", T_TITLE)
+    s.title("ওহমের সূত্র: V, I ও R-এর সম্পর্ক", T_TITLE)
 
     # circuit
     L, R_, T, B = 110, 540, 150, 400
@@ -245,7 +253,7 @@ def d05_ohm():
         x = 110 + i * 356
         s.rect(x, y, 320, 84, "#F5F9FC", STEEL, 2, 11)
         s.text(x + 160, y + 40, f, 30, NAVY, 700, "middle")
-        s.text(x + 160, y + 68, note, T_SMALL, GREY, 400, "middle")
+        s.text(x + 160, y + 70, note, T_SMALL, GREY, 400, "middle")
     s.fit(y + 84, 24)
     return s.save(f"{OUT}/d05_ohm.svg")
 
@@ -258,7 +266,7 @@ def d06_resistance_factors():
         ("দৈর্ঘ্য", "L", "দৈর্ঘ্য বাড়লে রোধ বাড়ে", "R ∝ L", STEEL, "#EAF2FA"),
         ("প্রস্থচ্ছেদ", "A", "মোটা তারে রোধ কমে", "R ∝ 1/A", GREEN, GREENBG),
         ("উপাদান", "ρ", "তামার রোধ কম, লোহার বেশি", "R ∝ ρ", AMBER, AMBERBG),
-        ("তাপমাত্রা", "t", "ধাতুতে তাপ বাড়লে রোধ বাড়ে", "—", RED, REDBG),
+        ("তাপমাত্রা", "t", "ধাতুতে তাপ বাড়লে রোধ বাড়ে", "", RED, REDBG),
     ]
     cw, gapx = 278, 22
     x0 = (1240 - (4 * cw + 3 * gapx)) / 2
@@ -266,7 +274,7 @@ def d06_resistance_factors():
         x = x0 + i * (cw + gapx)
         s.rect(x, 96, cw, 300, bg, col, 2, 13)
         s.rect(x, 96, cw, 58, col, col, 2, 13)
-        s.rect(x, 140, cw, 14, bg, "none", 0, 0)
+        s.rect(x + 1, 144, cw - 2, 10, col, "none", 0, 0)
         s.text(x + cw / 2, 136, name, T_NAME, "#FFFFFF", 700, "middle")
         s.circle(x + cw / 2, 214, 38, "#FFFFFF", col, 3)
         s.text(x + cw / 2, 228, sym, 40, col, 700, "middle")
@@ -293,11 +301,12 @@ def d07_capacitor_inductor():
                tcolor="#FFFFFF", pad_x=26, pad_y=11)
     PL, PR, PT, PH = 268, 396, 216, 150          # plate x's, top, height
     s.rect(PL + 16, PT + 10, PR - PL - 32, PH - 20, "#E8EDF1", "#B9C4CE", 1.8, 3)
-    s.text((PL + PR) / 2, PT + PH / 2 + 7, "ডাইইলেকট্রিক", 17, "#4A5561", 600, "middle")
+    s.text((PL + PR) / 2, PT + PH / 2 - 6, "ডাই-", 21, "#4A5561", 600, "middle")
+    s.text((PL + PR) / 2, PT + PH / 2 + 20, "ইলেকট্রিক", 21, "#4A5561", 600, "middle")
     s.rect(PL - 11, PT, 22, PH, "#C57A2A", "#9A5A18", 2, 3)
     s.rect(PR - 11, PT, 22, PH, "#C57A2A", "#9A5A18", 2, 3)
-    s.text(PL, PT - 16, "প্লেট", 17, "#7A5200", 700, "middle")
-    s.text(PR, PT - 16, "প্লেট", 17, "#7A5200", 700, "middle")
+    s.text(PL, PT - 16, "প্লেট", 22, "#7A5200", 700, "middle")
+    s.text(PR, PT - 16, "প্লেট", 22, "#7A5200", 700, "middle")
     s.path(f"M {PL} {PT+PH/2} L 168 {PT+PH/2}", NAVY, 3)
     s.path(f"M {PR} {PT+PH/2} L 512 {PT+PH/2}", NAVY, 3)
     s.text(148, PT + PH / 2 + 9, "+", 30, RED, 700, "middle")
@@ -320,63 +329,74 @@ def d07_capacitor_inductor():
     s.clip_end()
     s.path(f"M 700 {CY+CH/2:.1f} L {CX0} {CY+CH/2:.1f}", NAVY, 3)
     s.path(f"M {CX1} {CY+CH/2:.1f} L 1100 {CY+CH/2:.1f}", NAVY, 3)
-    s.text(900, CY + CH + 44, "লোহার কোর", 17, "#4A5561", 600, "middle")
+    s.text(900, CY + CH + 46, "লোহার কোর", 22, "#4A5561", 600, "middle")
     s.text(900, 424, "চৌম্বক ক্ষেত্রে শক্তি জমায় · একক হেনরি (H)",
            T_SMALL, NAVY, 600, "middle")
 
-    s.rect(70, 492, 1100, 62, "#FFF6E5", AMBER, 2, 11)
-    s.text(620, 520, "ক্যাপাসিটর বৈদ্যুতিক ক্ষেত্রে, ইন্ডাক্টর চৌম্বক ক্ষেত্রে শক্তি সঞ্চয় করে",
+    s.rect(70, 492, 1100, 72, "#FFF6E5", AMBER, 2, 11)
+    s.text(620, 522, "ক্যাপাসিটর বৈদ্যুতিক ক্ষেত্রে, ইন্ডাক্টর চৌম্বক ক্ষেত্রে শক্তি সঞ্চয় করে",
            T_NAME, "#7A5200", 700, "middle")
-    s.text(620, 546, "দুটিই AC সার্কিটে কারেন্টকে বাধা দেয়, কিন্তু ভিন্ন উপায়ে",
+    s.text(620, 552, "দুটিই AC সার্কিটে কারেন্টকে বাধা দেয়, তবে ভিন্ন উপায়ে",
            T_SMALL, "#7A5200", 400, "middle")
-    s.fit(554, 22)
+    s.fit(564, 22)
     return s.save(f"{OUT}/d07_capacitor_inductor.svg")
 
 
 def d08_colour_code():
-    """IEC 60445 conductor colours."""
-    s = SVG(1240, 620)
-    s.title("পরিবাহীর রং সংকেত (IEC 60445)", T_TITLE)
+    """Conductor colours: IEC 60445 beside BNBC Table 8.1.2.
+
+    The figure is captioned "IEC ও BNBC" in ch04.py, and the chapter's ⚠ box
+    explains the blue-wire trap, so the picture has to show both systems.
+    """
+    s = SVG(1240, 700)
+    s.title("পরিবাহীর রং সংকেত: IEC ও BNBC", T_TITLE)
+    GY_ = "green-yellow"
     rows = [
-        ("ফেজ / লাইন", "L  বা  L1", "বাদামি", "#7A4A21", "#FFFFFF"),
-        ("ফেজ (দ্বিতীয়)", "L2", "কালো", "#232323", "#FFFFFF"),
-        ("ফেজ (তৃতীয়)", "L3", "ধূসর", "#8D9AA8", "#FFFFFF"),
-        ("নিউট্রাল", "N", "নীল", "#1E63B5", "#FFFFFF"),
-        ("আর্থ / প্রোটেক্টিভ", "PE", "সবুজ-হলুদ", "#2E8B31", "#FFFFFF"),
+        ("ফেজ (প্রথম)", "L বা L1", ("বাদামি", "#7A4A21"), ("লাল", "#C62828")),
+        ("ফেজ (দ্বিতীয়)", "L2", ("কালো", "#232323"), ("হলুদ", "#F2C200")),
+        ("ফেজ (তৃতীয়)", "L3", ("ধূসর", "#8D9AA8"), ("নীল", "#1E63B5")),
+        ("নিউট্রাল", "N", ("নীল", "#1E63B5"), ("কালো", "#232323")),
+        ("আর্থ", "PE", ("সবুজ-হলুদ", GY_), ("সবুজ-হলুদ", GY_)),
     ]
-    x0, w = 90, 1060
-    y = 108
-    hrow = 74
-    s.rect(x0, y, w, 52, NAVY, NAVY, 2, 10)
-    s.text(x0 + 190, y + 35, "পরিবাহীর নাম", T_BODY, "#FFFFFF", 700, "middle")
-    s.text(x0 + 470, y + 35, "চিহ্ন", T_BODY, "#FFFFFF", 700, "middle")
-    s.text(x0 + 700, y + 35, "রং", T_BODY, "#FFFFFF", 700, "middle")
-    s.text(x0 + 920, y + 35, "নমুনা", T_BODY, "#FFFFFF", 700, "middle")
-    yy = y + 60
-    for name, sym, colname, hexc, tcol in rows:
-        s.rect(x0, yy, w, hrow, "#F7FAFC", LINE, 1.6, 9)
-        s.text(x0 + 190, yy + hrow / 2 + 8, name, T_BODY, "#2E3842", 400, "middle")
-        s.text(x0 + 470, yy + hrow / 2 + 8, sym, T_BODY, NAVY, 700, "middle")
-        s.text(x0 + 700, yy + hrow / 2 + 8, colname, T_BODY, "#2E3842", 400, "middle")
-        if colname == "সবুজ-হলুদ":
-            s.rect(x0 + 848, yy + 17, 144, 40, "#2E8B31", "none", 0, 6)
-            s.clip_begin(x0 + 848, yy + 17, 144, 40, 6)
-            for k in range(7):
-                s.path(f"M {x0+836+k*26} {yy+61} L {x0+868+k*26} {yy+13}",
-                       "#F2D200", 12)
+    x0, w = 60, 1120
+    y = 104
+    hrow = 70
+    cols = {"name": x0 + 140, "sym": x0 + 340, "iec": x0 + 450, "bnbc": x0 + 790}
+    s.rect(x0, y, w, 54, NAVY, NAVY, 2, 10)
+    s.text(cols["name"], y + 36, "পরিবাহী", T_BODY, "#FFFFFF", 700, "middle")
+    s.text(cols["sym"], y + 36, "চিহ্ন", T_BODY, "#FFFFFF", 700, "middle")
+    s.text(cols["iec"] + 150, y + 36, "IEC 60445", T_BODY, "#FFFFFF", 700, "middle")
+    s.text(cols["bnbc"] + 150, y + 36, "BNBC (সারণি ৮.১.২)", T_BODY, "#FFFFFF", 700, "middle")
+
+    def swatch(x, yy, hexc):
+        if hexc == GY_:
+            s.rect(x, yy, 120, 38, "#2E8B31", "none", 0, 6)
+            s.clip_begin(x, yy, 120, 38, 6)
+            for k in range(6):
+                s.path(f"M {x-12+k*26} {yy+44} L {x+20+k*26} {yy-4}", "#F2D200", 12)
             s.clip_end()
-            s.rect(x0 + 848, yy + 17, 144, 40, "none", "#20621F", 2, 6)
+            s.rect(x, yy, 120, 38, "none", "#20621F", 2, 6)
         else:
-            s.rect(x0 + 848, yy + 17, 144, 40, hexc, "#5A6470", 2, 6)
+            s.rect(x, yy, 120, 38, hexc, "#5A6470", 2, 6)
+
+    yy = y + 62
+    for name, sym, (ci, hi), (cb, hb) in rows:
+        trap = ci == "নীল" or cb == "নীল"
+        s.rect(x0, yy, w, hrow, "#FFF6E5" if trap else "#F7FAFC",
+               AMBER if trap else LINE, 1.6, 9)
+        my = yy + hrow / 2 + 8
+        s.text(cols["name"], my, name, T_BODY, "#2E3842", 400, "middle")
+        s.text(cols["sym"], my, sym, T_BODY, NAVY, 700, "middle")
+        for cx_, cname, hexc in ((cols["iec"], ci, hi), (cols["bnbc"], cb, hb)):
+            s.text(cx_ + 10, my, cname, T_BODY, "#2E3842", 600)
+            swatch(cx_ + 170, yy + 16, hexc)
         yy += hrow + 8
-    s.rect(x0, yy + 6, w, 62, REDBG, RED, 2, 11)
-    s.text(x0 + w / 2, yy + 34,
-           "সবুজ-হলুদ রং কেবল আর্থ পরিবাহীর জন্য সংরক্ষিত",
+    s.rect(x0, yy + 6, w, 72, REDBG, RED, 2, 11)
+    s.text(x0 + w / 2, yy + 38, "নীল তার IEC-তে নিউট্রাল, কিন্তু BNBC-তে ফেজ",
            T_NAME, "#7A1810", 700, "middle")
-    s.text(x0 + w / 2, yy + 60,
-           "অন্য কোনো কাজে এই রঙের তার ব্যবহার করা সম্পূর্ণ নিষিদ্ধ",
+    s.text(x0 + w / 2, yy + 68, "দুই নিয়মে মিল শুধু আর্থে: সবুজ-হলুদ",
            T_SMALL, "#7A1810", 400, "middle")
-    s.fit(yy + 68, 24)
+    s.fit(yy + 78, 24)
     return s.save(f"{OUT}/d08_colour_code.svg")
 
 
