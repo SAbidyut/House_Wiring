@@ -19,9 +19,9 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "diagrams", "ch01
 # type scale — body label 21 px on a ~1100 px canvas ≈ 8.4 pt at 15.6 cm
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_NAME = 25.5
+T_BODY = 23
+T_SMALL = 22.5
 LH = 1.42
 
 
@@ -48,7 +48,7 @@ def bullet_panel(s, x, y, w, items, size=T_BODY, fill="#F7FAFC", stroke=LINE,
 
 def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
            gloves=True, boots=True, mask=False, harness=False, earplug=False,
-           skin="#F0C9A4", cloth="#2E5F8A", pants="#37474F"):
+           skin="#F0C9A4", cloth="#2E5F8A", pants="#37474F", reach_l=None):
     """Stylised electrician figure; returns anchor points for callouts."""
     S = scale
     head_r = 30 * S
@@ -73,13 +73,18 @@ def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
            f"Q {cx:.1f} {sh_y-9*S:.1f} {cx-body_w/2:.1f} {sh_y+4*S:.1f} Z",
            "#1D3F5C", 1.6, cloth)
     arm_x = body_w / 2 + 6 * S
-    s.path(f"M {cx-arm_x:.1f} {sh_y+12*S:.1f} L {cx-arm_x-16*S:.1f} {hip_y+16*S:.1f}",
-           cloth, 19 * S)
+    if reach_l:
+        # the left arm raised to touch something (a device body)
+        s.path(f"M {cx-arm_x:.1f} {sh_y+12*S:.1f} L {reach_l[0]+9*S:.1f} {reach_l[1]:.1f}",
+               cloth, 19 * S, cap="round")
+    else:
+        s.path(f"M {cx-arm_x:.1f} {sh_y+12*S:.1f} L {cx-arm_x-16*S:.1f} {hip_y+16*S:.1f}",
+               cloth, 19 * S)
     s.path(f"M {cx+arm_x:.1f} {sh_y+12*S:.1f} L {cx+arm_x+16*S:.1f} {hip_y+16*S:.1f}",
            cloth, 19 * S)
     gcol = "#E8A33D" if gloves else skin
     gedge = "#B4761F" if gloves else "#D6A882"
-    hand_l = (cx - arm_x - 18 * S, hip_y + 26 * S)
+    hand_l = reach_l or (cx - arm_x - 18 * S, hip_y + 26 * S)
     hand_r = (cx + arm_x + 18 * S, hip_y + 26 * S)
     for (hx_, hy_), sgn in ((hand_l, -1), (hand_r, 1)):
         if gloves:
@@ -194,7 +199,8 @@ def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
             "hand": hand_r, "hand_l": hand_l,
             "boot": (cx + 24 * S, foot_y + 6 * S),
             "harness": (cx - 40 * S, hip_y - 7 * S),
-            "bottom": foot_y + 20 * S, "scale": S}
+            "bottom": foot_y + 20 * S, "scale": S,
+            "shoulder_l": (cx - arm_x, sh_y + 12 * S), "hip": (cx, hip_y)}
 
 
 def _stack(anchors, box_h, gap, first_top):
@@ -263,7 +269,7 @@ def d02_shock_path():
     ar = s.arrow_defs(RED, "arr", 15)
     GY = 462
     panels = [(282, "হাত থেকে হাত", "প্রবাহের বড় অংশ সরাসরি হৃৎপিণ্ডের ভেতর দিয়ে যায়"),
-              (838, "হাত থেকে পা", "সবচেয়ে বিপজ্জনক — পুরো দেহ প্রবাহপথে পড়ে")]
+              (838, "হাত থেকে পা", "সবচেয়ে বিপজ্জনক পথ, পুরো দেহ প্রবাহপথে পড়ে")]
     for cx, title, sub in panels:
         s.rect(cx - 248, 66, 496, 512, "#FCFDFE", LINE, 1.8, 14)
         s.box_auto(cx, 80, title, T_NAME, fill=RED, stroke=RED, tcolor="#FFFFFF",
@@ -285,7 +291,7 @@ def d02_shock_path():
     s.path(f"M {hx2+18:.1f} {hy2:.1f} L {hx2+64:.1f} {hy2:.1f}", RED, 3.6, marker=ar)
     s.text(hx1 - 72, hy1 + 7, "L", T_NAME, RED, 700, "end")
     s.text(hx2 + 72, hy2 + 7, "N", T_NAME, RED, 700, "start")
-    s.text(282, 518, "দুই হাতের মধ্য দিয়ে বর্তনী সম্পূর্ণ হয়", T_SMALL, "#7A1810", 600, "middle")
+    s.text(282, 518, "দুই হাতের মধ্য দিয়ে সার্কিট সম্পূর্ণ হয়", T_SMALL, "#7A1810", 600, "middle")
 
     b = worker(s, 838, 148, 0.86, goggles=False, vest=False,
                gloves=False, boots=False, cloth="#3E6E93")
@@ -300,7 +306,7 @@ def d02_shock_path():
 
     s.rect(30, 600, 1060, 56, "#FFF6E5", AMBER, 1.8, 11)
     s.text(560, 636,
-           "কারেন্ট যে পথেই যাক — হৃৎপিণ্ড সেই পথে পড়লেই ভেন্ট্রিকুলার ফিব্রিলেশনের ঝুঁকি সর্বোচ্চ",
+           "কারেন্টের পথে হৃৎপিণ্ড পড়লেই ভেন্ট্রিকুলার ফিব্রিলেশনের ঝুঁকি সবচেয়ে বেশি",
            T_BODY, "#7A5200", 600, "middle")
     s.fit(656, 24)
     return s.save(f"{OUT}/d02_shock_path.svg")
@@ -322,20 +328,21 @@ def d04_safety_types():
     xs = [30, 30 + cw + gapx, 30 + 2 * (cw + gapx)]
     ytop = 232
     s.path(f"M 590 {ry+rh:.1f} L 590 {ytop-70:.1f}", STEEL, 2.6)
+    nl = max(len(wrap(d_, cw - 52, T_BODY, 400)) for _, _, d_, _, _ in items)
+    h = 92 + lines_h(nl, T_BODY) + 36          # all three cards the same height
     for i, (bn_, en, desc, bg, br) in enumerate(items):
         cx = xs[i] + cw / 2
         s.path(f"M 590 {ytop-70:.1f} L {cx:.1f} {ytop-70:.1f} L {cx:.1f} {ytop-16:.1f}",
                STEEL, 2.6, marker=ar)
         dl = wrap(desc, cw - 52, T_BODY, 400)
-        h = 92 + lines_h(len(dl), T_BODY) + 40
         s.rect(xs[i], ytop, cw, h, bg, br, 2, 13)
         s.rect(xs[i], ytop, cw, 62, br, br, 2, 13)
-        s.rect(xs[i], ytop + 48, cw, 14, bg, "none", 0, 0)
-        s.text(cx, ytop + 42, bn_, T_NAME, "#FFFFFF", 700, "middle")
-        s.text(cx, ytop + 92, en, T_SMALL, br, 700, "middle")
+        s.rect(xs[i] + 1, ytop + 52, cw - 2, 10, br, "none", 0, 0)
+        s.text(cx, ytop + 40, bn_, T_NAME, "#FFFFFF", 700, "middle")
+        s.text(cx, ytop + 94, en, T_BODY, br, 700, "middle")
         for j, ln in enumerate(dl):
-            s.text(cx, ytop + 128 + j * T_BODY * LH, ln, T_BODY, "#2E3842", 400, "middle")
-        bot = ytop + h
+            s.text(cx, ytop + 130 + j * T_BODY * LH, ln, T_BODY, "#2E3842", 400, "middle")
+    bot = ytop + h
     s.text(590, bot + 44,
            "তিন প্রকার নিরাপত্তা একসঙ্গে নিশ্চিত হলে কর্মক্ষেত্র নিরাপদ হয়",
            T_SMALL, GREY, 400, "middle")
@@ -345,22 +352,32 @@ def d04_safety_types():
 
 def d05_ppe():
     s = SVG(1200, 820)
-    s.title("ব্যক্তিগত প্রতিরক্ষামূলক সরঞ্জাম (PPE) — মাথা থেকে পা", T_TITLE)
+    s.title("ব্যক্তিগত প্রতিরক্ষামূলক সরঞ্জাম (PPE): মাথা থেকে পা", T_TITLE)
     S = 1.42
     a = worker(s, 600, 92, S, mask=True, harness=True, earplug=True)
-    left = [("সেফটি হেলমেট", "পড়ন্ত বস্তু ও আঘাত থেকে মাথা রক্ষা করে", a["helmet"]),
-            ("সেফটি গগলস", "স্পার্ক, ধুলা ও ধাতুকণা থেকে চোখ বাঁচায়", a["goggles"]),
-            ("ডাস্ট মাস্ক", "ধুলা ও ক্ষতিকর ধোঁয়া শ্বাসে ঢোকা রোধ করে", a["mask"]),
-            ("সেফটি হারনেস", "উঁচুতে কাজের সময় পড়ে যাওয়া ঠেকায়", a["harness"])]
-    right = [("ইয়ার প্লাগ", "উচ্চ শব্দ থেকে শ্রবণশক্তি রক্ষা করে", a["ear"]),
-             ("রিফ্লেক্টিভ অ্যাপ্রন", "দূর থেকে কর্মীকে দৃশ্যমান করে তোলে", a["vest"]),
-             ("ইনসুলেটেড গ্লাভস", "বিদ্যুৎ ও তাপ থেকে হাত রক্ষা করে", a["hand"]),
-             ("সেফটি শু", "বিদ্যুৎ নিরোধী ও ভারী বস্তু থেকে পা বাঁচায়", a["boot"])]
+    hx, hy = a["head"]
+    # Left-side leaders are routed round the figure, never across it: the old
+    # straight leaders ran the goggles line through the ear plug and the
+    # mask and harness lines across the arm and the glove.
+    gog = (hx - 25, hy + 6)                 # lower-left of the lens
+    msk = (hx - 12, hy + 30)                # lower-left of the mask
+    thigh = (hx - 48, a["hip"][1] + 34)     # left thigh loop of the harness
+    left = [("সেফটি হেলমেট", "পড়ন্ত বস্তুর আঘাত থেকে মাথা বাঁচায়", a["helmet"], None),
+            ("সেফটি গগলস", "স্পার্ক, ধুলা ও ধাতুকণা থেকে চোখ বাঁচায়", gog,
+             lambda m: [(440, m), (440, hy + 30), (hx - 52, hy + 30), gog]),
+            ("ডাস্ট মাস্ক", "ধুলা ও ক্ষতিকর ধোঁয়া শ্বাসে ঢুকতে দেয় না", msk,
+             lambda m: [(470, m), (470, hy + 50), (hx - 34, hy + 50), msk]),
+            ("সেফটি হারনেস", "উঁচু থেকে পড়ে যাওয়া ঠেকায়", thigh,
+             lambda m: [(thigh[0] - 10, m), (thigh[0] - 10, thigh[1]), thigh])]
+    right = [("ইয়ার প্লাগ", "উচ্চ শব্দ থেকে কান রক্ষা করে", a["ear"], None),
+             ("রিফ্লেক্টিভ অ্যাপ্রন", "দূর থেকে কর্মীকে সহজে দেখা যায়", a["vest"], None),
+             ("ইনসুলেটেড গ্লাভস", "বিদ্যুৎ ও তাপ থেকে হাত বাঁচায়", a["hand"], None),
+             ("সেফটি শু", "শক ও ভারী বস্তু থেকে পা বাঁচায়", a["boot"], None)]
     BW, GAP, LX, RX = 322, 18, 352, 848
     BH = 42 + lines_h(2, T_SMALL) + 24
     for side, items, edge in (("L", left, LX), ("R", right, RX)):
         tops = _stack([p[2][1] for p in items], BH, GAP, 74)
-        for (name, desc, (px, py)), by in zip(items, tops):
+        for (name, desc, (px, py), route), by in zip(items, tops):
             x = edge - BW if side == "L" else edge
             s.rect(x, by, BW, BH, "#F5F9FC", STEEL, 1.8, 11)
             s.rect(x if side == "L" else x + BW - 6, by, 6, BH, STEEL, "none", 0, 2)
@@ -371,9 +388,15 @@ def d05_ppe():
                 s.text(tx, by + 68 + j * T_SMALL * 1.35, ln, T_SMALL, "#4A5561", 400, anc)
             # the elbow must sit OUTSIDE the label box, otherwise the leader
             # doubles back across the lettering
-            stub = edge - 18 if side == "R" else edge + 18
-            s.path(f"M {px:.1f} {py:.1f} L {stub:.1f} {by + BH/2:.1f} "
-                   f"L {edge:.1f} {by + BH/2:.1f}", "#8A97A6", 1.7)
+            m = by + BH / 2
+            if route:
+                pts = [(edge, m)] + route(m)
+                s.path("M " + " L ".join(f"{x_:.1f} {y_:.1f}" for x_, y_ in pts),
+                       "#8A97A6", 1.7)
+            else:
+                stub = edge - 18 if side == "R" else edge + 18
+                s.path(f"M {px:.1f} {py:.1f} L {stub:.1f} {m:.1f} "
+                       f"L {edge:.1f} {m:.1f}", "#8A97A6", 1.7)
             s.circle(px, py, 4.2, "#8A97A6")
     fy = max(a["bottom"], 74 + 4 * (BH + GAP)) + 34
     s.rect(288, fy, 624, 58, "#EAF2FA", STEEL, 2, 11)
@@ -388,37 +411,39 @@ def d06_loto():
     s.title("লক-আউট ট্যাগ-আউট (LOTO) পদ্ধতির ছয়টি ধাপ", T_TITLE)
     ar = s.arrow_defs(STEEL, "ar", 15)
     steps = ["প্রস্তুতি", "সবাইকে জানানো", "সাপ্লাই বন্ধ", "লক ও ট্যাগ",
-             "সঞ্চিত শক্তি অপসারণ", "যাচাই"]
+             "জমে থাকা শক্তি সরানো", "যাচাই"]
     n = len(steps)
     bw, gap = 168, 30
     x0 = (1200 - (n * bw + (n - 1) * gap)) / 2
     for i, t in enumerate(steps):
         x = x0 + i * (bw + gap)
-        s.rect(x, 118, bw, 108, "#F5F9FC", STEEL, 2, 13)
+        s.rect(x, 118, bw, 124, "#F5F9FC", STEEL, 2, 13)
         s.circle(x + bw / 2, 118, 28, NAVY)
         s.text(x + bw / 2, 128, ["১", "২", "৩", "৪", "৫", "৬"][i], T_NODE,
                "#FFFFFF", 700, "middle")
-        for j, ln in enumerate(wrap(t, bw - 24, T_NAME, 700)):
-            s.text(x + bw / 2, 186 + j * T_NAME * 1.3, ln, T_NAME, NAVY, 700, "middle")
+        tl = wrap(t, bw - 24, T_NAME, 700)
+        y0 = 194 - (len(tl) - 1) * T_NAME * 0.65      # centred in the box below the badge
+        for j, ln in enumerate(tl):
+            s.text(x + bw / 2, y0 + j * T_NAME * 1.3, ln, T_NAME, NAVY, 700, "middle")
         if i < n - 1:
-            s.path(f"M {x+bw+5:.1f} 172 L {x+bw+gap-7:.1f} 172", STEEL, 2.8, marker=ar)
-    s.rect(x0, 268, n * bw + (n - 1) * gap, 64, REDBG, RED, 2, 12)
-    s.text(600, 307,
-           "যিনি তালা লাগিয়েছেন, কেবল তিনিই তালা খুলবেন",
+            s.path(f"M {x+bw+5:.1f} 186 L {x+bw+gap-7:.1f} 186", STEEL, 2.8, marker=ar)
+    s.rect(x0, 276, n * bw + (n - 1) * gap, 64, REDBG, RED, 2, 12)
+    s.text(600, 315,
+           "যিনি তালা লাগিয়েছেন, শুধু তিনিই তালা খুলবেন",
            T_NAME, "#7A1810", 700, "middle")
-    s.fit(332, 24)
+    s.fit(340, 24)
     return s.save(f"{OUT}/d06_loto.svg")
 
 
 def d07_five_rules():
-    s = SVG(1180, 760)
+    s = SVG(1180, 700)
     s.title("বৈদ্যুতিক কাজের পাঁচটি সোনালি নিয়ম", T_TITLE)
-    rules = [("সম্পূর্ণ বিচ্ছিন্ন করা", "সব সোর্স থেকে সরঞ্জাম আলাদা করা"),
-             ("পুনঃসংযোগ প্রতিরোধ", "ব্রেকার লক করে ট্যাগ ঝুলিয়ে দেওয়া"),
+    rules = [("সম্পূর্ণ বিচ্ছিন্ন করা", "যেসব পথে বিদ্যুৎ আসতে পারে, সব বন্ধ"),
+             ("আবার চালু হওয়া ঠেকানো", "ব্রেকারে তালা ও নামসহ ট্যাগ"),
              ("লাইন ডেড যাচাই", "অনুমোদিত টেস্টার দিয়ে নিশ্চিত হওয়া"),
-             ("আর্থিং ও শর্টিং", "কার্যস্থলে অস্থায়ী আর্থ সংযোগ দেওয়া"),
-             ("চারপাশ ঘিরে দেওয়া", "জীবন্ত অংশ ঢেকে সীমানা নির্ধারণ")]
-    cx, cy, R = 590, 430, 208
+             ("আর্থিং ও শর্টিং", "কাজের জায়গার দুই পাশে অস্থায়ী আর্থ"),
+             ("লাইভ অংশ ঢেকে দেওয়া", "কভার দিয়ে ঢেকে সীমানা টানা")]
+    cx, cy, R = 590, 414, 208
     s.circle(cx, cy, R + 5, "none", "#DCE5EE", 2.4)
     s.circle(cx, cy, 96, NAVY)
     s.text(cx, cy - 8, "পাঁচটি", T_NAME, "#9FC4E6", 700, "middle")
@@ -436,10 +461,11 @@ def d07_five_rules():
             lx, anc = px - 48, "end"
         else:
             lx, anc = px, "middle"
-        ly = py - 76 if math.sin(ang) < -0.4 else py + 6
+        ly = py - 82 if math.sin(ang) < -0.4 else py + 6
         s.text(lx, ly, t, T_NAME, NAVY, 700, anc)
-        for j, ln in enumerate(wrap(d, 300, T_SMALL, 400)):
-            s.text(lx, ly + 30 + j * T_SMALL * 1.35, ln, T_SMALL, "#4A5561", 400, anc)
+        for j, ln in enumerate(wrap(d, 330, T_SMALL, 400)):
+            s.text(lx, ly + 31 + j * T_SMALL * 1.35, ln, T_SMALL, "#4A5561", 400, anc)
+    s.fit(cy + R + 40, 18)
     return s.save(f"{OUT}/d07_five_rules.svg")
 
 
@@ -449,12 +475,12 @@ def d08_safety_signs():
     groups = [("নিষেধাজ্ঞা", "Prohibition", "লাল বৃত্ত ও তির্যক দাগ", "যা করা নিষেধ", "#C0392B"),
               ("বাধ্যতামূলক", "Mandatory", "নীল ভরাট বৃত্ত", "যা অবশ্যই করতে হবে", "#1D5B8F"),
               ("সতর্কতা", "Warning", "হলুদ ত্রিভুজ", "সম্ভাব্য বিপদ", "#D89B00"),
-              ("নিরাপদ অবস্থা", "Safe condition", "সবুজ চতুর্ভুজ", "নির্গমন ও সহায়তা", "#1B6E47")]
+              ("নিরাপদ অবস্থা", "Safe condition", "সবুজ চতুর্ভুজ", "বের হওয়ার পথ ও সহায়তা", "#1B6E47")]
     cw, gapx = 272, 24
     x0 = (1180 - (4 * cw + 3 * gapx)) / 2
     for i, (bn_, en, shape, mean, col) in enumerate(groups):
         x = x0 + i * (cw + gapx); cx = x + cw / 2
-        s.rect(x, 78, cw, 428, "#FCFDFE", LINE, 1.8, 13)
+        s.rect(x, 78, cw, 386, "#FCFDFE", LINE, 1.8, 13)
         s.rect(x, 78, cw, 10, col, "none", 0, 5)
         cy = 190
         if i == 0:
@@ -479,9 +505,9 @@ def d08_safety_signs():
         yy += 8
         for ln in wrap(mean, cw - 40, T_SMALL, 400):
             s.text(cx, yy, ln, T_SMALL, "#5A6470", 400, "middle"); yy += T_SMALL * 1.35
-    s.text(590, 552, "চিহ্নের রং ও আকৃতি দেখেই বার্তা বোঝা যায় — লেখা পড়ার আগেই",
+    s.text(590, 508, "লেখা পড়ার আগেই চিহ্নের রং ও আকৃতি দেখে বার্তা বোঝা যায়",
            T_SMALL, GREY, 400, "middle")
-    s.fit(552, 26)
+    s.fit(508, 26)
     return s.save(f"{OUT}/d08_safety_signs.svg")
 
 
@@ -493,7 +519,7 @@ def d10_rescue():
     ar_r = s.arrow_defs(RED, "arr", 15)
     seq = [("নিজে নিরাপদ থাকা", "খালি হাতে আক্রান্ত ব্যক্তিকে স্পর্শ করা যাবে না", REDBG, RED, "#7A1810"),
            ("সাপ্লাই বন্ধ করা", "মেইন সুইচ বা ব্রেকার সঙ্গে সঙ্গে অফ করা", "#FFF6E5", AMBER, "#7A5200"),
-           ("অন্তরক দিয়ে সরানো", "শুকনা কাঠ, বাঁশ বা রাবার দিয়ে সরানো", "#F5F9FC", STEEL, NAVY),
+           ("অপরিবাহী বস্তু দিয়ে সরানো", "শুকনো কাঠ, বাঁশ বা রাবার দিয়ে ঠেলে সরানো", "#F5F9FC", STEEL, NAVY),
            ("সাহায্য ডাকা", "৯৯৯-এ কল করে অ্যাম্বুলেন্স ডাকা", "#F5F9FC", STEEL, NAVY),
            ("শ্বাস ও নাড়ি পরীক্ষা", "১০ সেকেন্ড দেখে-শুনে-অনুভব করা", "#F5F9FC", STEEL, NAVY)]
     x0, w, y, rowh, vgap = 60, 1020, 84, 92, 26
@@ -504,7 +530,7 @@ def d10_rescue():
         s.text(x0 + 54, yy + rowh / 2 + 10, ["১", "২", "৩", "৪", "৫"][i],
                T_NODE, "#FFFFFF", 700, "middle")
         s.text(x0 + 104, yy + 38, t, T_NAME, tc, 700)
-        s.text(x0 + 104, yy + 70, d, T_SMALL, "#4A5561", 400)
+        s.text(x0 + 104, yy + 72, d, T_BODY, "#4A5561", 400)
         if i < len(seq) - 1:
             s.path(f"M {x0+160:.1f} {yy+rowh+3:.1f} L {x0+160:.1f} {yy+rowh+vgap-5:.1f}",
                    STEEL, 2.8, marker=ar)
@@ -514,17 +540,17 @@ def d10_rescue():
     s.poly([(570, dy), (834, dy + 52), (570, dy + 104), (306, dy + 52)],
            "#EAF2FA", STEEL, 2.2)
     s.text(570, dy + 46, "শ্বাস চলছে কি?", T_NAME, NAVY, 700, "middle")
-    s.text(570, dy + 76, "১০ সেকেন্ড ধরে পরীক্ষা", T_SMALL, GREY, 400, "middle")
+    s.text(570, dy + 78, "১০ সেকেন্ড ধরে পরীক্ষা", T_BODY, GREY, 400, "middle")
     s.path(f"M 570 {dy+104:.1f} L 570 {dy+142:.1f} L 262 {dy+142:.1f} L 262 {dy+176:.1f}",
            GREEN, 2.8, marker=ar_g)
     s.path(f"M 834 {dy+52:.1f} L 906 {dy+52:.1f} L 906 {dy+176:.1f}",
            RED, 2.8, marker=ar_r)
     s.text(400, dy + 132, "হ্যাঁ", T_BODY, GREEN, 700, "middle")
     s.text(898, dy + 96, "না", T_BODY, RED, 700, "end")
-    s.box_auto(262, dy + 184, "শ্বাস আছে — রিকভারি পজিশনে শুইয়ে নজরে রাখা",
-               T_BODY, fill=GREENBG, stroke=GREEN, tcolor="#12523A", max_w=290,
+    s.box_auto(262, dy + 184, "রিকভারি পজিশনে শুইয়ে নজরে রাখা",
+               T_BODY, fill=GREENBG, stroke=GREEN, tcolor="#12523A", max_w=440,
                pad_x=22, pad_y=16)
-    s.box_auto(906, dy + 184, "শ্বাস নেই — সঙ্গে সঙ্গে CPR শুরু",
+    s.box_auto(906, dy + 184, "সঙ্গে সঙ্গে CPR শুরু করা",
                T_BODY, fill=REDBG, stroke=RED, tcolor="#7A1810", max_w=290,
                pad_x=22, pad_y=16)
     s.fit(dy + 300, 22)
@@ -533,12 +559,12 @@ def d10_rescue():
 
 def d12_hierarchy():
     s = SVG(1200, 700)
-    s.title("ঝুঁকি নিয়ন্ত্রণের অনুক্রম (Hierarchy of Controls)", T_TITLE)
+    s.title("ঝুঁকি নিয়ন্ত্রণের ধাপক্রম (Hierarchy of Controls)", T_TITLE)
     levels = [("অপসারণ", "Elimination", "ঝুঁকির উৎসই সরিয়ে ফেলা", "#1B6E47"),
               ("প্রতিস্থাপন", "Substitution", "কম ঝুঁকির বিকল্প ব্যবহার", "#4E8C3F"),
               ("প্রকৌশলগত নিয়ন্ত্রণ", "Engineering", "গার্ড, ইনসুলেশন, আর্থিং, RCCB", "#B47500"),
               ("প্রশাসনিক নিয়ন্ত্রণ", "Administrative", "প্রশিক্ষণ, সাইনবোর্ড, কর্মপদ্ধতি", "#C86A16"),
-              ("পিপিই", "PPE", "সর্বশেষ প্রতিরক্ষা স্তর", "#B32A22")]
+              ("PPE", "ব্যক্তিগত সরঞ্জাম", "সুরক্ষার শেষ স্তর", "#B32A22")]
     ytop, hrow, vgap = 92, 96, 12
     wtop, wbot, cx, n = 700, 300, 524, 5
     for i, (bn_, en, d, col) in enumerate(levels):
@@ -548,29 +574,29 @@ def d12_hierarchy():
         s.poly([(cx - w1 / 2, y), (cx + w1 / 2, y),
                 (cx + w2 / 2, y + hrow), (cx - w2 / 2, y + hrow)], col, "#FFFFFF", 2.4)
         s.text(cx, y + 42, bn_, T_NAME, "#FFFFFF", 700, "middle")
-        s.text(cx, y + 72, en, T_SMALL, "#E8EEF3", 400, "middle")
+        s.text(cx, y + 73, en, T_BODY, "#E8EEF3", 400, "middle")
         s.text(cx + w1 / 2 + 26, y + 58, d, T_BODY, "#39434D", 400)
     bot = ytop + n * (hrow + vgap) - vgap
     ax = 78
-    s.text(78, ytop + 22, "বেশি", T_SMALL, GREEN, 700, "middle")
-    s.text(78, ytop + 50, "কার্যকর", T_SMALL, GREEN, 700, "middle")
-    s.text(78, bot - 40, "কম", T_SMALL, RED, 700, "middle")
-    s.text(78, bot - 12, "কার্যকর", T_SMALL, RED, 700, "middle")
+    s.text(78, ytop + 22, "বেশি", T_BODY, GREEN, 700, "middle")
+    s.text(78, ytop + 51, "কার্যকর", T_BODY, GREEN, 700, "middle")
+    s.text(78, bot - 40, "কম", T_BODY, RED, 700, "middle")
+    s.text(78, bot - 11, "কার্যকর", T_BODY, RED, 700, "middle")
     s.path(f"M {ax} {ytop + 76:.1f} L {ax} {bot - 66:.1f}", "#9AA5B1", 3,
            marker=s.arrow_defs("#9AA5B1", "arg2", 14))
     s.text(600, bot + 46, "উপরের স্তর প্রয়োগ করা গেলে নিচের স্তরের উপর নির্ভরতা কমে যায়",
-           T_SMALL, GREY, 400, "middle")
+           T_BODY, GREY, 400, "middle")
     s.fit(bot + 46, 26)
-    return s.save(f"{OUT}/d12_dead.svg") if False else s.save(f"{OUT}/d12_hierarchy.svg")
+    return s.save(f"{OUT}/d12_hierarchy.svg")
 
 
 def d13_dead_test():
     s = SVG(1180, 560)
-    s.title("লাইন ডেড যাচাই — তিন ধাপের পরীক্ষা (Prove–Test–Prove)", T_TITLE)
+    s.title("লাইন ডেড যাচাই: তিন ধাপের পরীক্ষা (Prove–Test–Prove)", T_TITLE)
     ar = s.arrow_defs(STEEL, "ar", 15)
-    panels = [("১", "টেস্টার যাচাই", "জীবন্ত লাইনে ধরে টেস্টার সচল কি না দেখা", GREEN, GREENBG, True),
-              ("২", "লাইন পরীক্ষা", "বন্ধ করা লাইনে ধরা — সংকেত আসা চলবে না", STEEL, "#EAF2FA", False),
-              ("৩", "আবার যাচাই", "ফের জীবন্ত লাইনে ধরে টেস্টার ঠিক আছে কি না নিশ্চিত হওয়া", GREEN, GREENBG, True)]
+    panels = [("১", "টেস্টার যাচাই", "চালু লাইনে ধরে টেস্টার সচল কি না দেখা", GREEN, GREENBG, True),
+              ("২", "লাইন পরীক্ষা", "বন্ধ করা লাইনে ধরা; কোনো সংকেত আসা চলবে না", STEEL, "#EAF2FA", False),
+              ("৩", "আবার যাচাই", "আবার চালু লাইনে ধরে টেস্টার ঠিক আছে কি না নিশ্চিত হওয়া", GREEN, GREENBG, True)]
     bw, gap = 348, 34
     x0 = (1180 - (3 * bw + 2 * gap)) / 2
     for i, (num, t, d, col, bg, glow) in enumerate(panels):
@@ -587,10 +613,11 @@ def d13_dead_test():
         if glow:
             s.circle(tx, ty - 18, 20, "#FF5A3C", "none", 0, 0.28)
             s.circle(tx, ty - 18, 11, "#FF3B1F")
-            for k in range(6):
-                a_ = math.radians(k * 60)
-                s.line(tx + 25 * math.cos(a_), ty - 18 + 25 * math.sin(a_),
-                       tx + 36 * math.cos(a_), ty - 18 + 36 * math.sin(a_), "#FF7A45", 3)
+            # rays leave sideways only, so none is drawn across the tester body
+            for deg in (-30, 0, 30, 150, 180, 210):
+                a_ = math.radians(deg)
+                s.line(tx + 23 * math.cos(a_), ty - 18 + 23 * math.sin(a_),
+                       tx + 35 * math.cos(a_), ty - 18 + 35 * math.sin(a_), "#FF7A45", 3)
             s.text(tx + 56, ty - 10, "জ্বলছে", T_BODY, RED, 700)
         else:
             s.circle(tx, ty - 18, 11, "#D8DEE4", "#9AA5B1", 1.6)
@@ -600,7 +627,7 @@ def d13_dead_test():
         if i < 2:
             s.path(f"M {x+bw+5:.1f} 252 L {x+bw+gap-7:.1f} 252", STEEL, 2.8, marker=ar)
     s.rect(x0, 444, 3 * bw + 2 * gap, 58, REDBG, RED, 2, 11)
-    s.text(590, 481, "শুধু দ্বিতীয় ধাপ করলে চলবে না — টেস্টার নিজেই নষ্ট থাকতে পারে",
+    s.text(590, 481, "শুধু দ্বিতীয় ধাপ করলে চলবে না, কারণ টেস্টার নিজেই নষ্ট থাকতে পারে",
            T_NAME, "#7A1810", 600, "middle")
     s.fit(502, 24)
     return s.save(f"{OUT}/d13_dead_test.svg")
@@ -612,14 +639,15 @@ def d14_earthing():
     ar_r = s.arrow_defs(RED, "arr", 15)
     ar_g = s.arrow_defs(GREEN, "arg", 15)
 
-    def appliance(x, y, label):
+    def appliance(x, y, label, wmax=300):
         s.rect(x, y, 140, 112, "#B7C1CB", "#7C8794", 2, 11)
         s.rect(x + 20, y + 22, 100, 46, "#8D9AA8", "#6B7684", 1.4, 6)
-        for j, ln in enumerate(wrap(label, 300, T_SMALL, 600)):
-            s.text(x + 70, y + 158 + j * T_SMALL * 1.35, ln, T_SMALL, "#39434D", 600, "middle")
+        lines = label if isinstance(label, list) else wrap(label, wmax, T_SMALL, 600)
+        for j, ln in enumerate(lines):
+            s.text(x + 70, y + 150 + j * T_SMALL * 1.35, ln, T_SMALL, "#39434D", 600, "middle")
 
     GY = 512
-    for cx, title, br in ((308, "আর্থিং ছাড়া", RED), (892, "আর্থিং সহ", GREEN)):
+    for cx, title, br in ((308, "আর্থিং ছাড়া", RED), (892, "আর্থিংসহ", GREEN)):
         s.rect(cx - 266, 72, 532, 542, "#FCFDFE", LINE, 1.8, 14)
         s.box_auto(cx, 86, title, T_NAME, fill=br, stroke=br, tcolor="#FFFFFF",
                    pad_x=26, pad_y=12)
@@ -627,49 +655,53 @@ def d14_earthing():
         for i in range(16):
             s.line(cx - 234 + i * 31, GY + 13, cx - 242 + i * 31, GY + 26, "#8D9AA8", 2)
 
-    # left — no earth
-    appliance(140, 202, "ত্রুটিপূর্ণ যন্ত্র (বডিতে লিক)")
-    s.line(66, 178, 308, 178, NAVY, 3)
-    s.text(60, 172, "L", T_NAME, RED, 700, "end")
-    s.path("M 210 178 L 210 202", NAVY, 3)
-    s.circle(210, 228, 9, RED)
-    s.path("M 219 236 L 262 268", RED, 3, dash="8 6")
-    w = worker(s, 432, 246, 0.72, helmet=False, goggles=False, vest=False,
-               gloves=False, boots=False, cloth="#3E6E93")
-    hxl, hyl = w["hand_l"]
-    s.path(f"M 286 300 L {hxl-11:.1f} {hyl-5:.1f}", RED, 3.4, marker=ar_r)
-    s.path(f"M 432 {w['bottom']-6:.1f} L 432 {GY-14:.1f}", RED, 3.4, dash="9 6", marker=ar_r)
-    for j, ln in enumerate(wrap("কারেন্ট মানুষের দেহ দিয়ে মাটিতে যায় — মারাত্মক শক",
-                                460, T_SMALL, 600)):
-        s.text(308, GY + 72 + j * T_SMALL * 1.35, ln, T_SMALL, "#7A1810", 600, "middle")
+    # The person actually touches the appliance's body: the raised left hand
+    # rests on its right-hand side.  (The old figure stood him a pace away and
+    # let an arrow jump the gap, which read as current through the air.)
+    TOUCH_Y = 286
 
-    # right — with earth
-    appliance(724, 202, "একই ত্রুটি — বডি আর্থ করা")
-    s.line(650, 178, 892, 178, NAVY, 3)
+    # left: no earth.  The leakage reaches the body, then the hand, and runs
+    # through the man to the ground.
+    appliance(132, 202, "ত্রুটিপূর্ণ যন্ত্র (বডিতে লিক)")
+    s.line(66, 178, 300, 178, NAVY, 3)
+    s.text(60, 172, "L", T_NAME, RED, 700, "end")
+    s.path("M 202 178 L 202 202", NAVY, 3)
+    s.circle(202, 228, 9, RED)
+    s.path("M 210 234 L 262 274", RED, 3, dash="8 6")
+    w = worker(s, 372, 246, 0.72, helmet=False, goggles=False, vest=False,
+               gloves=False, boots=False, cloth="#3E6E93", reach_l=(276, TOUCH_Y))
+    shx, shy = w["shoulder_l"]
+    s.path(f"M 280 {TOUCH_Y:.1f} L {shx+8:.1f} {shy+6:.1f} L 372 {w['hip'][1]:.1f} "
+           f"L 372 {GY-14:.1f}", RED, 3.4, dash="9 6", marker=ar_r)
+    for j, ln in enumerate(wrap("দেহ দিয়ে কারেন্ট মাটিতে যায়, মারাত্মক শক লাগে",
+                                470, T_SMALL, 600)):
+        s.text(308, GY + 70 + j * T_SMALL * 1.35, ln, T_SMALL, "#7A1810", 600, "middle")
+
+    # right: with earth.  Same fault, same touch, but the fault current takes
+    # the earth conductor and the man is safe.
+    appliance(724, 202, ["একই ত্রুটি,", "বডি আর্থ করা"])
+    s.line(650, 178, 884, 178, NAVY, 3)
     s.text(644, 172, "L", T_NAME, RED, 700, "end")
     s.path("M 794 178 L 794 202", NAVY, 3)
     s.circle(794, 228, 9, RED)
     s.rect(714, 258, 12, 20, GREEN, "#0E4430", 1.4, 3)
     s.path(f"M 714 268 L 686 268 L 686 {GY-16:.1f}", GREEN, 3.8, marker=ar_g)
-    s.text(706, 402, "ফল্ট কারেন্ট", T_BODY, GREEN, 700)
-    s.text(706, 428, "আর্থ তারে চলে যায়", T_BODY, GREEN, 400)
-    w2 = worker(s, 1022, 246, 0.72, helmet=False, goggles=False, vest=False,
-                gloves=False, boots=False, cloth="#3E6E93")
-    hx2, hy2 = w2["hand_l"]
-    s.path(f"M 878 300 L {hx2-11:.1f} {hy2-5:.1f}", "#9AA5B1", 2.6, dash="7 6")
-    s.check(944, 330, 21)
-    for j, ln in enumerate(["স্পর্শ করলেও", "বিপজ্জনক শক লাগে না"]):
-        s.text(1040, 152 + j * T_SMALL * 1.35, ln, T_SMALL, GREEN, 600, "middle")
+    s.text(704, 436, "ফল্ট কারেন্ট", T_BODY, GREEN, 700)
+    s.text(704, 464, "আর্থ তারে চলে যায়", T_BODY, GREEN, 400)
+    w2 = worker(s, 964, 246, 0.72, helmet=False, goggles=False, vest=False,
+                gloves=False, boots=False, cloth="#3E6E93", reach_l=(868, TOUCH_Y))
+    s.check(1080, 196, 21)
+    for j, ln in enumerate(["স্পর্শ করলেও", "শক লাগে না"]):
+        s.text(1080, 250 + j * T_SMALL * 1.35, ln, T_SMALL, GREEN, 600, "middle")
     s.line(686, GY, 686, GY + 14, GREEN, 3.6)
     for i, ww in enumerate((42, 28, 16)):
         s.line(686 - ww / 2, GY + 18 + i * 8, 686 + ww / 2, GY + 18 + i * 8, GREEN, 3.6)
     for j, ln in enumerate(wrap("বড় ফল্ট কারেন্টে ব্রেকার বা RCCB সঙ্গে সঙ্গে ট্রিপ করে",
-                                460, T_SMALL, 600)):
-        s.text(892, GY + 72 + j * T_SMALL * 1.35, ln, T_SMALL, "#12523A", 600, "middle")
+                                470, T_SMALL, 600)):
+        s.text(892, GY + 70 + j * T_SMALL * 1.35, ln, T_SMALL, "#12523A", 600, "middle")
 
     s.rect(40, 636, 1120, 58, "#EAF2FA", STEEL, 2, 11)
-    s.text(600, 673,
-           "ধাতব বডিযুক্ত প্রতিটি যন্ত্র অবশ্যই আর্থ করতে হবে — এটি ঐচ্ছিক নয়, বাধ্যতামূলক",
+    s.text(600, 673, "ধাতব বডির প্রতিটি যন্ত্র আর্থ করা বাধ্যতামূলক",
            T_NAME, NAVY, 700, "middle")
     s.fit(694, 24)
     return s.save(f"{OUT}/d14_earthing.svg")

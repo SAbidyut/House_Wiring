@@ -13,9 +13,9 @@ OUT = os.path.join(os.path.dirname(os.path.abspath(__file__)), "diagrams", "ch02
 
 T_TITLE = 34
 T_NODE = 28
-T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_NAME = 25.5
+T_BODY = 23
+T_SMALL = 22.5
 LH = 1.42
 
 
@@ -86,26 +86,27 @@ def d01_screwdriver():
            "#7C858D", "#5A6167", 2)
 
     # ── উপরে তিনটি, নিচে তিনটি — লিডার লেখার গা ঘেঁষে থামে, ভেতর দিয়ে যায় না
-    part_label(s, 200, cy - 58, 176, 150, "হ্যান্ডেল",
-               "অন্তরক প্লাস্টিক বা রাবার — হাত সুরক্ষিত রাখে", 250)
-    part_label(s, 440, cy - 17, 566, 150, "ইনসুলেটেড স্লিভ",
-               "১০০০ V পর্যন্ত অন্তরণ (IEC 60900)", 250)
-    part_label(s, 690, cy - 13, 952, 150, "শ্যাফট / ব্লেড",
-               "শক্ত ইস্পাতের দণ্ড", 250)
+    LS = 25                          # part names; sub-lines print at LS − 2
+    part_label(s, 200, cy - 58, 176, 132, "হ্যান্ডেল",
+               "ইনসুলেটেড প্লাস্টিক বা রাবার, হাত নিরাপদ রাখে", 270, LS)
+    part_label(s, 440, cy - 17, 566, 132, "ইনসুলেটেড স্লিভ",
+               "১০০০ V পর্যন্ত ইনসুলেশন (IEC 60900)", 380, LS)
+    part_label(s, 690, cy - 13, 952, 132, "শ্যাফট বা ব্লেড",
+               "শক্ত ইস্পাতের দণ্ড", 270, LS)
 
-    part_label(s, 200, cy + 58, 176, 452, "গ্রিপ খাঁজ",
-               "পিছলে যাওয়া রোধ করে", 250, above=False)
-    part_label(s, 271, cy + 30, 524, 452, "ফেরুল",
-               "হ্যান্ডেল ও শ্যাফট আটকে রাখে", 250, above=False)
-    part_label(s, 845, cy + 3, 946, 452, "টিপ",
-               "স্ক্রুর খাঁজে বসে — ফ্ল্যাট বা স্টার", 250, above=False)
+    part_label(s, 200, cy + 58, 176, 446, "গ্রিপ খাঁজ",
+               "হাত পিছলে যেতে দেয় না", 270, LS, above=False)
+    part_label(s, 271, cy + 30, 524, 446, "ফেরুল",
+               "হ্যান্ডেল ও শ্যাফট আটকে রাখে", 270, LS, above=False)
+    part_label(s, 845, cy + 3, 946, 446, "টিপ",
+               "স্ক্রুর খাঁজে বসে; ফ্ল্যাট বা স্টার", 270, LS, above=False)
 
-    s.rect(40, 542, 1120, 62, "#EAF2FA", STEEL, 2, 11)
-    s.text(600, 570, "স্ক্রু ড্রাইভারের মাপ = ব্লেডের দৈর্ঘ্য × টিপের প্রস্থ",
+    s.rect(40, 548, 1120, 72, "#EAF2FA", STEEL, 2, 11)
+    s.text(600, 578, "স্ক্রু ড্রাইভারের মাপ = ব্লেডের দৈর্ঘ্য × টিপের প্রস্থ",
            T_NAME, NAVY, 700, "middle")
-    s.text(600, 596, "যেমন ১৫০ মিমি × ৬ মিমি — স্ক্রুর খাঁজের সমান টিপ বেছে নিতে হয়",
+    s.text(600, 608, "যেমন ১৫০ মিমি × ৬ মিমি; টিপ হবে স্ক্রুর খাঁজের সমান",
            T_SMALL, GREY, 400, "middle")
-    s.fit(604, 22)
+    s.fit(620, 22)
     return s.save(f"{OUT}/d01_screwdriver.svg")
 
 
@@ -156,11 +157,11 @@ def d02_iec60900_marking():
     s.text(152, cy + 32, "IEC 60900", 23, MK, 700)
 
     s.rect(84, 336, 532, 54, "#FFF6E5", AMBER, 2, 11)
-    s.text(350, 369, "মার্কিং হাতলের গায়েই থাকে — মুছে গেলে টুলটাই বাতিল",
+    s.text(350, 369, "মার্কিং মুছে গেলে টুলটি আর ব্যবহার করা যাবে না",
            T_SMALL, "#7A5200", 700, "middle")
 
     # ── ডান দিকের ঘর : কোন লেখাটার মানে কী ─────────────────────────
-    rows = [("দ্বৈত ত্রিভুজ", "জীবন্ত লাইনে ব্যবহারের উপযোগী", GREEN),
+    rows = [("দুই ত্রিভুজ", "লাইভ লাইনে ব্যবহারের উপযোগী", GREEN),
             ("1000 V", "১০০০ V AC / ১৫০০ V DC পর্যন্ত অনুমোদিত", STEEL),
             ("IEC 60900", "যে মান অনুসারে পরীক্ষা করা হয়েছে", STEEL),
             ("প্রস্তুতকারকের নাম", "উৎস শনাক্তকরণ", GREY),
@@ -180,10 +181,10 @@ def d02_iec60900_marking():
 
     bot = max(yy, 410) + 26
     s.rect(70, bot, 1090, 62, REDBG, RED, 2, 11)
-    s.text(615, bot + 28, "যে টুলে এই চিহ্ন নেই, তা দিয়ে জীবন্ত লাইনে কাজ করা যাবে না",
+    s.text(615, bot + 28, "যে টুলে এই চিহ্ন নেই, তা দিয়ে লাইভ লাইনে কাজ করা যাবে না",
            T_NAME, "#7A1810", 700, "middle")
     s.text(615, bot + 54,
-           "শুধু প্লাস্টিকের হাতল থাকা মানেই ইনসুলেটেড টুল নয় — মার্কিং দেখে নিশ্চিত হতে হবে",
+           "শুধু প্লাস্টিকের হাতল থাকলেই ইনসুলেটেড টুল হয় না; মার্কিং দেখে নিশ্চিত হতে হবে",
            T_SMALL, "#7A1810", 400, "middle")
     s.fit(bot + 62, 22)
     return s.save(f"{OUT}/d02_iec60900_marking.svg")
@@ -197,7 +198,7 @@ def d03_stripping():
     ওখানেই, খালি চোখে যা ধরা পড়ে না।
     """
     s = SVG(1240, 980)
-    s.title("তারের ইনসুলেশন ছাড়ানো — সঠিক ও ভুল পদ্ধতি", 38)
+    s.title("তারের ইনসুলেশন ছাড়ানো: সঠিক ও ভুল পদ্ধতি", 38)
 
     TS, TB = 23, 25                 # এই ছবির লেখা একটু বড়, নইলে ছাপায় পড়া যায় না
     INS, INS_E = "#2E6F9E", "#1D4E70"
@@ -276,8 +277,8 @@ def d03_stripping():
                     (nx - 20, cy - 40)], ST_L, ST_D, 2.4)
             s.path(f"M {nx-9} {cy-66:.1f} L {nx-3} {cy-14:.1f}", ST_M, 3)
             ar = s.arrow_defs(RED, "kdn", 13)
-            s.path(f"M {nx+70} {cy-72:.1f} L {nx+70} {cy-30:.1f}", RED, 3,
-                   marker=ar)
+            s.path(f"M {nx+40} {cy-80:.1f} L {nx+40} {cy-38:.1f}", RED, 3,
+                   marker=ar)                    # the push, beside the blade
         else:                         # চোয়ালের ধার তামার গা ছুঁয়েই থেমেছে
             nx = xc + 6
             for sg in (-1, 1):
@@ -288,22 +289,23 @@ def d03_stripping():
                 s.path(f"M {nx+13} {cy+sg*70:.1f} L {nx+5} {cy+sg*26:.1f}",
                        ST_M, 3)
             ar = s.arrow_defs(GREEN, "jsq", 13)
-            s.path(f"M {nx+112} {cy-100:.1f} L {nx+112} {cy-56:.1f}", GREEN, 3,
+            # the squeeze, right beside the two jaws it describes
+            s.path(f"M {nx+40} {cy-82:.1f} L {nx+40} {cy-42:.1f}", GREEN, 3,
                    marker=ar)
-            s.path(f"M {nx+112} {cy+100:.1f} L {nx+112} {cy+56:.1f}", GREEN, 3,
+            s.path(f"M {nx+40} {cy+82:.1f} L {nx+40} {cy+42:.1f}", GREEN, 3,
                    marker=ar)
             s.path(f"M {nx+26} {cy-17:.1f} L {x1-10} {cy-17:.1f}", GREEN, 2.4,
                    dash="7 5")
 
     cases = [
-        (46, "সঠিক — ওয়্যার স্ট্রিপার", GREEN, GREENBG, tool_stripper,
+        (46, "সঠিক: ওয়্যার স্ট্রিপার", GREEN, GREENBG, tool_stripper,
          "তারের মাপ অনুযায়ী খাঁজ বেছে নিলে চোয়ালের ধার ইনসুলেশন কেটে "
          "তামার গায়ে এসে থেমে যায়।",
          "তামার পৃষ্ঠ মসৃণ ও অক্ষত", False),
-        (634, "ভুল — ছুরি সমকোণে", RED, REDBG, tool_knife,
+        (634, "ভুল: ছুরি সমকোণে", RED, REDBG, tool_knife,
          "ছুরি তারের সঙ্গে সমকোণে চেপে ধরলে ধার ইনসুলেশন পেরিয়ে তামার "
          "গায়ে বসে যায়।",
-         "তামায় খাঁজ — টান পড়লে এখানেই ভাঙবে", True),
+         "তামায় খাঁজ, টান পড়লে এখানেই ভাঙবে", True),
     ]
 
     PW, PH = 560, 700
@@ -319,7 +321,7 @@ def d03_stripping():
         # ── নিচের ঘর : ধার কতদূর নামে, ×৪ বিবর্ধিত
         zy = 508
         s.rect(px + 26, 392, PW - 52, 214, "#FBFDFE", ST_D, 2, 12, dash="8 6")
-        s.text(px + 46, 424, "কাটার মুহূর্ত — ×৪ বিবর্ধিত", TS, GREY, 700)
+        s.text(px + 46, 424, "বড় করে দেখানো", TS, GREY, 700)
         section(px + 54, px + 506, px + 236, zy, bad)
         s.text(px + 54, 584, "ইনসুলেশন", TS, "#1D4E70", 700)
         s.text(px + 506, 584, "তামা", TS, "#8A5A18", 700, "end")
@@ -334,7 +336,7 @@ def d03_stripping():
     s.rect(60, 826, 1120, 86, "#FFF6E5", AMBER, 2, 11)
     s.text(620, 862, "তামায় সামান্য খাঁজ পড়লেই সেখানে তারের প্রস্থচ্ছেদ কমে "
            "যায়, রোধ বাড়ে ও তাপ জমে", TS, "#7A5200", 700, "middle")
-    s.text(620, 894, "কাজের দিন কিছু বোঝা যায় না — কয়েক মাস পরে ঠিক ওই "
+    s.text(620, 894, "কাজের দিন কিছু বোঝা যায় না; কয়েক মাস পরে ঠিক ওই "
            "বিন্দুতেই তার গরম হয়ে ভেঙে যায়", TS, "#7A5200", 400,
            "middle")
     s.fit(912, 22)
@@ -359,9 +361,9 @@ def d04_protection_class():
     x0 = (1200 - (3 * cw + 2 * gapx)) / 2
     for i, (name, sub, desc, col, bg) in enumerate(cards):
         x = x0 + i * (cw + gapx)
-        s.rect(x, 96, cw, 340, bg, col, 2, 13)
+        s.rect(x, 96, cw, 330, bg, col, 2, 13)
         s.rect(x, 96, cw, 60, col, col, 2, 13)
-        s.rect(x, 142, cw, 14, bg, "none", 0, 0)
+        s.rect(x + 1, 146, cw - 2, 10, col, "none", 0, 0)
         s.text(x + cw / 2, 138, name, T_NAME, "#FFFFFF", 700, "middle")
         cx, cy = x + cw / 2, 232
         if i == 0:   # earth symbol
@@ -379,10 +381,10 @@ def d04_protection_class():
         for j, ln in enumerate(wrap(desc, cw - 52, T_SMALL, 400)):
             s.text(x + cw / 2, 336 + j * T_SMALL * 1.34, ln, T_SMALL,
                    "#2E3842", 400, "middle")
-    s.text(600, 478,
-           "পাওয়ার টুলের নেমপ্লেটে বর্গের ভেতর বর্গ দেখলে বুঝতে হবে সেটি ক্লাস II — আলাদা আর্থিং লাগবে না",
+    s.text(600, 470,
+           "নেমপ্লেটে বর্গের ভেতর বর্গ থাকলে টুলটি ক্লাস II, তাই আলাদা আর্থিং লাগে না",
            T_SMALL, GREY, 400, "middle")
-    s.fit(478, 24)
+    s.fit(470, 24)
     return s.save(f"{OUT}/d04_protection_class.svg")
 
 
@@ -395,7 +397,7 @@ def d05_drill_zones():
     s = SVG(1240, 1000)
     s.title("দেয়ালের ভেতরে ক্যাবল টানার অনুমোদিত অঞ্চল", T_TITLE)
 
-    WX, WY, WW, WH = 150, 196, 580, 560
+    WX, WY, WW, WH = 150, 146, 580, 560
     BAND = 56                      # ১৫০ মিমি-এর প্রতীকী প্রস্থ
     SLAB = 34
     PLASTER, CONC, CONC_E = "#F7F3EB", "#D9DFE6", "#A9B4C0"
@@ -460,16 +462,16 @@ def d05_drill_zones():
     mx, my = (ax + bx) / 2, (ay + by) / 2
     s.circle(mx, my, 24, "#FFFFFF", RED, 4)
     s.line(mx - 15, my + 15, mx + 15, my - 15, RED, 4)
-    s.text(WX + 131, WY + 524, "কোনাকুনি নয়", T_SMALL, RED, 700, "middle")
+    s.text(WX + 140, WY + 214, "কোনাকুনি নয়", T_SMALL, RED, 700, "middle")
 
     s.text(WX + 330, WY + 152, "এখানে ক্যাবল নয়", T_SMALL, "#7A8590", 400)
 
     # ── জোন-ব্যাজ ───────────────────────────────────────────────────
-    s.badge(WX + 116, WY + BAND / 2, "১", 17, GREEN)
-    s.badge(WX + BAND / 2, WY + 214, "২", 17, GREEN)
-    s.badge(WX + WW - BAND / 2, WY + 214, "২", 17, GREEN)
-    s.badge(SW_X + 26, WY + 148, "৩", 17, GREEN)
-    s.badge(WX + 130, SO_CY, "৩", 17, GREEN)
+    s.badge(WX + 116, WY + BAND / 2, "১", 20, GREEN)
+    s.badge(WX + BAND / 2, WY + 214, "২", 20, GREEN)
+    s.badge(WX + WW - BAND / 2, WY + 214, "২", 20, GREEN)
+    s.badge(SW_X + 26, WY + 148, "৩", 20, GREEN)
+    s.badge(WX + 130, SO_CY, "৩", 20, GREEN)
 
     # ── রঙের ব্যাখ্যা ───────────────────────────────────────────────
     ly = WY + WH + SLAB + 26
@@ -494,7 +496,7 @@ def d05_drill_zones():
         yy = y + 78
         for k, lines in enumerate(wrapped):
             if badges:
-                s.badge(x0 + 32, yy - 6, ["১", "২", "৩"][k], 15, col)
+                s.badge(x0 + 32, yy - 7, ["১", "২", "৩"][k], 19, col)
                 tx = x0 + 56
             else:
                 s.circle(x0 + 30, yy - 7, 5, col)
@@ -504,7 +506,7 @@ def d05_drill_zones():
             yy += len(lines) * T_SMALL * 1.32 + 16
         return y + h + 24
 
-    cy = card(196, "সবুজ — এখানেই ক্যাবল টানা যায়",
+    cy = card(WY - SLAB, "সবুজ অঞ্চল: এখানেই ক্যাবল টানা যায়",
               ["দেয়ালের একেবারে উপরে ১৫০ মিমি চওড়া ব্যান্ড",
                "দুই দেয়ালের কোণা ঘেঁষে ১৫০ মিমি ব্যান্ড",
                "সুইচ বা সকেট বরাবর সোজা উল্লম্ব ও অনুভূমিক পথ"],
@@ -521,12 +523,12 @@ def d05_drill_zones():
 
     # ── নিচের বার্তা ────────────────────────────────────────────────
     ny = max(ly + 58, cy) + 4
-    s.rect(60, ny, 1120, 58, REDBG, RED, 2, 11)
-    s.text(620, ny + 36,
-           "সবুজ অঞ্চলেই ক্যাবল থাকে — তাই ওই অংশে পেরেক বা ড্রিল বসানো "
-           "যাবে না; অন্য জায়গাতেও আগে ডিটেক্টর দিয়ে যাচাই করতে হবে",
+    s.rect(60, ny, 1120, 88, REDBG, RED, 2, 11)
+    s.text(620, ny + 36, "সবুজ অঞ্চলেই ক্যাবল থাকে, তাই ওই অংশে পেরেক বা ড্রিল বসানো যাবে না।",
            T_SMALL, "#7A1810", 700, "middle")
-    s.fit(ny + 58, 22)
+    s.text(620, ny + 68, "অন্য জায়গাতেও আগে ডিটেক্টর দিয়ে যাচাই করে নিতে হবে।",
+           T_SMALL, "#7A1810", 400, "middle")
+    s.fit(ny + 88, 22)
     return s.save(f"{OUT}/d05_drill_zones.svg")
 
 
@@ -585,16 +587,16 @@ def d06_classification():
         cx = x0 + i * (cw + gapx) + cw / 2
         s.path(f"M 700 {ytop-76:.1f} L {cx:.1f} {ytop-76:.1f} L {cx:.1f} {ytop-22:.1f}",
                STEEL, 2.6, marker=ar)
-        s.box_auto(cx, ytop - 12, name, T_NAME, fill=br, stroke=br,
+        s.box_auto(cx, ytop - 12, name, 27, fill=br, stroke=br,
                    tcolor="#FFFFFF", pad_x=24, pad_y=13, min_w=230)
     bot = 0
     for i, (name, bg, br, items) in enumerate(cols):
         bot = max(bot, _bullet_panel(s, x0 + i * (cw + gapx), ytop + 62, cw,
-                                     items, T_BODY, bg, br, INK, br))
-    s.text(700, bot + 46,
-           "প্রতিটি শ্রেণির টুল তার নিজের কাজেই ব্যবহার করতে হয় — বিকল্প হিসেবে নয়",
-           T_SMALL, GREY, 400, "middle")
-    s.fit(bot + 46, 26)
+                                     items, 25, bg, br, INK, br))
+    s.text(700, bot + 48,
+           "প্রতিটি শ্রেণির টুল তার নিজের কাজেই ব্যবহার করতে হয়, অন্য কাজের বিকল্প হিসেবে নয়",
+           25, GREY, 400, "middle")
+    s.fit(bot + 48, 26)
     return s.save(f"{OUT}/d06_classification.svg")
 
 
@@ -607,7 +609,7 @@ def d07_maintenance():
              ("পরীক্ষা", "ফাটল ও ক্ষয় দেখা"),
              ("তেল দেওয়া", "কব্জা ও ধাতব অংশে"),
              ("ধার দেওয়া", "চিজেল ও ব্লেড"),
-             ("সংরক্ষণ", "শুকনা টুল বক্সে")]
+             ("সংরক্ষণ", "শুকনো টুল বক্সে")]
     bw, gap = 208, 32
     x0 = (1240 - (5 * bw + 4 * gap)) / 2
     for i, (t, d) in enumerate(steps):

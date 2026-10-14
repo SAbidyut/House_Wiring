@@ -10,6 +10,7 @@ import os, re, subprocess, sys, glob, shutil
 
 CHROME = os.environ.get("CHROME_BIN", "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
 SCALE = 3          # 3x → ~300 dpi at print size
+PAD = 400          # extra window height, cropped off after the screenshot
 
 
 def svg_size(path):
@@ -38,13 +39,21 @@ def render(svg, png=None, scale=SCALE):
            "--disable-lcd-text", "--font-render-hinting=none",
            f"--force-device-scale-factor={scale}",
            "--default-background-color=FFFFFFFF",
-           f"--screenshot={png}", f"--window-size={w},{h}",
+           f"--screenshot={png}", f"--window-size={w},{h + PAD}",
            "file://" + html]
+    if os.path.exists(png):
+        os.remove(png)
     r = subprocess.run(cmd, capture_output=True, text=True)
     os.remove(html)
     if not os.path.exists(png):
         print("FAIL", svg, r.stderr[-600:], file=sys.stderr)
         return None
+    # New-style headless Chrome takes the window's outer size for
+    # --window-size, so the viewport is shorter than asked and the foot of
+    # the drawing was cut off.  Render into a taller window, then crop back.
+    from PIL import Image
+    im = Image.open(png)
+    im.crop((0, 0, w * scale, h * scale)).save(png)
     return png
 
 
