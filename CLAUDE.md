@@ -2320,7 +2320,7 @@ re-merged.**
 ## Diagram pass over chapters 10–19, 2026-10-15
 
 User: "chapter 10 theke 19 er diagram kaj shuru koro". This was the same
-treatment as the ch1–9 pass. All 107 figures in `dia_ch10–19` were looked at.
+treatment as the ch1–9 pass. All 95 figures in `dia_ch10–19` were looked at.
 Every chapter's `qc.py` reports 0 problems, and the SVGs were copied into each
 `Book/অধ্যায়-NN/ডায়াগ্রাম-সোর্স (SVG)/` folder. **The full book was not
 re-merged.**
