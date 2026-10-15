@@ -2491,6 +2491,13 @@ ch1–9 and ch10–19 passes. All 180 figures in `dia_ch20–28` were looked at,
 - **Pages ch20–28:** 25 / 30 / 52 / 49 / 41 / 43 / 46 / 33 / 49 (status
   table updated; the +1s in ch20/21/23/26 came from equations rendering
   taller). `mathguard.py` is clean on all nine.
+- **Full book re-merged afterwards** (user: "full book merge kore daw"):
+  `python mkbook.py --pdf` → **815 pages**, 474.8 MB `.docx`, 44.6 MB PDF.
+  The `bake:` line reported 342 anchors resolved; the shipped `document.xml`
+  has 0 PAGEREF and 0 fldChar. The running header names the right chapter on
+  sampled pages, and the TOC numbers match the chapter openers. Every equation
+  renders. This is the first merge with all three diagram passes (ch1–28) and
+  the equation fix in it.
 
 ## Open items
 
