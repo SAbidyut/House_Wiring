@@ -36,13 +36,13 @@ order *is* the book order — do not regroup chapters by theme.
 | 17 | বিদ্যুৎ বিল | 19 | ✅ delivered |
 | 18 | মোটর | 27 | ✅ delivered |
 | 19 | আইপিএস ও ইউপিএস | 36 | ✅ delivered |
-| 20 | ফ্লোট সুইচ | 24 | ✅ delivered |
-| 21 | বাসবার ও বাসবার ক্যালকুলেশন | 29 | ✅ delivered |
+| 20 | ফ্লোট সুইচ | 25 | ✅ delivered |
+| 21 | বাসবার ও বাসবার ক্যালকুলেশন | 30 | ✅ delivered |
 | 22 | সার্কিট ব্রেকার ও প্রতিরক্ষামূলক ডিভাইস | 52 | ✅ delivered |
-| 23 | ক্যাবল ও ক্যাবল ক্যালকুলেশন | 48 | ✅ delivered |
+| 23 | ক্যাবল ও ক্যাবল ক্যালকুলেশন | 49 | ✅ delivered |
 | 24 | এমডিবি ওয়্যারিং | 41 | ✅ delivered |
 | 25 | এসডিবি ওয়্যারিং | 43 | ✅ delivered |
-| 26 | কন্ডুইট পাইপ ওয়্যারিং | 45 | ✅ delivered |
+| 26 | কন্ডুইট পাইপ ওয়্যারিং | 46 | ✅ delivered |
 | 27 | চ্যানেল ওয়্যারিং | 33 | ✅ delivered |
 | 28 | আর্থিং ও ওয়্যারিং টেস্ট | 49 | ✅ delivered |
 
@@ -2412,7 +2412,85 @@ clean at 4.5 cm except ch04's long-standing 4.78 cm.
   - ch22: 4.57 cm.
 
   Their docx and previews in `Book/` were refreshed (equations now visible).
-  The layout fixes are owed.
+  **Closed in the ch20–28 diagram pass below.**
+
+
+## Diagram pass over chapters 20–28, 2026-10-15
+
+User: "chapter 20 theke 28 suru kore daw". This was the same treatment as the
+ch1–9 and ch10–19 passes. All 180 figures in `dia_ch20–28` were looked at,
+`qc.py` reports 0 problems on all nine, and the SVGs were copied into each
+`Book/অধ্যায়-NN/ডায়াগ্রাম-সোর্স (SVG)/` folder (no stale extras).
+**The full book was not re-merged.**
+
+- **Language (same rules as before).** Em-dashes were converted (tokenizer +
+  hand fixes). Other changes:
+  - শুধু for "only" (ch20 keeps কেবল = cable).
+  - Diminutive -টা/-টো → -টি.
+  - BNBC in Latin.
+  - সব সময়.
+  - IS 9537 / BS 7671 in Latin in figure text.
+  - Step badges in ch26/ch28 use Latin digits (Kalpurush ৪ reads as 8),
+    matching ch24/25.
+  - ch27 d11's note was reworded to "চারটিই BNBC-বিরোধী; কোন ধারায়, তা
+    পাঠে বলা আছে".
+  - ch25 d09's note: "ছবির নম্বর" → "ওয়ের নম্বর".
+- **Type:** ch20–23 `T_SMALL`/`T_BODY` were raised to ≥7.5 pt. ch21 d14 is
+  now 14.0 cm; ch22 d10 is 15.4 and d18/d19 are 14.4; ch23 d03/d15 are 13.6.
+- **One fact fixed in artwork:** ch28 d09_ir's note said "ব্রেকার **বন্ধ**
+  রেখে" for the insulation test. The chapter (§২৮.৭, MCQ ১০) says the
+  breakers stay **চালু**, and so does the figure now.
+- **Drawing faults, all invisible to `qc.py`:**
+  - **`strip_callouts()` in dia_ch22–27:** an "above" label's leader started
+    at the text baseline, so it ran through the label's own descenders. It
+    now starts at `iy - gap + size × 0.32 + 12`. Copy this version forward.
+  - **ch28 d01_why:** the person floated above the ground and did not touch
+    the appliance, so the fault-current arrow crossed empty air. The person
+    now stands on the grade line with the left arm on the metal body. The
+    red path runs hand → shoulder → hip → foot → into the soil.
+  - **ch26 d07_bendwork:**
+    - The arc's sweep flag was wrong (`0 0 1`), so the "bend" was a kinked
+      S. It is `0 0 0` now, a smooth 90°.
+    - The former circle sat at the bend's start point; it now sits at the
+      bend centre.
+    - The spring ring crossed the cell border.
+  - **ch26 d11_loop:** the colour key sat on the switch box. **ch26
+    d12_gijoint:** the ECC label fell outside its panel.
+  - **ch24 d08_route:** "তারের লেন" was crossed by the last wire. Breakers
+    are now at a 64 px pitch, and the label sits inside the lane.
+  - **ch25 d06_spd:** "সার্জ" touched the panel chip.
+  - **ch27:**
+    - d01_room: two leaders converged on one point, and "সকেট"'s leader
+      crossed the 1220 mm dimension.
+    - d06_corner: "কোনো ফাঁক নেই" sat on the channel.
+  - **ch22 d08_curve:** a gridline ran through a label.
+  - **ch23:**
+    - d06_legend: the boxes overlapped each other; they are now staggered in
+      two rows.
+    - d13_vdrop: a label sat on the limit line.
+- **Page-foot gaps (the ones equations exposed) closed with the playbook:**
+  - **ch25:** উদাহরণ ২৫.১ question trimmed and steps merged → 43 pp, clean.
+  - **ch26:**
+    - The note box moved ahead of চিত্র d05_fill.
+    - d06_bend moved ahead of the bend-radius table.
+    - Result: 46 pp, clean.
+  - **ch27:** three moves gave 33 pp, clean:
+    - d19_fitreal moved ahead of সারণি ২৭.৫.
+    - d07_fill moved right after সারণি ২৭.৭.
+    - d21_capfit moved after §২৭.৬.৫'s first paragraph, with d14_wire last.
+  - **ch23:**
+    - The grouping tip box moved ahead of উদাহরণ ২৩.২ ("এই কারণেই" →
+      "তাই").
+    - উদাহরণ ২৩.৩: steps merged, and its note became a para after চিত্র
+      ২৩.১৬. It also had a তুমি-imperative ("দেখাও" → "যাচাই করুন").
+    - উদাহরণ ২৩.৫: steps merged, and its note became a para.
+    - উদাহরণ ২৩.৬: six step lines became three.
+    - ঘ-প্রশ্নের "বের করো/দেখাও" → "নির্ণয় করুন/দেখান".
+  - **Remaining, all pre-existing and just over the line:** ch22 p8 4.57,
+    ch23 p23 4.66, ch28 p26 4.70 cm. ch20/21/24 are clean.
+- **Pages ch20–28:** 25 / 30 / 52 / 49 / 41 / 43 / 46 / 33 / 49 (status
+  table updated; the +1s in ch20/21/23/26 came from equations rendering
+  taller). `mathguard.py` is clean on all nine.
 
 ## Open items
 
