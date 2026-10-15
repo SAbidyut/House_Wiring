@@ -166,7 +166,7 @@ def d01_parts():
         callout(s, IX + IW + 34, ly, text, tx, ty, "start")
 
     y = note_strip(s, IY + IH + 26,
-                   "স্টেটর স্থির থাকে, রোটর ঘোরে — মাঝের ফাঁকটির নাম "
+                   "স্টেটর স্থির থাকে, রোটর ঘোরে; মাঝের ফাঁকটির নাম "
                    "এয়ার গ্যাপ")
     s.fit(y, 24)
     return s.save(f"{OUT}/d01_parts.svg")
@@ -260,14 +260,14 @@ def d04_coils():
     s.text(CX - 24, CY + 10, "C", T_NODE, NAVY, 700, "end")
 
     # রানিং কয়েল — উপরের পথ, মোটা তার
-    s.path(f"M {CX} {CY} L {CX} 210", SYM, SW)
-    s.path(f"M {CX} 210 L 210 210", SYM, SW)
-    x = coil_sym(s, 210, 210, 200, 5, True, SW + 1.2)
-    s.path(f"M {x} 210 L 560 210", SYM, SW)
-    s.path("M 560 210 L 560 260", SYM, SW)
-    node(s, 560, 260)
-    s.text(560, 300, "R", T_NODE, NAVY, 700, "middle")
-    s.text(310, 168, "রানিং কয়েল", T_BODY, NAVY, 700, "middle")
+    s.path(f"M {CX} {CY} L {CX} 224", SYM, SW)
+    s.path(f"M {CX} 224 L 210 224", SYM, SW)
+    x = coil_sym(s, 210, 224, 200, 5, True, SW + 1.2)
+    s.path(f"M {x} 224 L 560 224", SYM, SW)
+    s.path("M 560 224 L 560 268", SYM, SW)
+    node(s, 560, 268)
+    s.text(560, 306, "R", T_NODE, NAVY, 700, "middle")
+    s.text(310, 186, "রানিং কয়েল", T_BODY, NAVY, 700, "middle")
 
     # স্টার্টিং কয়েল — নিচের পথ, সরু তার
     s.path(f"M {CX} {CY} L {CX} 430", SYM, SW)
@@ -370,7 +370,7 @@ def d07_dp_switch():
     node(s, MCX, MCY + MR, EARTH)
 
     y = note_strip(s, PY + PH + 26,
-                   "ডিপি সুইচ ফেজ আর নিউট্রাল — দুটোই একসঙ্গে কাটে")
+                   "ডিপি সুইচ ফেজ আর নিউট্রাল দুটিই একসঙ্গে কাটে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d07_dp_switch.svg")
 

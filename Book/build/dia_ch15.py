@@ -169,9 +169,9 @@ def d01_parts():
         s.circle(cx, cy, 7, "#FFFFFF", METAL, 2)
     # আর্থিং টার্মিনাল
     s.circle(bx + bw / 2, by + bh - 24, 9, "#CFE6D8", EARTH, 2.6)
-    callout(s, xs[0] + 300, PY + 348, "আর্থিং টার্মিনাল",
+    callout(s, xs[0] + 300, PY + 380, "আর্থিং টার্মিনাল",
             bx + bw / 2, by + bh - 24, "end", T_SMALL, EARTH)
-    s.text(xs[0] + PW / 2, PY + 108, "দেয়ালে গাঁথা", T_SMALL, GREY, 400,
+    s.text(xs[0] + PW / 2, PY + 94, "দেয়ালে গাঁথা", T_SMALL, GREY, 400,
            "middle")
 
     # ২ — ইউনিটগুলো
@@ -179,7 +179,7 @@ def d01_parts():
     kinds = ["switch", "indicator", "switch", "regulator"]
     for i, k in enumerate(kinds):
         piano_switch(s, ux + i * 68, uy, 60, 150, k)
-    s.text(xs[1] + PW / 2, PY + 108, "গ্যাং ধরে ধরে", T_SMALL, GREY, 400,
+    s.text(xs[1] + PW / 2, PY + 94, "গ্যাং ধরে ধরে", T_SMALL, GREY, 400,
            "middle")
     s.text(xs[1] + PW / 2, PY + 348, "প্রতিটি ইউনিট = ১ গ্যাং", T_SMALL,
            GREEN, 700, "middle")
@@ -194,7 +194,7 @@ def d01_parts():
                    (px0 + 16, py0 + ph0 - 16),
                    (px0 + pw0 - 16, py0 + ph0 - 16)):
         s.circle(cx, cy, 6, "#FFFFFF", PLATE_E, 2)
-    s.text(xs[2] + PW / 2, PY + 108, "স্ক্রু দিয়ে আটকানো", T_SMALL, GREY,
+    s.text(xs[2] + PW / 2, PY + 94, "স্ক্রু দিয়ে আটকানো", T_SMALL, GREY,
            400, "middle")
 
     # তিন ধাপের তির
@@ -202,8 +202,8 @@ def d01_parts():
         s.line(x0, PY + PH / 2, x0 + 48, PY + PH / 2, STEEL, 3, marker=ar)
 
     y = note_strip(s, PY + PH + 30,
-                   "ধাতব ব্যাক বক্সে আর্থিং টার্মিনাল বাধ্যতামূলক — "
-                   "বিএনবিসি ১.৩.৮.১")
+                   "ধাতব ব্যাক বক্সে আর্থিং টার্মিনাল বাধ্যতামূলক "
+                   "(BNBC ১.৩.৮.১)")
     s.fit(y, 24)
     return s.save(f"{OUT}/d01_parts.svg")
 
@@ -244,7 +244,7 @@ def d02_switch_types():
         s.text(cx, 440, use, T_SMALL, "#39434D", 400, "middle")
 
     y = note_strip(s, 96 + PH + 26,
-                   "সুইচের সর্বনিম্ন রেটিং 5A — বিএনবিসি ১.৩.৮.১")
+                   "সুইচের সর্বনিম্ন রেটিং 5A (BNBC ১.৩.৮.১)")
     s.fit(y, 24)
     return s.save(f"{OUT}/d02_switch_types.svg")
 
@@ -255,7 +255,7 @@ def d03_piano_gang():
         "d03_piano_gang", "পিয়ানো বোর্ড ও গ্যাং বোর্ড",
         ("পিয়ানো বোর্ড", "h34_piano_board.png"),
         ("গ্যাং বোর্ড", "h35_gang_board.png"),
-        "দুটোতেই ব্যাক বক্স এক, বদলায় কেবল প্লেট ও ইউনিটের ধরন",
+        "দুটিতেই ব্যাক বক্স এক, বদলায় শুধু প্লেট ও ইউনিটের ধরন",
         h=470, pw=560)
 
 
@@ -357,7 +357,7 @@ def d05_inside():
         kx += 60 + tw(lab, T_SMALL, 400) + 54
 
     y = note_strip(s, KY + 34,
-                   "নিউট্রাল সরাসরি লোডে যায়; ফেজই কেবল সুইচের ভেতর দিয়ে")
+                   "নিউট্রাল সরাসরি লোডে যায়; শুধু ফেজ যায় সুইচের ভেতর দিয়ে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d05_inside.svg")
 
@@ -413,19 +413,19 @@ def d07_gang_module():
     MY = PY + PH + 34
     s.rect(46, MY, 1148, 158, "#F7FAFC", LINE, 1.8, 12)
     s.text(70, MY + 40, "কোন ইউনিট কয় মডিউল", T_BODY, NAVY, 700)
-    items = [("সুইচ", 1, "১M"), ("সকেট", 2, "২M"), ("রেগুলেটর", 2, "২M"),
-             ("১৩A সকেট", 3, "৩M")]
+    items = [("সুইচ", 1, "1M"), ("সকেট", 2, "2M"), ("রেগুলেটর", 2, "2M"),
+             ("13A সকেট", 3, "3M")]
     ux = 96
     for name, m, lab in items:
         wdt = 26 * m + 8 * (m - 1)
         for k in range(m):
             s.rect(ux + k * 34, MY + 66, 26, 56, "#FFFFFF", STEEL, 2.2, 3)
-        s.text(ux + wdt / 2, MY + 146, f"{name} — {lab}", T_SMALL, "#39434D",
+        s.text(ux + wdt / 2, MY + 146, f"{name}: {lab}", T_SMALL, "#39434D",
                400, "middle")
-        ux += max(wdt, tw(f"{name} — {lab}", T_SMALL, 400)) + 104
+        ux += max(wdt, tw(f"{name}: {lab}", T_SMALL, 400)) + 104
 
     y = note_strip(s, MY + 182,
-                   "প্লেটের নাম মডিউলের সংখ্যায় — ২M, ৩M, ৪M, ৬M, ৮M")
+                   "প্লেটের নাম মডিউলের সংখ্যায়: 2M, 3M, 4M, 6M, 8M")
     s.fit(y, 24)
     return s.save(f"{OUT}/d07_gang_module.svg")
 
@@ -457,7 +457,7 @@ def d08_install_steps():
                    "#39434D", 400)
 
     y = note_strip(s, 106 + 2 * CH + 26 + 26,
-                   "সাপ্লাই দেওয়ার আগেই শেষ ধাপের পরীক্ষা — ব্যতিক্রম নেই",
+                   "সাপ্লাই দেওয়ার আগেই শেষ ধাপের পরীক্ষা; ব্যতিক্রম নেই",
                    fill=AMBERBG, stroke=AMBER, tcolor="#7A5200")
     s.fit(y, 24)
     return s.save(f"{OUT}/d08_install_steps.svg")

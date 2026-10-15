@@ -27,14 +27,14 @@ order *is* the book order — do not regroup chapters by theme.
 | 08 | মেজারিং ইন্সট্রুমেন্টস | 21 | ✅ delivered |
 | 09 | মাল্টিপ্লাগ সার্কিট | 18 | ✅ delivered |
 | 10 | সিরিজ বোর্ড | 18 | ✅ delivered |
-| 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 24 | ✅ delivered |
-| 12 | ফ্যান ও ফ্যান রেগুলেটর | 25 | ✅ delivered |
+| 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 26 | ✅ delivered |
+| 12 | ফ্যান ও ফ্যান রেগুলেটর | 26 | ✅ delivered |
 | 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 21 | ✅ delivered |
 | 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 31 | ✅ delivered |
 | 15 | সুইচ বোর্ড | 24 | ✅ delivered |
-| 16 | পাওয়ার ফর্মুলা ও ক্যালকুলেশন | 19 | ✅ delivered |
+| 16 | পাওয়ার ফর্মুলা ও ক্যালকুলেশন | 20 | ✅ delivered |
 | 17 | বিদ্যুৎ বিল | 19 | ✅ delivered |
-| 18 | মোটর | 26 | ✅ delivered |
+| 18 | মোটর | 27 | ✅ delivered |
 | 19 | আইপিএস ও ইউপিএস | 36 | ✅ delivered |
 | 20 | ফ্লোট সুইচ | 24 | ✅ delivered |
 | 21 | বাসবার ও বাসবার ক্যালকুলেশন | 29 | ✅ delivered |
@@ -2316,6 +2316,103 @@ re-merged.**
 - `ch01.py`: an earlier replace had turned "অস্থায়ী আর্থিং সংযোগ" into
   "ধাপক্রম" in three places (§১.৭ lists and the LOTO table). All three were
   restored.
+
+## Diagram pass over chapters 10–19, 2026-10-15
+
+User: "chapter 10 theke 19 er diagram kaj shuru koro". This was the same
+treatment as the ch1–9 pass. All 107 figures in `dia_ch10–19` were looked at.
+Every chapter's `qc.py` reports 0 problems, and the SVGs were copied into each
+`Book/অধ্যায়-NN/ডায়াগ্রাম-সোর্স (SVG)/` folder. **The full book was not
+re-merged.**
+
+- **Em-dashes in diagram text** were converted by a tokenizer script (115
+  strings across ch10–19). A short label became `X: Y`; a note-strip sentence
+  became `A; B`. About 15 results were then hand-corrected where the
+  mechanical choice read wrong.
+  - **f-strings are separate tokens in Python 3.12 and the script missed
+    them.** Grep the code for `—` after any such script; ch15's module labels
+    were caught that way.
+- **Word swaps:**
+
+  | Old | New |
+  |---|---|
+  | বর্তনী (ch12 d10, ch13 d05b) | সার্কিট |
+  | কেবল meaning "only" | শুধু |
+  | সবসময় | সব সময় |
+  | শ্রেণী | শ্রেণি |
+  | দুটো / এটা / সেটা | দুটি / এটি / সেটি |
+  | বিএনবিসি (ch14 d03/d05/d08, ch15 d01/d02, ch16 d06) | BNBC |
+  | তুমি-imperatives (ch19 "বদলাও", "দিয়ো না", "খোঁজো") | impersonal forms |
+  | লাল কাঁপছে | লাল জ্বলে-নেভে (ch19 d06 and the সারণি row in ch19.py) |
+
+- **Kalpurush ৪-as-8 in engineering figures went Latin:**
+  - ch15 d07 module sizes: 1M–8M and 13A.
+  - ch19 d09: "4.5AH … 20 ঘণ্টায় … 4.5".
+  - ch14 d04: 20 SWG.
+  - ch14 d09: "SDB: 12 ওয়ে".
+- **Note strips that ran to two lines were cut to one:** ch14 d02, d04, d05
+  and d07.
+- **Type:** ch10's `T_SMALL`/`T_BODY` were 20/21.5 px, i.e. 7.04 pt at 15.4 cm
+  and 6.88 pt for d06 at 14 cm. They are now 23/23.5.
+- **Drawing faults, all invisible to `qc.py`:**
+  - ch14 d09: the incoming feeder ran through the "SDB: ১২ ওয়ে" label. The
+    amp ratings sat between two MCB boxes, so it was unclear which breaker
+    each belonged to. The rating now leads the right-hand column
+    (`5A · 1.5 mm² · 324 W`), and rows are `GAP = 40`.
+  - ch19 d10: the parallel pair's − bus was taken from the **bottom of the
+    battery case**, although the − terminal is on top, and the + lead ran
+    into the panel chip. Both buses now leave the top terminals: + at y 170,
+    − at y 200, with a hop where d's + lead crosses the − bus.
+  - ch19 d02: the "লোড" box straddled the dashed device outline. The outline
+    was narrowed.
+  - ch19 d06: "MUTE" overflowed its button. The button is now r 30.
+  - ch15 d01: "দেয়ালে গাঁথা" sat on the box frame and the earth-terminal label
+    sat on its lower edge. Both were moved.
+  - ch12 d11: "গায়ে + বা − কিছু নেই" was stacked on the symbol caption. It
+    now points at the can's side.
+  - ch18 d04: the running-coil row was moved down, clear of the panel chip.
+  - ch10 d04: the open-circuit caption was shortened so it no longer
+    orphans "বন্ধ".
+
+**Two problems found along the way. Both affect every preview built in this
+cloud container:**
+
+1. **`libreoffice-math` was not installed.** As a result, every equation was
+   blank in every preview PDF built here, including all of 2026-10-14's
+   ch1–28 previews and the 812-page merged PDF. The space was reserved, so
+   page counts looked plausible. It is installed now
+   (`apt-get install libreoffice-math`). Once the equations actually
+   rendered, they were taller, so math-heavy chapters re-paginated:
+   - ch10: three back-to-back examples, `steps=` merged.
+   - ch14: examples ১৪.১–১৪.৩ compacted, and their `note=` moved out as
+     `b.para`.
+   - ch16: চিত্র ১৬.৬ moved before উদাহরণ ১৬.৪, and the BNBC 1.3.9.3.16 box
+     moved before উদাহরণ ১৬.৫.
+   - ch17: চিত্র ১৭.২ moved into §১৭.৪.১, and উদাহরণ ১৭.২'s note became a
+     para.
+   - ch19: উদাহরণ ১৯.১/১৯.৩ compacted, and their notes became paras.
+   **If a fresh container shows blank equations again, check
+   `dpkg -l libreoffice-math` first.**
+2. **LibreOffice prints a bracket inside an `<m:nor/>` math run as a literal
+   `\(`** (Word does not). Every `(6 × 40)` in a worked example came out as
+   `\(6 × 40\)`. The fix is in `bookkit._mrun()`: `( ) { }` are split into
+   their own runs without `<m:nor/>`. All 28 chapters were rebuilt with it.
+
+**Page counts after the rebuild, with equations rendering:** ch1–19 are
+32 23 17 21 15 14 24 22 18 · 18 26 26 21 31 24 20 19 27 36. Every one is
+clean at 4.5 cm except ch04's long-standing 4.78 cm.
+
+- **ch20–28 still show gaps that only appear now that equations render.**
+  They were not touched, because this pass covered ch10–19:
+  - ch23: 4.66 / 5.43 cm.
+  - ch25: 8.16 / 9.66 / 6.03 cm.
+  - ch26: 7.97 / 11.35 / 5.03 / 5.26 cm.
+  - ch27: 5.50 / 7.29 / 8.23 cm.
+  - ch28: 4.70 cm.
+  - ch22: 4.57 cm.
+
+  Their docx and previews in `Book/` were refreshed (equations now visible).
+  The layout fixes are owed.
 
 ## Open items
 

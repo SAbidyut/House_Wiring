@@ -18,6 +18,7 @@ from docx.opc.part import Part
 from docx.opc.packuri import PackURI
 from docx.opc.constants import RELATIONSHIP_TYPE as RT
 import os
+import re
 
 SVG_EXT_URI = "{96DAC541-7B7A-43D3-8B79-37D633B846F1}"
 ASVG_NS = "http://schemas.microsoft.com/office/drawing/2016/SVG/main"
@@ -1134,6 +1135,12 @@ def _mrun(text, italic=False, upright=False, font=BN_FONT, size=None):
     run as ordinary text — without it Word/LibreOffice inserts operator spacing
     around things like the decimal point and sets unit letters in italics.
     """
+    if upright and len(text) > 1 and any(c in text for c in "(){}"):
+        # LibreOffice's OMML import writes a bracket inside an <m:nor/> run
+        # back out as a literal "\(" (Word does not).  So each bracket gets
+        # its own run without <m:nor/>; Word renders both forms the same.
+        return "".join(_mrun(part, italic, part not in "(){}", font, size)
+                       for part in re.split(r"([(){}])", text) if part)
     props = ""
     if upright:
         props += "<m:nor/>"

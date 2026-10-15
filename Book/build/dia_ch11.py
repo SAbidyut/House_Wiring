@@ -763,7 +763,7 @@ def d01_steps():
               x0 + BW / 2, ry + GY / 2, x0 + BW / 2, ry + GY - 6),
            STEEL, 3.2, marker=ar)
     y = note_strip(s, bottom + 32,
-                   "পাঁচটি ধাপের একটিও বাদ দেওয়া চলবে না — স্ক্র্যাপিং ছাড়া "
+                   "পাঁচটি ধাপের একটিও বাদ দেওয়া চলবে না; স্ক্র্যাপিং ছাড়া "
                    "সোল্ডার ধরে না, টেপিং ছাড়া জয়েন্ট বিপজ্জনক")
     s.fit(y, 24)
     return s.save("%s/d01_steps.svg" % OUT)
@@ -787,14 +787,14 @@ def d02_skinning():
     দুই প্যানেলে একই মাপে, একদিকে মসৃণ তামা আর অন্যদিকে কাটা খাঁজ ও তা
     থেকে নামা ফাটল।"""
     s = SVG(1240, 760)
-    s.title("স্কিনিং — ছুরি ধরার সঠিক ও ভুল কোণ", T_TITLE)
+    s.title("স্কিনিং: ছুরি ধরার সঠিক ও ভুল কোণ", T_TITLE)
     PW, PH = 560, 472
     cy = 96 + 62 + 208
     INS_TH, CU_TH = 40, 24
     MR = 58                                   # বিবর্ধকের ব্যাসার্ধ
 
-    for px, col, head, ok in ((46, GREEN, "সঠিক — পেনসিল ছোলার মতো", True),
-                              (634, RED, "ভুল — তারের সঙ্গে সমকোণে", False)):
+    for px, col, head, ok in ((46, GREEN, "সঠিক: পেনসিল ছোলার মতো", True),
+                              (634, RED, "ভুল: তারের সঙ্গে সমকোণে", False)):
         panel(s, px, 96, PW, PH, head, col)
         wx0, wx1 = px + 30, px + PW - 30
         edge = px + 262                       # ইনসুলেশন যেখানে শেষ
@@ -842,14 +842,14 @@ def d02_skinning():
         magnifier(s, mx, my, MR, inner,
                   src=(tx + 46 if ok else xn, cy + CU_TH * 0.5),
                   ring=GREEN if ok else RED)
-        s.box_auto(mx, my + MR + 10, "খেই অক্ষত" if ok else "খাঁজ পড়েছে",
+        s.box_auto(mx, my + MR + 10, "খেই ঠিক আছে" if ok else "খাঁজ পড়েছে",
                    T_SMALL, fill=GREENBG if ok else REDBG,
                    stroke=GREEN if ok else RED,
                    tcolor=GREEN if ok else RED, pad_x=16, pad_y=7)
 
     y = note_strip(s, 96 + PH + 22,
                    "যতটুকু ইনসুলেশন তোলা হবে তার পুরোটাই জয়েন্টের ভেতরে "
-                   "ঢুকবে — বাইরে খালি তামা থাকা চলবে না")
+                   "ঢুকবে; বাইরে খালি তামা থাকা চলবে না")
     s.fit(y, 24)
     return s.save("%s/d02_skinning.svg" % OUT)
 
@@ -919,8 +919,8 @@ def d04_wu():
     s.title("ওয়েস্টার্ন ইউনিয়ন জয়েন্ট", T_TITLE)
     PW, PH = 372, 286
     cy = 96 + 62 + 108
-    heads = ("ক — দুই তার আড়াআড়ি", "খ — মাঝে দুই পরস্পর-পাক",
-             "গ — দুই প্রান্তে পাঁচ পাক")
+    heads = ("ক: দুই তার আড়াআড়ি", "খ: মাঝে দুই পরস্পর-পাক",
+             "গ: দুই প্রান্তে পাঁচ পাক")
     cu = 15
     for i, head in enumerate(heads):
         x = 46 + i * (PW + 16)
@@ -966,7 +966,7 @@ def d04_wu():
     wu_joint(s, 620, yb + 62 + 70, cu=30, mid_turns=2, end_turns=5,
              ins=210, bounds=(70, 1170))
     y = note_strip(s, yb + 208 + 22,
-                   "দৈর্ঘ্য বাড়ানোর সবচেয়ে প্রচলিত জয়েন্ট — টান পড়লে "
+                   "দৈর্ঘ্য বাড়ানোর সবচেয়ে প্রচলিত জয়েন্ট; টান পড়লে "
                    "জয়েন্টের আগে তারই ছেঁড়ে")
     s.fit(y, 24)
     return s.save("%s/d04_wu.svg" % OUT)
@@ -994,11 +994,11 @@ def d05_wu_ties():
         s.path("M %.1f %d L %.1f %d L %.1f %d L %.1f %d"
                % (ml, by - 11, ml, by, mr, by, mr, by - 11), RED, 3.2)
 
-    sheet(46, "লং টাই — মাঝের পাক লম্বা", STEEL, 6)
-    sheet(634, "শর্ট টাই — মাঝের পাক ছোট", GREEN, 2)
+    sheet(46, "লং টাই: মাঝের পাক লম্বা", STEEL, 6)
+    sheet(634, "শর্ট টাই: মাঝের পাক ছোট", GREEN, 2)
     y = note_strip(s, 96 + PH + 22,
                    "লং টাইয়ে সোল্ডার ভেতরে ভালো ঢোকে, শর্ট টাই জায়গা কম "
-                   "নেয় — কন্ডুইটের ভেতরে সুবিধা")
+                   "নেয়; কন্ডুইটের ভেতরে সুবিধা")
     s.fit(y, 24)
     return s.save("%s/d05_wu_ties.svg" % OUT)
 
@@ -1013,8 +1013,8 @@ def d09_britannia():
     s.title("ব্রিটানিয়া জয়েন্ট", T_TITLE)
     PW, PH = 1148, 196
     for k, (bound, head, col) in enumerate((
-            (False, "ধাপ ১ — দুই তার পাশাপাশি, ডগা সমকোণে ভাঁজ", STEEL),
-            (True, "ধাপ ২ — সরু বাঁধন-তার মাঝ থেকে দুই দিকে", GREEN))):
+            (False, "ধাপ ১: দুই তার পাশাপাশি, ডগা সমকোণে ভাঁজ", STEEL),
+            (True, "ধাপ ২: সরু বাঁধন-তার মাঝ থেকে দুই দিকে", GREEN))):
         py = 96 + k * (PH + 20)
         panel(s, 46, py, PW, PH, head, col)
         britannia(s, 620, py + 62 + 66, cu=20, bind=10, bound=bound,
@@ -1029,10 +1029,10 @@ def d09_britannia():
 def d10_married():
     """ম্যারিড বা টেপার জয়েন্ট — চার ধাপ।"""
     s = SVG(1240, 720)
-    s.title("ম্যারিড জয়েন্ট — বহু খেইয়ের তারের স্প্লাইস", T_TITLE)
+    s.title("ম্যারিড জয়েন্ট: বহু খেইয়ের তারের স্প্লাইস", T_TITLE)
     PW, PH = 560, 216
-    heads = ["ক — খেই ছড়ানো", "খ — খেই পরস্পরের ফাঁকে গাঁথা",
-             "গ — এক পাশ জড়ানো", "ঘ — সম্পূর্ণ জয়েন্ট"]
+    heads = ["ক: খেই ছড়ানো", "খ: খেই পরস্পরের ফাঁকে গাঁথা",
+             "গ: এক পাশ জড়ানো", "ঘ: সম্পূর্ণ জয়েন্ট"]
     for i, head in enumerate(heads):
         r, c = divmod(i, 2)
         x = 46 + c * (PW + 28)
@@ -1057,7 +1057,7 @@ def d07_tee():
     cy = 96 + 62 + 32
     for i, (head, kn, col) in enumerate((
             ("সাধারণ ট্যাপ", False, STEEL),
-            ("নটেড ট্যাপ — টান পড়ার জায়গায়", True, GREEN))):
+            ("নটেড ট্যাপ: টান পড়ার জায়গায়", True, GREEN))):
         x = 46 + i * (PW + 28)
         panel(s, x, 96, PW, PH, head, col)
         tap_joint(s, x + PW / 2, cy, cu=18, turns=6, knot=kn, drop=112,
@@ -1066,7 +1066,7 @@ def d07_tee():
 
     yb = 96 + PH + 20
     PH2 = 230
-    panel(s, 46, yb, 1148, PH2, "বহু খেইয়ের তারে ট্যাপ — খেই দুই ভাগ",
+    panel(s, 46, yb, 1148, PH2, "বহু খেইয়ের তারে ট্যাপ: খেই দুই ভাগ",
           NAVY)
     cy2 = yb + 62 + 40
     cu, st = 22, 7
@@ -1101,7 +1101,7 @@ def d07_tee():
 
     wound_multi(s, core, *segs)
     y = note_strip(s, yb + PH2 + 22,
-                   "মূল লাইন না কেটে শাখা নেওয়ার জয়েন্ট — টান পড়ার জায়গায় "
+                   "মূল লাইন না কেটে শাখা নেওয়ার জয়েন্ট; টান পড়ার জায়গায় "
                    "নট দিতে হয়")
     s.fit(y, 24)
     return s.save("%s/d07_tee.svg" % OUT)
@@ -1121,7 +1121,7 @@ def d08_cross():
                     ins=76, tail=40, bounds=(x + 22, x + PW - 22),
                     ybounds=(96 + 62, 96 + PH - 6))
     y = note_strip(s, 96 + PH + 22,
-                   "একই বিন্দু থেকে দুই দিকে শাখা — দুই পাশে সমান পাক দিতে "
+                   "একই বিন্দু থেকে দুই দিকে শাখা; দুই পাশে সমান পাক দিতে "
                    "হয়")
     s.fit(y, 24)
     return s.save("%s/d08_cross.svg" % OUT)
@@ -1135,7 +1135,7 @@ def d06_pigtail():
     s = SVG(1240, 560)
     s.title("পিগটেল বা র‍্যাট-টেইল জয়েন্ট", T_TITLE)
     PW, PH = 372, 300
-    img_panel(s, 46, 96, PW, PH, "আসল ছবি — বক্সে তিনটি জোড়া",
+    img_panel(s, 46, 96, PW, PH, "আসল ছবি: বক্সে তিনটি জোড়া",
               "%s/ph_pig_real.jpg" % IMG, GREEN)
     img_panel(s, 46 + PW + 16, 96, PW, PH, "উপরে কানেক্টর ক্যাপ",
               "%s/ph_pig_nut.jpg" % IMG, GREEN)
@@ -1143,7 +1143,7 @@ def d06_pigtail():
     panel(s, x, 96, PW, PH, "আঁকা রূপ", STEEL)
     pigtail(s, x + PW / 2, 96 + PH - 58, 158, turns=6, cu=17, spread=112)
     y = note_strip(s, 96 + PH + 22,
-                   "জংশন বা আউটলেট বক্সের ভেতরে চলে — টান পড়ে এমন জায়গায় নয়")
+                   "জংশন বা আউটলেট বক্সের ভেতরে চলে; টান পড়ে এমন জায়গায় নয়")
     s.fit(y, 24)
     return s.save("%s/d06_pigtail.svg" % OUT)
 
@@ -1154,8 +1154,8 @@ def d11_fixture():
     s.title("ফিক্সচার জয়েন্ট ও স্ট্যাগার্ড (staggered) জয়েন্ট", T_TITLE)
     PW, PH = 560, 190
     cy = 96 + 62 + 62
-    for i, (head, fold) in enumerate((("১ — সরু তার মোটা তারে জড়ানো", False),
-                                      ("২ — মোটা তারের ডগা ভাঁজ", True))):
+    for i, (head, fold) in enumerate((("১: সরু তার মোটা তারে জড়ানো", False),
+                                      ("২: মোটা তারের ডগা ভাঁজ", True))):
         x = 46 + i * (PW + 28)
         panel(s, x, 96, PW, PH, head, STEEL)
         fixture_joint(s, x + PW / 2 - 24, cy, folded=fold, big=25, small=12,
@@ -1264,7 +1264,7 @@ def d13_solder_steps():
               x0 + BW / 2, ry + GY / 2, x0 + BW / 2, ry + GY - 6),
            STEEL, 3.2, marker=ar)
     y = note_strip(s, bottom + 32,
-                   "সোল্ডার গলবে জয়েন্টের তাপে — বিটের গায়ে গলিয়ে ফোঁটা "
+                   "সোল্ডার গলবে জয়েন্টের তাপে; বিটের গায়ে গলিয়ে ফোঁটা "
                    "ফেললে ঠান্ডা জোড়া (dry joint) হয়",
                    fill=AMBERBG, stroke=AMBER, tcolor="#7A5200")
     s.fit(y, 24)
@@ -1281,7 +1281,7 @@ def d14_taping():
     s = SVG(1240, 740)
     s.title("জয়েন্টে টেপ পেঁচানোর নিয়ম", T_TITLE)
     PW, PH = 372, 214
-    cases = [("১ — শুরু", 0.24), ("২ — হাফ-ল্যাপ", 0.66), ("৩ — শেষ", 1.0)]
+    cases = [("১: শুরু", 0.24), ("২: হাফ-ল্যাপ", 0.66), ("৩: শেষ", 1.0)]
     cy = 96 + 62 + 66
     band, cu = 27, 15
     for i, (head, frac) in enumerate(cases):
@@ -1305,7 +1305,7 @@ def d14_taping():
     yb = 96 + PH + 22
     bullets = [
         "টেপ শুরু ও শেষ হবে তারের ইনসুলেশনের উপরে, অন্তত ২৫ মিমি ছাড়িয়ে;",
-        "প্রতিটি পাক আগের পাকের অর্ধেক ঢেকে দেবে — একেই হাফ-ল্যাপ বলে;",
+        "প্রতিটি পাক আগের পাকের অর্ধেক ঢেকে দেবে, একেই হাফ-ল্যাপ বলে;",
         "টেপ হালকা টান দিয়ে পেঁচাতে হবে, ঢিলা টেপ খুলে যায়;",
         "টেপের মোট পুরুত্ব তারের নিজস্ব ইনসুলেশনের চেয়ে কম হবে না।",
     ]

@@ -233,7 +233,7 @@ def d02_block():
     arg = s.arrow_defs(GREEN, "arg", 15)
 
     # যন্ত্রের খোলস
-    s.rect(196, 118, 848, 372, "#F7FAFD", STEEL, 3, 16, dash="10 7")
+    s.rect(196, 118, 824, 372, "#F7FAFD", STEEL, 3, 16, dash="10 7")
     s.text(620, 152, "যন্ত্রের ভেতরে", T_SMALL, GREY, 700, "middle")
 
     # উপরের সারি — চার্জার ও ব্যাটারি
@@ -276,7 +276,7 @@ def d02_block():
     state(652, "মেইন নেই", "ব্যাটারি → ইনভার্টার → লোড",
           "চেঞ্জওভার ইনভার্টারের দিকে", AMBER, AMBERBG)
 
-    y = note_strip(s, 800, "মেইন কাটলে চেঞ্জওভার সুইচ দিক বদলায় — "
+    y = note_strip(s, 800, "মেইন কাটলে চেঞ্জওভার সুইচ দিক বদলায়; "
                            "এটুকু সময়ই ট্রান্সফার টাইম")
     s.fit(y, 24)
     return s.save(f"{OUT}/d02_block.svg")
@@ -442,7 +442,7 @@ def d05_nameplate():
                ("ইনপুট সকেট", 0.90, 0.535),
                ("ফিউজ ড্রয়ার", 0.90, 0.635),
                ("মডেল নম্বর", 0.86, 0.82)],
-        note="300 W ও 500 VA — দুটোই লেখা; ভাগ করলে পাওয়ার ফ্যাক্টর ০.৬",
+        note="300 W ও 500 VA দুটিই লেখা; ভাগ করলে পাওয়ার ফ্যাক্টর ০.৬",
         iw=436)
 
 
@@ -488,7 +488,7 @@ def d06_display():
     # সুইচ ও অ্যালার্ম
     s.circle(PX + 148, PY + 396, 22, "#FFFFFF", GREY, 3)
     s.text(PX + 148, PY + 396 + 6, "I/O", T_TINY, GREY, 700, "middle")
-    s.circle(PX + PW - 148, PY + 396, 22, "#FFFFFF", GREY, 3)
+    s.circle(PX + PW - 148, PY + 396, 30, "#FFFFFF", GREY, 3)
     s.text(PX + PW - 148, PY + 396 + 6, "MUTE", 14, GREY, 700, "middle")
 
     # ডান-বাঁ লেবেল।  লিডারের ডগা এলসিডির লেখার গায়ে নয়, তার পাশে —
@@ -509,7 +509,7 @@ def d06_display():
     meanings = [("সবুজ", "মেইনে চলছে", GREEN),
                 ("হলুদ", "ব্যাটারিতে চলছে", AMBER),
                 ("লাল জ্বলছে", "ওভারলোড", RED),
-                ("লাল কাঁপছে", "ব্যাটারি দুর্বল", RED)]
+                ("লাল জ্বলে-নেভে", "ব্যাটারি দুর্বল", RED)]
     for i, (c, m, col) in enumerate(meanings):
         cx = 176 + i * 296
         s.circle(cx - 108, 700, 13, col, col, 2)
@@ -527,9 +527,9 @@ def d07_leds():
         left=[("মেইনে চলছে", 0.38, 0.083),
               ("ব্যাটারিতে চলছে", 0.38, 0.187)],
         right=[("ওভারলোড", 0.59, 0.288),
-               ("ব্যাটারি বদলাও", 0.58, 0.388),
+               ("ব্যাটারি বদলানো দরকার", 0.58, 0.388),
                ("চালু-বন্ধ বোতাম", 0.545, 0.555)],
-        note="চারটি বাতির একটিও লাল হলে যন্ত্র ছুঁয়ে দেখার আগে কারণ খোঁজো",
+        note="চারটি বাতির একটিও লাল হলে যন্ত্র ছোঁয়ার আগে কারণ খুঁজতে হবে",
         iw=392)
 
 
@@ -540,7 +540,7 @@ def d08_batt_types():
         [("টল টিউবুলার", "ph_tubular.jpg"),
          ("SMF বা AGM", "ph_batt_smf.jpg"),
          ("ছোট SLA", "ph_batt_drawer.jpg")],
-        "টিউবুলারে পানি দিতে হয়, SMF-এ হয় না — দাম ও আয়ুও আলাদা",
+        "টিউবুলারে পানি দিতে হয়, SMF-এ হয় না; দাম ও আয়ুও আলাদা",
         pw=376)
 
 
@@ -555,7 +555,7 @@ def d09_batt_label():
                ("ভোল্ট ও AH", 0.84, 0.555),
                ("ব্যাটারির ধরন", 0.84, 0.655),
                ("পুনর্ব্যবহার চিহ্ন", 0.85, 0.755)],
-        note="4.5AH/20HR মানে ২০ ঘণ্টায় নিঃশেষ করলে ৪.৫ অ্যাম্পিয়ার-আওয়ার",
+        note="4.5AH/20HR মানে 20 ঘণ্টায় নিঃশেষ করলে 4.5 অ্যাম্পিয়ার-আওয়ার",
         iw=452)
 
 
@@ -564,7 +564,7 @@ def d10_series_parallel():
     s = SVG(1240, 720)
     s.title("ব্যাটারির সিরিজ ও প্যারালাল সংযোগ", T_TITLE)
 
-    def cell(x, y, w=176, h=104, label="12 V"):
+    def cell(x, y, w=176, h=104, label="12 V", signs=True):
         s.rect(x, y, w, h, "#FFFFFF", NAVY, 3, 9)
         s.rect(x, y, w, 26, "#DCE6F0", NAVY, 2, 9)
         s.text(x + w / 2, y + h / 2 + 22, label, T_NAME, NAVY, 700, "middle")
@@ -572,8 +572,9 @@ def d10_series_parallel():
         # প্রান্ত থেকে ওঠা তারটাই চিহ্নের উপর দিয়ে যায়
         s.rect(x + 22, y - 15, 26, 16, RED, RED, 1.5, 3)
         s.rect(x + w - 48, y - 15, 26, 16, NEUT, NEUT, 1.5, 3)
-        s.text(x + 10, y - 22, "+", T_SMALL, RED, 700, "middle")
-        s.text(x + w - 10, y - 22, "−", T_SMALL, NEUT, 700, "middle")
+        if signs:
+            s.text(x + 10, y - 22, "+", T_SMALL, RED, 700, "middle")
+            s.text(x + w - 10, y - 22, "−", T_SMALL, NEUT, 700, "middle")
         return x + 35, x + w - 35            # + ও − প্রান্তের x
 
     # ── বাঁ পাশ: সিরিজ ─────────────────────────────────────────────
@@ -600,26 +601,28 @@ def d10_series_parallel():
     s.box_auto(918, 108, "প্যারালাল", T_BODY, fill=GREEN, stroke=GREEN,
                tcolor="#FFFFFF", pad_x=24, pad_y=9)
 
-    cp, cn = cell(708, 236, label="100 AH")
-    dp, dn = cell(918, 236, label="100 AH")
-    # দুটি স্বাধীন বাস — + এক বাসে, − আরেক বাসে
-    s.path(f"M {cp} 221 L {cp} 186 L {dp} 186", RED, SW)
-    s.path(f"M {dp} 221 L {dp} 186", RED, SW)
-    s.path(f"M {cn} 348 L {cn} 372 L {dn} 372", NEUT, SW)
-    s.path(f"M {dn} 348 L {dn} 372", NEUT, SW)
-    node(s, dp, 186, RED)
-    node(s, cn, 372, NEUT)
-    s.path(f"M {(cp + dp) / 2} 186 L {(cp + dp) / 2} 152", RED, SW)
-    s.text((cp + dp) / 2, 140, "+", T_NODE, RED, 700, "middle")
-    s.path(f"M {(cn + dn) / 2} 372 L {(cn + dn) / 2} 404", NEUT, SW)
-    s.text((cn + dn) / 2, 428, "−", T_NODE, NEUT, 700, "middle")
+    cp, cn = cell(708, 236, label="100 AH", signs=False)
+    dp, dn = cell(918, 236, label="100 AH", signs=False)
+    # দুটি স্বাধীন বাস, দুটিই প্রান্তের উপরে: + বাস উপরে (170), − বাস
+    # তার নিচে (200)।  আগে − বাস ব্যাটারির তলা থেকে নেওয়া হতো, অথচ −
+    # প্রান্ত উপরে; d-এর + তার − বাস পেরোয় একটি হপ দিয়ে।
+    s.path(f"M {cn} 221 L {cn} 200 L {dn} 200 L {dn} 221", NEUT, SW)
+    s.path(f"M {cp} 221 L {cp} 170 L {dp} 170", RED, SW)
+    s.path(f"M {dp} 221 L {dp} 210 A 10 10 0 0 1 {dp} 190 L {dp} 170",
+           RED, SW)
+    node(s, cp, 170, RED)
+    node(s, dn, 200, NEUT)
+    s.path(f"M {cp} 170 L {cp} 146", RED, SW)
+    s.text(cp - 22, 158, "+", T_NODE, RED, 700, "middle")
+    s.path(f"M {dn} 200 L {dn} 146", NEUT, SW)
+    s.text(dn + 22, 158, "−", T_NODE, NEUT, 700, "middle")
 
     s.text(918, 462, "100 AH + 100 AH = 200 AH", T_NAME, GREEN, 700,
            "middle")
     s.text(918, 500, "ভোল্টেজ একই থাকে", T_BODY, GREY, 400, "middle")
 
     y = note_strip(s, 548, "একই ক্ষমতার, একই বয়সের, একই ব্র্যান্ডের "
-                           "ব্যাটারি ছাড়া জোড়া দিয়ো না")
+                           "ব্যাটারি ছাড়া জোড়া দেওয়া যাবে না")
     s.fit(y, 24)
     return s.save(f"{OUT}/d10_series_parallel.svg")
 
@@ -691,7 +694,7 @@ def d11_connect():
         s.path(f"M {cx} 690 L {cx} 729", NAVY, 2.8)
         blk(s, cx, 760, nm, 170, 62, "#FFFFFF", STEEL, T_BODY, STEEL)
 
-    y = note_strip(s, 828, "আইপিএসের লাইন আলাদা DB-তে — এসি, ফ্রিজ ও পাম্প "
+    y = note_strip(s, 828, "আইপিএসের লাইন আলাদা DB-তে; এসি, ফ্রিজ ও পাম্প "
                            "কখনো ওতে নয়")
     s.fit(y, 24)
     return s.save(f"{OUT}/d11_connect.svg")
@@ -710,7 +713,7 @@ def d12_sockets():
         right=[("মডেল রেটিং", 0.78, 0.360),
                ("ব্যাকআপ সকেট", 0.66, 0.580),
                ("শুধু সার্জ", 0.62, 0.845)],
-        note="নিচের সকেটটি ব্যাটারিতে চলে না — প্রিন্টার ওখানেই লাগাতে হয়",
+        note="নিচের সকেটটি ব্যাটারিতে চলে না; প্রিন্টার ওখানেই লাগাতে হয়",
         iw=404)
 
 
@@ -751,7 +754,7 @@ def d13_flow():
         s.text(cx, 458, v, T_NODE, NAVY, 700, "middle")
         s.text(cx, 500, k, T_TINY, GREY, 400, "middle")
 
-    y = note_strip(s, 582, "প্রথমে লোড, তারপর VA, তারপর AH — ক্রম উল্টালে "
+    y = note_strip(s, 582, "প্রথমে লোড, তারপর VA, তারপর AH; ক্রম উল্টালে "
                            "হিসাব মেলে না")
     s.fit(y, 24)
     return s.save(f"{OUT}/d13_flow.svg")
@@ -803,7 +806,7 @@ def d14_ips_plate():
         callout(s, PX + PW + 42, ty, text, PX + PW, ty, "start", T_CALL)
 
     y = note_strip(s, PY + PH + 32,
-                   "960 W / 1200 VA — ভাগ করলে পাওয়ার ফ্যাক্টর ০.৮")
+                   "960 W / 1200 VA; ভাগ করলে পাওয়ার ফ্যাক্টর ০.৮")
     s.fit(y, 24)
     return s.save(f"{OUT}/d14_ips_plate.svg")
 
