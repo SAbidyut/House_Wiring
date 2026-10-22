@@ -26,3 +26,7 @@ k/
 
 # --- render.py scratch wrappers ---
 *.__r.html
+
+# --- Slides: regenerable caches (diagram PNGs, prepped images, math, QR, thumbnails, previews) ---
+Slides/build/.cache/
+Slides/build/__pycache__/
