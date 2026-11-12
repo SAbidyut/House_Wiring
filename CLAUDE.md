@@ -18,7 +18,7 @@ order *is* the book order — do not regroup chapters by theme.
 | Chapter | Title | Pages | State |
 |---|---|---|---|
 | 01 | কর্মক্ষেত্রে নিরাপত্তা | 33 | ✅ delivered |
-| 02 | ইলেকট্রিক্যাল টুলস | 23 | ✅ delivered |
+| 02 | ইলেকট্রিক্যাল টুলস | 24 | ✅ delivered |
 | 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 17 | ✅ delivered |
 | 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 21 | ✅ delivered |
 | 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 15 | ✅ delivered |
@@ -2555,8 +2555,61 @@ above 3 cm.** What was wrong and is fixed; do not revert:
 - Layout fixes, all reorderings: চিত্র ১.৪ before সারণি ১.৫; চিত্র ১.৭ before
   the five-rule list; চিত্র ১.৯ at the end of §১.৮ (the first paragraph now
   cites it); চিত্র ১.২ stays after §১.৩.২'s first paragraph.
-- **Not pushed.** Committed locally on `ccr-3582eca2-jho6kv`; the push waits
-  for the user's go-ahead (the standing "ask before pushing" rule).
+- **Not pushed.** Committed locally on `ccr-3582eca2-jho6kv`; `git push` was
+  denied twice by the permission classifier even after the stop hook asked
+  for it. Do not work around it; the user has to say "push" (or add a Bash
+  permission rule). Chapter 2's commit is in the same state.
+
+**Chapter 2 — done 2026-11-12, 23 → 24 pp, 15 figures / 13 tables, no gap
+above 3 cm, no orphan caption.** What was wrong and is fixed; do not revert:
+- **চিত্র ২.১৪ (`d05_drill_zones`) contradicted the text.** The prose (and
+  BS 7671 522.6.202) say zone ৩ runs **both** vertically and horizontally from
+  every switch and socket; the figure coloured only the switch's vertical and
+  the socket's horizontal band, and labelled a permitted strip "এখানে ক্যাবল
+  নয়". All four bands are green now. Also fixed there: the right-hand cable
+  **dead-ended in mid-wall** (it now comes from the ceiling); "সকেট" sat on
+  its own cable (label moved to the other side); both ১৫০ মিমি dimensions sit
+  where no cable runs; the in-wall labels became two legend entries (legend is
+  2 × 2); the three side cards lost ~30 px of dead foot each. The zone fills
+  are raw `s.add()` rects — as `s.rect()` their invisible inner edges were
+  scored against the dimension labels.
+- **চিত্র ২.২ (`d01_screwdriver`)**: the handle was a stubby half-dome shorter
+  than the ferrule is wide; it is a full barrel handle now (the shape চিত্র
+  ২.১২ already used). Labels say **হাতল**, like the prose, not হ্যান্ডেল.
+- `d04`: header drawn as one path (two pale notches at its lower corners are
+  gone); class III reads "৫০ V AC পর্যন্ত". `d02`: "উৎস শনাক্তকরণ" /
+  "মেয়াদ ও ট্রেসেবিলিটি" → plain Bangla.
+- **`assets/ch02/measuring_tape.png` was mirrored** (KOMELON / 8m/26' printed
+  backwards). Flipped back in place.
+- **Class examples in সারণি ২.১০ were wrong**: "ড্রিল মেশিন" under class I
+  (most drills are class II, as the figure itself says) and "কর্ডলেস ড্রাইভার"
+  under class II (battery tool → class III). Now ধাতব বডির ড্রিল / প্লাস্টিক
+  বডির ড্রিল ও গ্রাইন্ডার / কর্ডলেস ড্রাইভার.
+- **The ভোল্টেজ ডিটেক্টর photo is a non-contact pen**, listed among পাওয়ার
+  টুলস. The row now says it is a battery test instrument, must be proved on a
+  live line first, and cannot prove a line dead either.
+- **Promised, never delivered:** the সারসংক্ষেপ and প্রশ্ন খ.৬ rely on *why* a
+  nicked conductor is bad, and the body had only the figure — paragraph added
+  in §২.৩.২. The screwdriver-size rule was only in the artwork — now in §২.৩.১.
+  §২.২ names four classes of tool; it now says where the other two are
+  treated (অধ্যায় ১ and ৮).
+- **The starter kit had nothing that can prove a line dead** — row ৩ is a
+  টু-পোল ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার (17 rows now).
+- §২.৩.৪–২.৩.৭ and §২.৭ each opened on a picture under the heading; each has
+  one opening sentence now. Cold-chisel row: a mushroomed head is ground, not
+  "replaced when cracked". ৯০° → ৯০ ডিগ্রি and ≤ → words (neither glyph is in
+  Kalpurush). BNBC ১.৩.১১.২ cited for vertical/horizontal-only runs.
+  One bullet on fully unwinding an extension reel. কেবল → শুধু, ঘূর্ণায়মান →
+  ঘুরন্ত, দ্বৈত ত্রিভুজ → দুই ত্রিভুজ, সর্বদা → সব সময়.
+- **Layout:** চিত্র ২.১৪ now follows §২.৬.২'s first paragraph (it could not fit
+  after the tip box: 9.87 cm gap). **চিত্র ২.১১'s caption had orphaned onto the
+  next page** — `figure_row()` has no keep-with-caption rule. Closed here by
+  trimming one line from the ওয়ার্ক লাইট cell; `bookkit` was deliberately
+  not changed (it would re-paginate chapters not yet re-checked).
+- **New check, run it on every chapter from now on:** a page that *opens* on
+  "চিত্র N.M:" has lost its picture to the page before. `layout.py` cannot
+  see it. The scratch script walks each page's text blocks and image rects.
+
 
 ## Open items
 

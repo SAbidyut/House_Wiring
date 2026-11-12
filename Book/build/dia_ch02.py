@@ -61,44 +61,53 @@ def part_label(s, tx, ty, cx, top, name, sub, max_w=280, size=T_SMALL,
 
 # ═══════════════════════════════════════════════════════════════════════
 def d01_screwdriver():
-    """Anatomy of a screwdriver — the parts a trainee must be able to name."""
+    """Anatomy of a screwdriver — the parts a trainee must be able to name.
+
+    The handle used to be a stubby half-dome, shorter than the ferrule was
+    wide, so the tool read as a mushroom on a stick.  It is a full barrel
+    handle now, the same shape চিত্র ২.১২ prints its markings on.
+    """
     s = SVG(1200, 620)
     s.title("স্ক্রু ড্রাইভারের বিভিন্ন অংশ", T_TITLE)
 
-    cy = 330
-    # handle
-    s.path(f"M 250 {cy-58:.1f} Q 168 {cy-58:.1f} 168 {cy:.1f} "
-           f"Q 168 {cy+58:.1f} 250 {cy+58:.1f} Z", "#B8500C", 2, "#F07818")
-    for i in range(5):
-        s.path(f"M {196+i*13} {cy-52:.1f} L {196+i*13} {cy+52:.1f}",
-               "#C25A10", 4.5)
-    s.rect(248, cy - 30, 46, 60, "#3A4750", "#222C33", 2, 8)      # ferrule
-    # shaft
-    s.rect(292, cy - 13, 470, 26, "#C6CDD4", "#8B949C", 2, 4)
-    s.rect(292, cy - 13, 470, 9, "#E4E9ED", "none", 0, 2)
-    # insulated sleeve on the shaft
-    s.rect(292, cy - 17, 300, 34, "#E8352A", "#A8231A", 2, 7)
-    s.rect(292, cy - 17, 300, 11, "#F26A60", "none", 0, 3)
-    # tip
-    s.poly([(762, cy - 13), (826, cy - 7), (826, cy + 7), (762, cy + 13)],
+    cy, X = 330, 110                 # X = left end of the handle
+    # handle: round at the butt, flatter towards the ferrule
+    s.path(f"M {X+226} {cy-32:.1f} Q {X+204} {cy-52:.1f} {X+112} {cy-54:.1f} "
+           f"Q {X+10} {cy-55:.1f} {X+2} {cy-28:.1f} Q {X-4} {cy:.1f} {X+2} {cy+28:.1f} "
+           f"Q {X+10} {cy+55:.1f} {X+112} {cy+54:.1f} "
+           f"Q {X+204} {cy+52:.1f} {X+226} {cy+32:.1f} Z",
+           "#B8500C", 2.4, "#F07818")
+    s.path(f"M {X+74} {cy-41:.1f} Q {X+140} {cy-45:.1f} {X+206} {cy-31:.1f}",
+           "#FBA65C", 9)
+    for i in range(4):                                             # grip grooves
+        s.path(f"M {X+16+i*14} {cy-43:.1f} Q {X+10+i*14} {cy:.1f} "
+               f"{X+16+i*14} {cy+43:.1f}", "#C25A10", 4.5)
+    s.rect(X + 222, cy - 26, 46, 52, "#3A4750", "#222C33", 2, 8)   # ferrule
+    SX = X + 266                                                   # shaft start
+    s.rect(SX, cy - 13, 470, 26, "#C6CDD4", "#8B949C", 2, 4)
+    s.rect(SX, cy - 13, 470, 9, "#E4E9ED", "none", 0, 2)
+    s.rect(SX, cy - 17, 300, 34, "#E8352A", "#A8231A", 2, 7)       # insulated sleeve
+    s.rect(SX, cy - 17, 300, 11, "#F26A60", "none", 0, 3)
+    TX = SX + 470                                                  # tip start
+    s.poly([(TX, cy - 13), (TX + 64, cy - 7), (TX + 64, cy + 7), (TX, cy + 13)],
            "#9AA3AB", "#6E767D", 2)
-    s.poly([(826, cy - 7), (858, cy - 3), (858, cy + 3), (826, cy + 7)],
+    s.poly([(TX + 64, cy - 7), (TX + 96, cy - 3), (TX + 96, cy + 3), (TX + 64, cy + 7)],
            "#7C858D", "#5A6167", 2)
 
     # ── উপরে তিনটি, নিচে তিনটি — লিডার লেখার গা ঘেঁষে থামে, ভেতর দিয়ে যায় না
     LS = 25                          # part names; sub-lines print at LS − 2
-    part_label(s, 200, cy - 58, 176, 132, "হ্যান্ডেল",
+    part_label(s, X + 130, cy - 54, 236, 132, "হাতল",
                "ইনসুলেটেড প্লাস্টিক বা রাবার, হাত নিরাপদ রাখে", 270, LS)
-    part_label(s, 440, cy - 17, 566, 132, "ইনসুলেটেড স্লিভ",
+    part_label(s, SX + 150, cy - 17, 600, 132, "ইনসুলেটেড স্লিভ",
                "১০০০ V পর্যন্ত ইনসুলেশন (IEC 60900)", 380, LS)
-    part_label(s, 690, cy - 13, 952, 132, "শ্যাফট বা ব্লেড",
+    part_label(s, SX + 390, cy - 13, 962, 132, "শ্যাফট বা ব্লেড",
                "শক্ত ইস্পাতের দণ্ড", 270, LS)
 
-    part_label(s, 200, cy + 58, 176, 446, "গ্রিপ খাঁজ",
+    part_label(s, X + 36, cy + 44, 200, 446, "গ্রিপ খাঁজ",
                "হাত পিছলে যেতে দেয় না", 270, LS, above=False)
-    part_label(s, 271, cy + 30, 524, 446, "ফেরুল",
-               "হ্যান্ডেল ও শ্যাফট আটকে রাখে", 270, LS, above=False)
-    part_label(s, 845, cy + 3, 946, 446, "টিপ",
+    part_label(s, X + 245, cy + 26, 520, 446, "ফেরুল",
+               "হাতল ও শ্যাফট আটকে রাখে", 270, LS, above=False)
+    part_label(s, TX + 84, cy + 4, 962, 446, "টিপ",
                "স্ক্রুর খাঁজে বসে; ফ্ল্যাট বা স্টার", 270, LS, above=False)
 
     s.rect(40, 548, 1120, 72, "#EAF2FA", STEEL, 2, 11)
@@ -164,8 +173,8 @@ def d02_iec60900_marking():
     rows = [("দুই ত্রিভুজ", "লাইভ লাইনে ব্যবহারের উপযোগী", GREEN),
             ("1000 V", "১০০০ V AC / ১৫০০ V DC পর্যন্ত অনুমোদিত", STEEL),
             ("IEC 60900", "যে মান অনুসারে পরীক্ষা করা হয়েছে", STEEL),
-            ("প্রস্তুতকারকের নাম", "উৎস শনাক্তকরণ", GREY),
-            ("তৈরির সন", "মেয়াদ ও ট্রেসেবিলিটি", GREY)]
+            ("প্রস্তুতকারকের নাম", "কে তৈরি করেছে, তা জানা যায়", GREY),
+            ("তৈরির সন", "টুলটি কত পুরোনো, তা জানা যায়", GREY)]
     x0, y0, w = 664, 118, 496
     s.rect(x0, y0, w, 46, NAVY, NAVY, 2, 10)
     s.text(x0 + w / 2, y0 + 31, "গায়ে যা যা লেখা থাকবে", T_NAME, "#FFFFFF", 700, "middle")
@@ -354,7 +363,7 @@ def d04_protection_class():
          "দুই স্তরের ইনসুলেশন থাকে, আর্থিং লাগে না। বেশির ভাগ পাওয়ার টুল এই শ্রেণির।",
          GREEN, GREENBG),
         ("ক্লাস III", "অতি নিম্ন ভোল্টেজ",
-         "SELV উৎসে চলে (৫০ V AC-এর নিচে)। শকের ঝুঁকি নেই বললেই চলে।",
+         "SELV উৎসে চলে (৫০ V AC পর্যন্ত)। শকের ঝুঁকি নেই বললেই চলে।",
          AMBER, AMBERBG),
     ]
     cw, gapx = 356, 26
@@ -362,8 +371,9 @@ def d04_protection_class():
     for i, (name, sub, desc, col, bg) in enumerate(cards):
         x = x0 + i * (cw + gapx)
         s.rect(x, 96, cw, 330, bg, col, 2, 13)
-        s.rect(x, 96, cw, 60, col, col, 2, 13)
-        s.rect(x + 1, 146, cw - 2, 10, col, "none", 0, 0)
+        # header as ONE shape — round on top, square where it meets the body
+        s.path(f"M {x} 156 L {x} 109 Q {x} 96 {x+13} 96 L {x+cw-13} 96 "
+               f"Q {x+cw} 96 {x+cw} 109 L {x+cw} 156 Z", col, 2, col)
         s.text(x + cw / 2, 138, name, T_NAME, "#FFFFFF", 700, "middle")
         cx, cy = x + cw / 2, 232
         if i == 0:   # earth symbol
@@ -391,8 +401,11 @@ def d04_protection_class():
 def d05_drill_zones():
     """দেয়ালের ভেতরে ক্যাবল কোন অঞ্চলে থাকতে পারে — অর্থাৎ কোথায় ড্রিল নয়।
 
-    ১৫০ মিমি মাপ ও তিনটি অঞ্চলের সংজ্ঞা BS 7671-এর ৫২২.৬.২০২ ধারা থেকে;
-    সবুজ অংশগুলো একরঙা ভরাট বলে ওভারল্যাপেও একটিই অবিচ্ছিন্ন করিডোর দেখায়।
+    ১৫০ মিমি মাপ ও তিনটি অঞ্চলের সংজ্ঞা BS 7671-এর ৫২২.৬.২০২ ধারা থেকে।
+    তৃতীয় অঞ্চলটি প্রতিটি সুইচ/সকেট থেকে **খাড়া ও আড়াআড়ি দুই দিকেই** যায়;
+    আগের ছবিতে সুইচের শুধু খাড়া আর সকেটের শুধু আড়াআড়ি পথ সবুজ ছিল, তাই
+    ছবি পাঠের সঙ্গে মিলত না।  সবুজ অংশগুলো একরঙা ভরাট বলে ওভারল্যাপেও
+    একটিই অবিচ্ছিন্ন করিডোর দেখায়।
     """
     s = SVG(1240, 1000)
     s.title("দেয়ালের ভেতরে ক্যাবল টানার অনুমোদিত অঞ্চল", T_TITLE)
@@ -412,85 +425,95 @@ def d05_drill_zones():
     s.text(WX + WW / 2, WY + WH + 24, "মেঝে", T_SMALL, "#54606C", 700, "middle")
     s.rect(WX, WY, WW, WH, PLASTER, CONC_E, 2, 0)
 
-    SW_X, SWY, SWW, SWH = WX + 250, WY + 210, 88, 108
-    SO_X, SOY, SOW, SOH = WX + 396, WY + 400, 88, 72
-    SO_CY = SOY + SOH / 2
+    SW_X, SWY, SWW, SWH = WX + 222, WY + 176, 80, 100     # সুইচ
+    SO_X, SOY, SOW, SOH = WX + 440, WY + 440, 84, 68      # সকেট
+    SW_CY, SO_CY = SWY + SWH / 2, SOY + SOH / 2
 
     # ── অনুমোদিত অঞ্চল ───────────────────────────────────────────────
     def zone(x, y, w_, h_):
-        s.rect(x, y, w_, h_, ZONE, "none", 0, 0)
+        # raw SVG, not s.rect(): the bands overlap into one flat field, and
+        # their invisible inner edges must not be scored against the labels
+        s.add(f'<rect x="{x}" y="{y}" width="{w_}" height="{h_}" fill="{ZONE}"/>')
 
     zone(WX, WY, WW, BAND)                          # ১ — ছাদ ঘেঁষে
     zone(WX, WY, BAND, WH)                          # ২ — বাঁ কোণা
     zone(WX + WW - BAND, WY, BAND, WH)              # ২ — ডান কোণা
-    zone(SW_X - SWW / 2, WY, SWW, WH)               # ৩ — সুইচ বরাবর উল্লম্ব
-    zone(WX, SO_CY - 44, WW, 88)                    # ৩ — সকেট বরাবর অনুভূমিক
+    zone(SW_X - SWW / 2, WY, SWW, WH)               # ৩ — সুইচ বরাবর খাড়া
+    zone(WX, SWY, WW, SWH)                          # ৩ — সুইচ বরাবর আড়াআড়ি
+    zone(SO_X - SOW / 2, WY, SOW, WH)               # ৩ — সকেট বরাবর খাড়া
+    zone(WX, SOY, WW, SOH)                          # ৩ — সকেট বরাবর আড়াআড়ি
 
     # ── অঞ্চলের ভেতর দিয়ে চলা প্রকৃত ক্যাবল ──────────────────────────
     s.path(f"M {WX+BAND/2} {WY+WH} L {WX+BAND/2} {WY+BAND/2} "
-           f"L {SW_X-28} {WY+BAND/2} L {SW_X-28} {SWY}", CABLE, 4.6)
-    s.path(f"M {WX+WW-BAND/2} {WY+BAND} L {WX+WW-BAND/2} {SO_CY} "
+           f"L {SW_X} {WY+BAND/2} L {SW_X} {SWY}", CABLE, 4.6)
+    s.path(f"M {WX+WW-BAND/2} {WY} L {WX+WW-BAND/2} {SO_CY} "
            f"L {SO_X+SOW/2} {SO_CY}", CABLE, 4.6)
 
     # ── সুইচ ও সকেট ─────────────────────────────────────────────────
     s.rect(SW_X - SWW / 2, SWY, SWW, SWH, "#FFFFFF", "#7C8794", 2.6, 7)
-    s.rect(SW_X - 16, SWY + 26, 32, 56, "#EDF1F5", "#9AA6B2", 2, 4)
-    s.rect(SW_X - 9, SWY + 33, 18, 22, RED, "#9C2B20", 1.4, 2)
-    s.text(SW_X + SWW / 2 + 14, SWY + 36, "সুইচ", T_SMALL, "#37424E", 700)
+    s.rect(SW_X - 15, SWY + 24, 30, 52, "#EDF1F5", "#9AA6B2", 2, 4)
+    s.rect(SW_X - 8, SWY + 30, 16, 20, RED, "#9C2B20", 1.4, 2)
+    s.text(SW_X + SWW / 2 + 12, SW_CY + 8, "সুইচ", T_SMALL, "#37424E", 700)
 
     s.rect(SO_X - SOW / 2, SOY, SOW, SOH, "#FFFFFF", "#7C8794", 2.6, 7)
     for dx in (-17, 17):
-        s.rect(SO_X + dx - 6, SOY + 28, 12, 20, "#3B4550", "#20272E", 1.4, 3)
-    s.rect(SO_X - 6, SOY + 10, 12, 14, "#3B4550", "#20272E", 1.4, 3)
-    s.text(SO_X + SOW / 2 + 14, SOY + 32, "সকেট", T_SMALL, "#37424E", 700)
+        s.rect(SO_X + dx - 6, SOY + 28, 12, 19, "#3B4550", "#20272E", 1.4, 3)
+    s.rect(SO_X - 6, SOY + 9, 12, 14, "#3B4550", "#20272E", 1.4, 3)
+    # label on the side the cable does NOT leave from
+    s.text(SO_X - SOW / 2 - 12, SO_CY + 8, "সকেট", T_SMALL, "#37424E", 700, "end")
 
-    # ── ১৫০ মিমি মাপ ────────────────────────────────────────────────
+    # ── ১৫০ মিমি মাপ : দুটিই এমন জায়গায়, যেখানে ক্যাবল নেই ─────────────
     ar = s.arrow_defs(NAVY, "dim", 11)
-    dx_ = WX + WW - BAND - 66
+    dx_ = WX + WW - BAND - 22
     s.path(f"M {dx_} {WY+5} L {dx_} {WY+BAND-5}", NAVY, 2, marker=ar)
     s.path(f"M {dx_} {WY+BAND-5} L {dx_} {WY+5}", NAVY, 2, marker=ar)
     s.text(dx_ - 14, WY + BAND / 2 + 7, "১৫০ মিমি", T_SMALL, NAVY, 700, "end")
 
-    dy_ = WY + BAND + 46
-    s.path(f"M {WX+5} {dy_} L {WX+BAND-5} {dy_}", NAVY, 2, marker=ar)
-    s.path(f"M {WX+BAND-5} {dy_} L {WX+5} {dy_}", NAVY, 2, marker=ar)
-    s.text(WX + BAND + 16, dy_ + 7, "১৫০ মিমি", T_SMALL, NAVY, 700)
+    dy_ = WY + WH - 26
+    rx_ = WX + WW - BAND
+    s.path(f"M {rx_+5} {dy_} L {rx_+BAND-5} {dy_}", NAVY, 2, marker=ar)
+    s.path(f"M {rx_+BAND-5} {dy_} L {rx_+5} {dy_}", NAVY, 2, marker=ar)
+    s.text(rx_ - 14, dy_ + 7, "১৫০ মিমি", T_SMALL, NAVY, 700, "end")
 
-    # ── নিষিদ্ধ কোনাকুনি রুট ────────────────────────────────────────
-    ax, ay, bx, by = WX + 92, WY + 356, WX + 180, WY + 236
+    # ── নিষিদ্ধ কোনাকুনি রুট (সুইচের নিচে-বাঁয়ের ফাঁকা ঘরে) ─────────────
+    ax, ay, bx, by = WX + 72, SOY - 14, WX + 168, SWY + SWH + 14
     s.path(f"M {ax} {ay} L {bx} {by}", RED, 4.4, dash="13 8")
     mx, my = (ax + bx) / 2, (ay + by) / 2
-    s.circle(mx, my, 24, "#FFFFFF", RED, 4)
-    s.line(mx - 15, my + 15, mx + 15, my - 15, RED, 4)
-    s.text(WX + 140, WY + 214, "কোনাকুনি নয়", T_SMALL, RED, 700, "middle")
-
-    s.text(WX + 330, WY + 152, "এখানে ক্যাবল নয়", T_SMALL, "#7A8590", 400)
+    s.circle(mx, my, 23, "#FFFFFF", RED, 4)
+    s.line(mx - 14, my + 14, mx + 14, my - 14, RED, 4)
 
     # ── জোন-ব্যাজ ───────────────────────────────────────────────────
     s.badge(WX + 116, WY + BAND / 2, "১", 20, GREEN)
-    s.badge(WX + BAND / 2, WY + 214, "২", 20, GREEN)
-    s.badge(WX + WW - BAND / 2, WY + 214, "২", 20, GREEN)
-    s.badge(SW_X + 26, WY + 148, "৩", 20, GREEN)
-    s.badge(WX + 130, SO_CY, "৩", 20, GREEN)
+    s.badge(WX + BAND / 2, (SWY + SWH + SOY) / 2, "২", 20, GREEN)
+    s.badge(WX + WW - BAND / 2, SW_CY, "২", 20, GREEN)
+    s.badge(SW_X, WY + BAND + 60, "৩", 20, GREEN)            # সুইচ: খাড়া
+    s.badge(WX + 120, SW_CY, "৩", 20, GREEN)                 # সুইচ: আড়াআড়ি
+    s.badge(SO_X, (SWY + SWH + SOY) / 2, "৩", 20, GREEN)     # সকেট: খাড়া
 
-    # ── রঙের ব্যাখ্যা ───────────────────────────────────────────────
+    # ── রঙের ব্যাখ্যা (দুই সারি) ─────────────────────────────────────
     ly = WY + WH + SLAB + 26
-    s.rect(WX - 46, ly, WW + 92, 58, "#FCFDFE", LINE, 1.8, 11)
-    s.rect(WX - 22, ly + 18, 34, 22, ZONE, ZONE_E, 2, 4)
-    s.text(WX + 22, ly + 36, "অনুমোদিত অঞ্চল", T_SMALL, "#12523A", 700)
-    s.line(WX + 236, ly + 29, WX + 278, ly + 29, CABLE, 4.6)
-    s.text(WX + 288, ly + 36, "ক্যাবল", T_SMALL, "#37424E", 700)
-    s.line(WX + 388, ly + 29, WX + 430, ly + 29, RED, 4.4, dash="13 8")
-    s.text(WX + 440, ly + 36, "নিষিদ্ধ রুট", T_SMALL, RED, 700)
+    LH_ = 96
+    s.rect(WX - 46, ly, WW + 92, LH_, "#FCFDFE", LINE, 1.8, 11)
+    ca, cb = WX - 22, WX + 300
+    s.rect(ca, ly + 17, 34, 22, ZONE, ZONE_E, 2, 4)
+    s.text(ca + 46, ly + 35, "অনুমোদিত অঞ্চল", T_SMALL, "#12523A", 700)
+    s.rect(cb, ly + 17, 34, 22, PLASTER, CONC_E, 2, 4)
+    s.text(cb + 46, ly + 35, "অঞ্চলের বাইরে", T_SMALL, "#54606C", 700)
+    s.line(ca, ly + 65, ca + 34, ly + 65, CABLE, 4.6)
+    s.text(ca + 46, ly + 72, "ক্যাবল", T_SMALL, "#37424E", 700)
+    s.line(cb, ly + 65, cb + 34, ly + 65, RED, 4.4, dash="13 8")
+    s.text(cb + 46, ly + 72, "কোনাকুনি রুট: নিষিদ্ধ", T_SMALL, RED, 700)
 
     # ── ডান পাশের কার্ড ─────────────────────────────────────────────
     x0, PW = 800, 388
+    LHT = T_SMALL * 1.32
 
     def card(y, head, items, col, bg, tcol, badges=False):
-        """কার্ডের উচ্চতা লেখার পরিমাণ থেকেই ঠিক হয় — লেখা কিনারা কাটে না।"""
+        """কার্ডের উচ্চতা লেখার পরিমাণ থেকেই ঠিক হয় — লেখা কিনারা কাটে না,
+        আর শেষ লাইনের নিচে ফাঁকা জায়গাও পড়ে থাকে না।"""
         mw = PW - (84 if badges else 76)
         wrapped = [wrap(it, mw, T_SMALL, 400) for it in items]
-        h = 78 + sum(len(w_) * T_SMALL * 1.32 + 16 for w_ in wrapped) + 8
+        h = 78 + sum(len(w_) * LHT + 16 for w_ in wrapped) - LHT - 16 + 24
         s.rect(x0, y, PW, h, bg, col, 2, 12)
         s.text(x0 + PW / 2, y + 38, head, T_BODY, tcol, 700, "middle")
         yy = y + 78
@@ -502,14 +525,14 @@ def d05_drill_zones():
                 s.circle(x0 + 30, yy - 7, 5, col)
                 tx = x0 + 48
             for j, ln in enumerate(lines):
-                s.text(tx, yy + j * T_SMALL * 1.32, ln, T_SMALL, "#2E3842", 400)
-            yy += len(lines) * T_SMALL * 1.32 + 16
-        return y + h + 24
+                s.text(tx, yy + j * LHT, ln, T_SMALL, "#2E3842", 400)
+            yy += len(lines) * LHT + 16
+        return y + h + 22
 
     cy = card(WY - SLAB, "সবুজ অঞ্চল: এখানেই ক্যাবল টানা যায়",
-              ["দেয়ালের একেবারে উপরে ১৫০ মিমি চওড়া ব্যান্ড",
-               "দুই দেয়ালের কোণা ঘেঁষে ১৫০ মিমি ব্যান্ড",
-               "সুইচ বা সকেট বরাবর সোজা উল্লম্ব ও অনুভূমিক পথ"],
+              ["ছাদের নিচে দেয়ালের উপরের ১৫০ মিমি অংশ",
+               "দুই দেয়ালের কোণা ঘেঁষে ১৫০ মিমি অংশ",
+               "সুইচ বা সকেট থেকে সোজা উপর-নিচ ও ডানে-বাঁয়ে"],
               GREEN, GREENBG, "#12523A", badges=True)
     cy = card(cy, "যা করা যাবে না",
               ["কোনাকুনি বা তির্যকভাবে ক্যাবল টানা",
@@ -522,7 +545,7 @@ def d05_drill_zones():
               AMBER, AMBERBG, "#7A5200")
 
     # ── নিচের বার্তা ────────────────────────────────────────────────
-    ny = max(ly + 58, cy) + 4
+    ny = max(ly + LH_ + 22, cy) + 2
     s.rect(60, ny, 1120, 88, REDBG, RED, 2, 11)
     s.text(620, ny + 36, "সবুজ অঞ্চলেই ক্যাবল থাকে, তাই ওই অংশে পেরেক বা ড্রিল বসানো যাবে না।",
            T_SMALL, "#7A1810", 700, "middle")
