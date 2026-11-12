@@ -27,8 +27,8 @@ order *is* the book order — do not regroup chapters by theme.
 | 08 | মেজারিং ইন্সট্রুমেন্টস | 23 | ✅ delivered |
 | 09 | মাল্টিপ্লাগ সার্কিট | 20 | ✅ delivered |
 | 10 | সিরিজ বোর্ড | 18 | ✅ delivered |
-| 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 26 | ✅ delivered |
-| 12 | ফ্যান ও ফ্যান রেগুলেটর | 26 | ✅ delivered |
+| 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 27 | ✅ delivered |
+| 12 | ফ্যান ও ফ্যান রেগুলেটর | 27 | ✅ delivered |
 | 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 21 | ✅ delivered |
 | 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 31 | ✅ delivered |
 | 15 | সুইচ বোর্ড | 24 | ✅ delivered |
@@ -2863,6 +2863,90 @@ above 4.0 cm.** What was wrong and is fixed; do not revert:
   *before* the lamp blows the fuse). §১০.৮'s eight-line paragraph is two.
   §১০.২ has a lead line. কেবল → শুধু, সহজলভ্য → plain words.
 
+
+
+**Chapter 11 — done 2026-11-12, 26 → 27 pp, 15 figures / 9 tables, no gap
+above 3 cm.** The joint drawings were sound. What was wrong and is fixed; do
+not revert:
+- **The chapter never said BNBC bans joint boxes in final circuits.** It
+  taught junction-box joints for forty pages while ch14 (verified clause
+  **1.3.9.3.1**) says all final circuits are loop wiring with no joint box.
+  The §১১.২ note now gives both rules: IEC 60364-5-52 **526.3** (accessible
+  connections; verified by search) and BNBC's loop wiring, and says where
+  hand-made joints still belong (repair and extension of old wiring, fitting
+  leads, temporary connections). Summary bullet and one short question added.
+- **চিত্র ১১.৫'s note said the short tie suits "কন্ডুইটের ভেতরে"** — a joint
+  inside conduit is exactly what the same chapter forbids. Now "জংশন বক্সে".
+- **Solder fume was called a lead hazard.** At soldering temperature the fume
+  is burnt rosin; lead gets in through the hands and mouth. The safety box
+  says both, correctly.
+- **`°` and `²` are not in Kalpurush**: every "°C" is "ডিগ্রি সেলসিয়াস" (the
+  solder table carries the unit in its header; MCQ ৯ options are Latin
+  digits), and the glossary's "I²Rt" is words.
+- Proving dead is done with a ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার, not a "টেস্টার"
+  (ch01's rule), in the tip box and the safety box.
+- Added: copper must not be twisted onto aluminium (bi-metal lug or connector;
+  ties back to ch05's galvanic corrosion) with a summary bullet and a short
+  question; a wire stripper's sized notch is the safer way to skin; what
+  happens to a twisted-and-taped joint that was never soldered.
+- §১১.৮.২ opened on a figure under its heading; it has a lead line. উদাহরণ ১'s
+  four `steps=` lines are two. The intro's sourceless "অগ্নিকাণ্ডের তদন্তে
+  বহুবার দেখা গেছে" is reworded. সবসময় → সব সময়.
+- **Diagrams:** `step_cards()` badges are Latin digits (Bangla ৪ read as 8),
+  and the cards start at y = 100 with BH 174 (d01 and d13 each lost ~80 px of
+  dead space). d12's callouts and photo moved up 42 px.
+- IEC 60454-3-1 (PVC tape) was confirmed by search.
+- **Not added:** the institute's বেল হ্যাঙ্গার জয়েন্ট (flagged to the user
+  earlier, still not in the chapter).
+
+**Chapter 12 — done 2026-11-12, 26 → 27 pp, 12 figures / 10 tables, no gap
+above 3 cm.** What was wrong and is fixed; do not revert:
+- **The down rod was said to carry no load** (prose, summary and চিত্র ১২.১'s
+  note: "ডাউন রড ও ক্যানোপি শুধু ঢেকে রাখে"). The fan hangs from the hook *on
+  the down rod*; only the canopy is a cover. All three now say hook + down
+  rod carry the load, and the bolt, nut and **split pin** at each end of the
+  rod are in the prose, the safety box, the maintenance list, the glossary
+  and a short question.
+- **The chapter contradicted itself and ch18 on electrolytic capacitors.**
+  সারণি ১২.৪ called the start capacitor "ইলেকট্রোলাইটিক" and the ⚠ box two
+  pages later said no AC motor may ever have one. A motor-start capacitor
+  *is* electrolytic, but a non-polarised AC type. Table, ⚠ box, glossary and
+  চিত্র ১২.৪'s note now say: never a **polarised (DC)** electrolytic on AC.
+  The diagrams' spelling "ইলেক্ট্রোলাইটিক" was unified to the prose's.
+- **Table fans were said to have a centrifugal switch.** They are PSC motors
+  like the ceiling fan; the note now names pump motors, and says so.
+- **চিত্র ১২.১২'s photo has three regulators**, the panel header said two;
+  its other header carried "(RAPTI সোর্স)" (headers are nouns).
+- **Coil-type regulator:** prose said "little saving", the artwork and the
+  glossary said "none". All say "সামান্যই কমে" now (d06 table cell and note).
+- Regulator test step said start at the lowest speed and step up. A PSC
+  motor's starting torque is poor at reduced voltage: start at full speed and
+  step down, with the reason.
+- **`°` again**: ৯০ ডিগ্রি (বৈদ্যুতিক), Class B / F 130 / 155 ডিগ্রি সেলসিয়াস,
+  40/70/21 explained in words, MCQ ৪ options in Latin digits; `″` → ইঞ্চি.
+- The capacitor-test note opened on a sentence fragment; it now starts with
+  "take it out of circuit and discharge it". The maintenance bullet about
+  "blades heavier than the nameplate power" was meaningless → replace blades
+  as a matched set.
+- Added: **BLDC fans** (no capacitor, about half the power, remote speed
+  control, no ordinary regulator on their line) with glossary row and short
+  question; regulator rating (usually 100 W, one fan per regulator, matches
+  ch15); earth wire to the fan's earth terminal; a "body gives a shock" row
+  in the fault table; blade height **at least 2.3 m above the floor**
+  (IEC 60335-2-80 installation guidance, confirmed by search); the reason a
+  fan runs backwards after repair is a mis-identified lead.
+- The reactance material sat under "নেমপ্লেটের তথ্য"; it is its own
+  **১২.৮.২ ক্যাপাসিটরের মান ও রিঅ্যাকট্যান্স** now.
+- **Layout:** চিত্র ১২.৩ follows the run/start table; চিত্র ১২.৫ follows চিত্র
+  ১২.৪ directly, then the comparison table, then the ⚠ box (trimmed by a
+  line so it fits the page foot); the regulator photo is 4.8 cm wide (no
+  lettering on it). চিত্র ১২.৭ stays right after §১২.৫'s paragraph — moving it
+  after the steps was tried and reverted.
+- `orphans.py` flags p10 ("চিত্র ১২.৬-এ বাজারে…"): a paragraph that begins
+  with a figure reference, not a stranded caption.
+- **BNBC's PDF could not be fetched from this container** (the proxy returns
+  403 for law.resource.org), so no new BNBC clause was cited in ch11 or ch12;
+  1.3.9.3.1 is ch14's already-verified clause.
 
 
 ## Open items

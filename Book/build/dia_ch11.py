@@ -448,7 +448,7 @@ def img_panel(s, x, y, w, h, title, img, col=STEEL, pad=16):
 
 def step_cards(s, steps, x0, y0, bw, bh, gx, gy, per_row, ar):
     """নম্বরযুক্ত ধাপের কার্ড — সারিতে তীরসহ।"""
-    dig = ["১", "২", "৩", "৪", "৫", "৬", "৭", "৮"]
+    dig = ["1", "2", "3", "4", "5", "6", "7", "8"]   # ৪ দেখায় 8-এর মতো
     for i, (t, d) in enumerate(steps):
         r, c = divmod(i, per_row)
         x = x0 + c * (bw + gx)
@@ -753,10 +753,10 @@ def d01_steps():
         ("সোল্ডারিং", "গলিত সোল্ডার ঢুকিয়ে জয়েন্ট স্থায়ী করা"),
         ("টেপিং", "ইনসুলেশন টেপ পেঁচিয়ে জয়েন্ট ঢেকে দেওয়া"),
     ]
-    BW, BH, GX, GY = 356, 196, 30, 36
+    BW, BH, GX, GY = 356, 174, 30, 36
     x0 = (1240 - (3 * BW + 2 * GX)) / 2
-    bottom = step_cards(s, steps, x0, 138, BW, BH, GX, GY, 3, ar)
-    ry = 138 + BH
+    bottom = step_cards(s, steps, x0, 100, BW, BH, GX, GY, 3, ar)
+    ry = 100 + BH
     s.path("M %.0f %.0f L %.0f %.0f L %.0f %.0f L %.0f %.0f"
            % (x0 + 2 * (BW + GX) + BW / 2, ry + 6,
               x0 + 2 * (BW + GX) + BW / 2, ry + GY / 2,
@@ -998,7 +998,7 @@ def d05_wu_ties():
     sheet(634, "শর্ট টাই: মাঝের পাক ছোট", GREEN, 2)
     y = note_strip(s, 96 + PH + 22,
                    "লং টাইয়ে সোল্ডার ভেতরে ভালো ঢোকে, শর্ট টাই জায়গা কম "
-                   "নেয়; কন্ডুইটের ভেতরে সুবিধা")
+                   "নেয়; জংশন বক্সে সুবিধা")
     s.fit(y, 24)
     return s.save("%s/d05_wu_ties.svg" % OUT)
 
@@ -1219,15 +1219,15 @@ def d12_solder_tools():
     """সোল্ডারিংয়ের সরঞ্জাম পরিচিতি।"""
     s = SVG(1240, 820)
     s.title("সোল্ডারিং আয়রন ও সোল্ডার তার", T_TITLE)
-    IX, IY, IW = 160, 246, 920
+    IX, IY, IW = 160, 204, 920
     IH = IW * 639 / 1600
     s.rect(IX - 12, IY - 12, IW + 24, IH + 24, "#FCFDFE", LINE, 1.8, 12)
     s.image(IX, IY, IW, IH, "%s/ph_solder_iron.jpg" % IMG, 6)
 
-    callout(s, 300, 180, "সোল্ডার তারের রোল", IX + 0.16 * IW,
+    callout(s, 300, 140, "সোল্ডার তারের রোল", IX + 0.16 * IW,
             IY + 0.52 * IH, "middle")
-    callout(s, 748, 180, "হ্যান্ডল", IX + 0.60 * IW, IY + 0.33 * IH, "middle")
-    callout(s, 1120, 180, "সাপ্লাই কর্ড ও প্লাগ", IX + 0.86 * IW,
+    callout(s, 748, 140, "হ্যান্ডল", IX + 0.60 * IW, IY + 0.33 * IH, "middle")
+    callout(s, 1120, 140, "সাপ্লাই কর্ড ও প্লাগ", IX + 0.86 * IW,
             IY + 0.12 * IH, "end")
     callout(s, 300, IY + IH + 70, "বিট বা টিপ", IX + 0.21 * IW,
             IY + 0.92 * IH, "middle")
@@ -1254,10 +1254,10 @@ def d13_solder_steps():
         ("সোল্ডার প্রয়োগ", "বিট জয়েন্টে চেপে ধরে সোল্ডার জয়েন্টে গলানো"),
         ("ঠান্ডা করা", "নড়াচড়া না করে ঠান্ডা হতে দেওয়া, তারপর টেপ লাগানো"),
     ]
-    BW, BH, GX, GY = 356, 196, 30, 36
+    BW, BH, GX, GY = 356, 174, 30, 36
     x0 = (1240 - (3 * BW + 2 * GX)) / 2
-    bottom = step_cards(s, steps, x0, 138, BW, BH, GX, GY, 3, ar)
-    ry = 138 + BH
+    bottom = step_cards(s, steps, x0, 100, BW, BH, GX, GY, 3, ar)
+    ry = 100 + BH
     s.path("M %.0f %.0f L %.0f %.0f L %.0f %.0f L %.0f %.0f"
            % (x0 + 2 * (BW + GX) + BW / 2, ry + 6,
               x0 + 2 * (BW + GX) + BW / 2, ry + GY / 2,
