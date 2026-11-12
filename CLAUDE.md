@@ -3305,8 +3305,16 @@ revert:
   nouns; em-dashes out of objectives, captions and formula boxes.
 - উদাহরণ ২৮.২, ২৮.৪, ২৮.৫, ২৮.৮ `steps=` merged.
 
-**The chapter-by-chapter review now covers all 28 chapters.** The merged
-book has not been rebuilt since; run `mkbook.py --pdf` when the user asks.
+**The chapter-by-chapter review now covers all 28 chapters, and the full
+book was re-merged on 2026-11-12** (user: "full book merge kore daw"):
+`python mkbook.py --pdf` → **827 pages** (was 815), 497.9 MB `.docx`,
+47.1 MB PDF. `bake:` reported 342 anchors resolved; the shipped
+`document.xml` has 0 PAGEREF and 0 fldChar; every checked সূচিপত্র line's
+printed number equals its link target; the running header names the right
+chapter (and "পরিভাষা" / the question type in the back-of-book parts);
+equations render. A fresh container also needs `pip install docxcompose`
+and `python render.py 'diagrams/cover/cover.svg'` before the merge.
+Page 2 (the cover's blank back) is by design.
 
 ## Open items
 
