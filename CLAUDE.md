@@ -23,8 +23,8 @@ order *is* the book order — do not regroup chapters by theme.
 | 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 21 | ✅ delivered |
 | 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 15 | ✅ delivered |
 | 06 | বেল সার্কিট (৬–৯) | 15 | ✅ delivered |
-| 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 24 | ✅ delivered |
-| 08 | মেজারিং ইন্সট্রুমেন্টস | 21 | ✅ delivered |
+| 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 25 | ✅ delivered |
+| 08 | মেজারিং ইন্সট্রুমেন্টস | 23 | ✅ delivered |
 | 09 | মাল্টিপ্লাগ সার্কিট | 18 | ✅ delivered |
 | 10 | সিরিজ বোর্ড | 18 | ✅ delivered |
 | 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 26 | ✅ delivered |
@@ -2738,6 +2738,68 @@ above 2.6 cm.** What was wrong and is fixed; do not revert:
   the last practical-work table is kept whole (`keep_with_next` on its rows in
   `ch06.py`, no engine change) instead of leaving five rows alone on p15.
 - ঘণ্টা → বেল, কেবল → শুধু, সর্বদা dropped; intro's doubled "কাজে লাগে" fixed.
+
+
+
+**Chapter 7 — done 2026-11-12, 24 → 25 pp, 10 figures / 9 tables, no gap above
+4.1 cm.** The diagrams were sound (only চিত্র ৭.২'s current arrow moved above
+the wire, beside its `I`). What changed in the text; do not revert:
+- **§৭.৬ reordered.** The worked example said "চিত্র অনুযায়ী" a page and a
+  half after its figure. Order is now bullets → real-wiring table → ৭.৬.১
+  steps → চিত্র ৭.৯ → উদাহরণ ৪. This needed উদাহরণ ৪'s `steps=` merged
+  (8 lines → 5, with `\quad`) and উদাহরণ ১'s first two lines merged, or the
+  unsplittable examples strand 13–17 cm.
+- §৭.৪.২ and §৭.৫.২ opened on a figure straight under the heading; each has a
+  one-line lead now. **Keep the §৭.৪.২ lead to one line** — at two lines
+  উদাহরণ ১ no longer fits under its figure.
+- Added: unequal lamps in series (60 W + 100 W → about 144 V and 86 V, the
+  60 W lamp is the brighter one; pointer to ch10's test lamp) with short
+  question খ.১৩; the fan regulator as a series device; equal resistors in
+  parallel = R / n; the AC convention for current arrows; **practical tasks
+  need three equal filament lamps** (LED lamps have drivers and do not follow
+  the series arithmetic); clamp meter mentioned where the ammeter needs the
+  circuit cut.
+- Parallel "অসুবিধা" row 3 was vague ("পুরো কারেন্ট সেই শাখা দিয়ে যেতে
+  পারে") → a short circuit in one branch shorts the whole supply. Load row of
+  সারণি ৭.১ matches ch03 (আলো, তাপ বা গতি). সুইচ বন্ধ → সুইচ অফ (ch03's
+  wording), সবসময় → সব সময়, কেবল → শুধু.
+- Arithmetic of all four examples, the three "প্রত্যাশিত ফল" boxes and the
+  MCQ key (ক4 খ4 গ4 ঘ4) were re-checked and are correct.
+
+**Chapter 8 — done 2026-11-12, 22 → 23 pp, 11 figures / 8 tables, no gap above
+4.0 cm.** What was wrong and is fixed; do not revert:
+- **The photo captioned "ডিজিটাল ইনসুলেশন ও আর্থ টেস্টার" is an insulation
+  tester only** (Victor, 250/500/1000 V buttons; its "EARTH" socket is the
+  megger's earth terminal, not an earth-resistance function). Caption is
+  "ডিজিটাল ইনসুলেশন টেস্টার".
+- **সারণি ৮.৬'s fan row had lost its condition** ("সরবরাহ পৌঁছায়নি বা কয়েল
+  কাটা; …") → "পাঠ শূন্য → …". The "গরম হচ্ছে" row gained the loose-joint
+  case (current within rating, still hot).
+- **`°` is not in Kalpurush** and the tungsten note printed "২৫০০ °C" →
+  "২৫০০ ডিগ্রি সেলসিয়াস".
+- The parts table said "A পোর্ট (10A ও mA)" while চিত্র ৮.৪'s meter has one A
+  port; the row now says the figure has one and most market meters have two.
+- চিত্র ৮.৬'s title said ভোল্টমিটার (caption and prose say মাল্টিমিটার);
+  চিত্র ৮.৫ mixed "জ" and "চোয়াল" and its jaw leader stopped short of the jaw.
+- **`p04_apm_amp.png`'s dial reads `1.5` and `C.T 200/5A`** (zoomed and read).
+  §৮.৩.১ uses it to explain the CT ratio and the accuracy class.
+- Added, each a field fact: L–N / L–E / N–E expected readings at a socket and
+  what a wrong one means; **ghost voltage** (10 MΩ input, 30–90 V on a dead
+  wire, test lamp or LoZ to confirm) with two short questions; mains load
+  current is a clamp-meter job, the series method is for battery / low-voltage
+  circuits (চিত্র ৮.৭ is a DC circuit, and the text says so); 10A range time
+  limit; probe-short zero check before an ohm reading; megger discharge;
+  "Megger" is a maker's name; CAT III 600 V as the wireman's minimum; a
+  source-to-load order for fault finding and the open-neutral test.
+- §৮.৫'s nine-line opening paragraph is two paragraphs; the jaw is named as a
+  current transformer, which is why an ordinary clamp is AC-only.
+- **Layout:** সারণি ৮.৪ now precedes চিত্র ৮.৪; in §৮.৭.১ the ⚠ box precedes
+  the figure; §৮.৭.২ runs steps → figure → table; **the লাইভ–ডেড–লাইভ box
+  moved to the end of §৮.১১** (it is a meter-use rule, and where it sat it
+  stranded 6 cm); the fault-finding paragraph after সারণি ৮.৬ fills the page
+  the first example could not fit on; উদাহরণ ১'s `steps=` is one line.
+- The definition box says "মেজারিং ইনস্ট্রুমেন্ট" like the rest of the body;
+  the chapter title and file name keep "ইন্সট্রুমেন্টস".
 
 
 

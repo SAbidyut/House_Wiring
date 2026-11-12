@@ -171,8 +171,8 @@ def d02_current_path():
         _dot(s, bx, TR)
         _dot(s, bx, BR)
         s.text(bx + 34, 322, f"I{i+1}", T_SMALL, RED, 700, "start")
-    s.text(768, TR - 16, "I", T_SMALL, RED, 700, "middle")
-    s.path(f"M 748 {TR+22} L 790 {TR+22}", RED, 3.4, marker=ar)
+    s.text(768, TR - 34, "I", T_SMALL, RED, 700, "middle")
+    s.path(f"M 744 {TR-18} L 794 {TR-18}", RED, 3.4, marker=ar)
 
     y = formula_strip(s, 466,
                       "সিরিজে কারেন্ট সমান, ভোল্টেজ ভাগ হয়; "
