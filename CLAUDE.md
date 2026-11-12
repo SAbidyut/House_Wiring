@@ -19,7 +19,7 @@ order *is* the book order — do not regroup chapters by theme.
 |---|---|---|---|
 | 01 | কর্মক্ষেত্রে নিরাপত্তা | 33 | ✅ delivered |
 | 02 | ইলেকট্রিক্যাল টুলস | 24 | ✅ delivered |
-| 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 17 | ✅ delivered |
+| 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 18 | ✅ delivered |
 | 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 21 | ✅ delivered |
 | 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 15 | ✅ delivered |
 | 06 | বেল সার্কিট (৬–৯) | 14 | ✅ delivered |
@@ -2609,6 +2609,75 @@ above 3 cm, no orphan caption.** What was wrong and is fixed; do not revert:
 - **New check, run it on every chapter from now on:** a page that *opens* on
   "চিত্র N.M:" has lost its picture to the page before. `layout.py` cannot
   see it. The scratch script walks each page's text blocks and image rects.
+
+**Chapter 3 — done 2026-11-12, 17 → 18 pp, 11 figures / 6 tables, no gap
+above 3 cm.** What was wrong and is fixed; do not revert:
+- **The prose named IEC colours while every circuit picture shows BNBC's.**
+  The steps said "ফেজ (বাদামি)" / "নিউট্রাল (নীল)"; all five institute slides
+  (চিত্র ৩.৭–৩.১১) are red phase, black neutral, green earth. The steps now say
+  "(চিত্রে লাল)" / "(চিত্রে কালো)", the intro says which colours the figures
+  use, and §৩.১০'s table row no longer asserts IEC colours two lines above the
+  ⚠ box that says there are two systems. MCQ ৮ asks the BNBC neutral colour.
+- **চিত্র ৩.২ had no source.** All three state panels drew a closed loop with a
+  switch and a lamp and nothing to drive it. `_source()` in `dia_ch03.py` puts
+  the same four-plate symbol as চিত্র ৩.১ on the left leg.
+- **চিত্র ৩.৬'s photos and their labels were on different pages** (a
+  `figure_row` split; `orphans.py` cannot see it because the page opens on the
+  tile labels, not on "চিত্র"). Order is now figure → photo row → table, and two
+  table cells were trimmed so the table ends on the same page. **Look at the
+  contact sheet for a `figure_row` whose labels start a page.**
+- Socket rating "১৩ – ১৬ A" → "১৩ বা ১৫ A" (matches the photo captions);
+  **BS 546** (round pin) and **BS 1363** (flat pin, fused plug) named — verified
+  by search, as is the shutter being opened by the earth pin; lamp caps
+  **B22 / E27** (E14 mentioned), per IEC 60061.
+- The holder-polarity ⚠ box sat inside §৩.৩.১ under the ceiling-rose photo; it
+  is in §৩.৩ now, says "প্যাঁচ টাইপ", and notes the pin type's contacts are both
+  at the bottom.
+- The 2-pin socket caution claimed "ডান পাশের ছিদ্রে ফেজ" although the pictured
+  socket's holes are stacked vertically and a 2-pin plug is reversible. It now
+  says: no fixed rule for 2-pin, keep one side throughout the house, and on a
+  3-pin socket the phase is on the right seen from the front.
+- Circuits ৩/৪ list the 2-pin plug the figures show, circuit ৫ the 3-pin plug;
+  circuit ৫'s step ৪ no longer sends a bench exercise's earth wire to an
+  electrode. §৩.২ has an opening paragraph, and the ⚠ box says an open circuit
+  still has full voltage at the phase-side end.
+- Broken intro sentence rewritten; সর্বদা → সব সময়, কেবল → শুধু, জীবন্ত → লাইভ.
+
+**Chapter 4 — done 2026-11-12, 21 pp unchanged, 8 figures / 10 tables, no gap
+above 2.5 cm (the long-standing 4.78 and 4.60 cm are gone).** Do not revert:
+- **Added, because later chapters rely on it:** `P = I^{2} × R` and
+  `P = V^{2}/R` with the one sentence a wireman needs (double the current,
+  four times the heat; a loose joint is where the heat is made) and the pointer
+  that motors need the power factor (অধ্যায় ১৬). One maths question uses it —
+  **written in words: Kalpurush has no `²`, so `I² R` cannot go in a question.**
+- Temperature was named as the fourth factor of resistance and never explained;
+  one paragraph now ties it to ch08's cold-filament point. Example ৪.১ says
+  "জ্বলন্ত অবস্থায়" for the same reason.
+- Free electrons were described as if every substance had them; the sentence is
+  about metals now. Static electricity: lightning is the *discharge* of charge
+  stored in clouds; a comb-and-paper example added.
+- AC/DC table: two rows said the same thing about DC; they now say a
+  transformer does not work on DC, and that DC transmission needs converter
+  stations. Example ৪.৩'s "হিটার" drawing 0.43 A (99 W) is a বাতি.
+- A sense of scale for current (LED lamp < 0.05 A, fan ≈ 0.3 A, iron 4–6 A,
+  30 mA is dangerous). Capacitors: stored charge after switch-off; polarised
+  ones are DC-only. Inductors: fan/motor coils, chokes, transformers, and why
+  the switch sparks when such a load is turned off.
+- The frequency box (a "safety" box that was not about safety, stranded after
+  the RMS subsection) is a note box inside §৪.৭ now.
+- Glossary: Voltage was "চালনাকারী বল" (it is a pressure, not a force); the
+  Insulator row was a sentence fragment. কেবল → শুধু, জীবন্ত → লাইভ.
+- **Diagrams:** d03 — the conductor reached the load through **two** wires (one
+  from each edge of the bar); one wire on the axis now, and the 56 px dead band
+  under the title is gone (function rewritten around `Y`). d01 — same dead band
+  removed. d04 — "পিক মান" marked on the crests (§৪.৭.১ points at it). d05 —
+  the triangle's bar overshot both sides. d06 — header drawn as one path (two
+  pale notches). d07 — capacitor leads ran through the plates.
+- Layout, all from the playbook: Ohm's-law equations before চিত্র ৪.৬;
+  examples ৪.১/৪.২ `steps=` merged to one line each (the back-to-back trap);
+  চিত্র ৪.৭ moved to the head of §৪.৮ behind a new opening paragraph;
+  চিত্র ৪.৮ moved ahead of the ⚠ box.
+
 
 
 ## Open items

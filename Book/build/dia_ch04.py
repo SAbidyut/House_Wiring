@@ -35,7 +35,7 @@ def d01_atom():
     """Atom, shells and the free electron that makes conduction possible."""
     s = SVG(1240, 700)
     s.title("পরমাণুর গঠন ও মুক্ত ইলেকট্রন", T_TITLE)
-    cx, cy = 430, 380
+    cx, cy = 430, 336
 
     for i, r in enumerate((108, 158, 210)):
         s.circle(cx, cy, r, "none", "#C3CEDA", 2, 0.9 if i < 2 else 0.6)
@@ -60,23 +60,23 @@ def d01_atom():
     ar = s.arrow_defs(RED, "ar", 14)
     s.path(f"M {fx+22:.1f} {fy-14:.1f} L {fx+92:.1f} {fy-64:.1f}", RED, 3.2, marker=ar)
 
-    s.text(770, 214, "মুক্ত ইলেকট্রন", T_NAME, RED, 700)
+    s.text(770, 176, "মুক্ত ইলেকট্রন", T_NAME, RED, 700)
     for j, ln in enumerate(wrap(
             "সবচেয়ে বাইরের কক্ষপথের ইলেকট্রন নিউক্লিয়াসের টান কম অনুভব করে, "
             "তাই সহজেই পরমাণু ছেড়ে বেরিয়ে যেতে পারে", 420, T_SMALL, 400)):
-        s.text(770, 250 + j * T_SMALL * 1.34, ln, T_SMALL, "#39434D", 400)
+        s.text(770, 212 + j * T_SMALL * 1.34, ln, T_SMALL, "#39434D", 400)
 
-    bullet_panel(s, 766, 342, 462,
+    bullet_panel(s, 766, 304, 462,
                  ["পরিবাহীতে মুক্ত ইলেকট্রনের সংখ্যা অনেক বেশি",
                   "অপরিবাহীতে ইলেকট্রন শক্তভাবে আবদ্ধ থাকে",
-                  "মুক্ত ইলেকট্রনের সুশৃঙ্খল প্রবাহই কারেন্ট"],
+                  "মুক্ত ইলেকট্রনের একমুখী প্রবাহই কারেন্ট"],
                  T_BODY, "#EAF2FA", STEEL, INK, STEEL)
     # the exponent is a real raised tspan: Kalpurush has no ⁻¹⁹ glyphs
-    s.add('<text x="620" y="660" font-family="Kalpurush" font-size="22.5" fill="#5A6470" '
+    s.add('<text x="620" y="606" font-family="Kalpurush" font-size="22.5" fill="#5A6470" '
           'text-anchor="middle">একটি ইলেকট্রনের চার্জ = 1.6 × 10'
           '<tspan dy="-10" font-size="16">−19</tspan>'
           '<tspan dy="10" font-size="22.5"> কুলম্ব (ঋণাত্মক)</tspan></text>')
-    s.fit(660, 24)
+    s.fit(606, 24)
     return s.save(f"{OUT}/d01_atom.svg")
 
 
@@ -123,52 +123,52 @@ def d02_types():
 
 def d03_current():
     """Electron drift inside a conductor vs conventional current direction."""
-    s = SVG(1240, 620)
+    s = SVG(1240, 580)
     s.title("পরিবাহীর ভেতরে ইলেকট্রন প্রবাহ ও কারেন্টের দিক", T_TITLE)
     ar_e = s.arrow_defs(STEEL, "are", 14)
     ar_c = s.arrow_defs(RED, "arc", 15)
+    Y = 266                                   # পরিবাহীর অক্ষ
 
     # battery
-    s.rect(96, 258, 34, 130, "#3A4750", "#222C33", 2, 5)
-    s.rect(96, 240, 34, 20, "#B7C1CB", "#7C8794", 2, 4)
-    s.text(76, 262, "+", 30, RED, 700, "middle")
-    s.text(76, 386, "−", 30, STEEL, 700, "middle")
-    s.text(113, 470, "ব্যাটারি", T_SMALL, "#39434D", 600, "middle")
+    s.rect(96, Y - 65, 34, 130, "#3A4750", "#222C33", 2, 5)
+    s.rect(96, Y - 83, 34, 20, "#B7C1CB", "#7C8794", 2, 4)
+    s.text(76, Y - 61, "+", 30, RED, 700, "middle")
+    s.text(76, Y + 63, "−", 30, STEEL, 700, "middle")
+    s.text(113, Y + 147, "ব্যাটারি", T_SMALL, "#39434D", 600, "middle")
     # the loop is closed: − terminal into the conductor, load back to +
-    s.path("M 113 388 L 113 418 L 145 418 L 145 323 L 160 323", NAVY, 3)
-    s.path("M 1166 323 L 1204 323 L 1204 190 L 113 190 L 113 240", NAVY, 3)
+    s.path(f"M 113 {Y+65} L 113 {Y+95} L 145 {Y+95} L 145 {Y} L 160 {Y}", NAVY, 3)
+    s.path(f"M 1166 {Y} L 1204 {Y} L 1204 {Y-133} L 113 {Y-133} L 113 {Y-83}", NAVY, 3)
 
     # conductor
-    s.rect(160, 286, 900, 74, "#E5D3B3", "#B08C60", 2.4, 10)
-    s.rect(160, 286, 900, 22, "#F0E3CB", "none", 0, 6)
-    s.text(610, 262, "পরিবাহী (তামার তার)", T_SMALL, "#7A5200", 700, "middle")
+    s.rect(160, Y - 37, 900, 74, "#E5D3B3", "#B08C60", 2.4, 10)
+    s.rect(160, Y - 37, 900, 22, "#F0E3CB", "none", 0, 6)
+    s.text(610, Y - 61, "পরিবাহী (তামার তার)", T_SMALL, "#7A5200", 700, "middle")
 
-    # lamp
-    s.circle(1122, 323, 44, "#FFF3C4", "#B08C00", 2.6)
-    s.path("M 1104 336 q 18 -34 36 0", "#B08C00", 3)
-    s.text(1122, 400, "লোড", T_SMALL, "#39434D", 600, "middle")
-    s.path("M 1060 300 L 1092 300", NAVY, 2.6)
-    s.path("M 1060 346 L 1092 346", NAVY, 2.6)
+    # load: one wire in on the conductor's axis, one wire out
+    s.path(f"M 1060 {Y} L 1078 {Y}", NAVY, 3)
+    s.circle(1122, Y, 44, "#FFF3C4", "#B08C00", 2.6)
+    s.path(f"M 1104 {Y+13} q 18 -34 36 0", "#B08C00", 3)
+    s.text(1122, Y + 77, "লোড", T_SMALL, "#39434D", 600, "middle")
 
     # electrons drifting
     for i in range(9):
         ex = 226 + i * 96
-        s.circle(ex, 323, 15, STEEL, "#FFFFFF", 2.4)
-        s.text(ex, 330, "−", 19, "#FFFFFF", 700, "middle")
+        s.circle(ex, Y, 15, STEEL, "#FFFFFF", 2.4)
+        s.text(ex, Y + 7, "−", 19, "#FFFFFF", 700, "middle")
         if i < 8:
-            s.path(f"M {ex+22:.1f} 323 L {ex+64:.1f} 323", STEEL, 2.6, marker=ar_e)
+            s.path(f"M {ex+22:.1f} {Y} L {ex+64:.1f} {Y}", STEEL, 2.6, marker=ar_e)
 
-    s.text(610, 404, "ইলেকট্রন প্রবাহ  →  ঋণাত্মক থেকে ধনাত্মক", T_BODY, STEEL, 700, "middle")
-    s.path("M 890 452 L 330 452", RED, 3.4, marker=ar_c)
-    s.text(610, 494, "প্রচলিত কারেন্টের দিক  ←  ধনাত্মক থেকে ঋণাত্মক",
+    s.text(610, Y + 81, "ইলেকট্রন প্রবাহ: ঋণাত্মক থেকে ধনাত্মক", T_BODY, STEEL, 700, "middle")
+    s.path(f"M 890 {Y+129} L 330 {Y+129}", RED, 3.4, marker=ar_c)
+    s.text(610, Y + 171, "প্রচলিত কারেন্টের দিক: ধনাত্মক থেকে ঋণাত্মক",
            T_BODY, RED, 700, "middle")
 
-    s.rect(60, 522, 1120, 72, "#EAF2FA", STEEL, 2, 11)
-    s.text(620, 552, "ইলেকট্রন প্রবাহ ও প্রচলিত কারেন্টের দিক পরস্পর বিপরীত",
+    s.rect(60, Y + 199, 1120, 72, "#EAF2FA", STEEL, 2, 11)
+    s.text(620, Y + 229, "ইলেকট্রন প্রবাহ ও প্রচলিত কারেন্টের দিক পরস্পর বিপরীত",
            T_NAME, NAVY, 700, "middle")
-    s.text(620, 582, "হিসাবে ও সার্কিট ডায়াগ্রামে সব সময় প্রচলিত দিকই ধরা হয়",
+    s.text(620, Y + 259, "হিসাবে ও সার্কিট ডায়াগ্রামে সব সময় প্রচলিত দিকই ধরা হয়",
            T_SMALL, GREY, 400, "middle")
-    s.fit(594, 22)
+    s.fit(Y + 271, 22)
     return s.save(f"{OUT}/d03_current.svg")
 
 
@@ -198,6 +198,9 @@ def d04_ac_dc():
     s.line(xa, y0 + h + 44, xa, y0 + h + 60, NAVY, 2.4)
     s.line(xa + 200, y0 + h + 44, xa + 200, y0 + h + 60, NAVY, 2.4)
     s.text(xa + 100, y0 + h + 92, "একটি সাইকেল", T_SMALL, NAVY, 700, "middle")
+    # পিক মান: দুই চূড়া ছুঁয়ে যাওয়া ড্যাশ-রেখা; লেখা দুই চূড়ার মাঝের ফাঁকা জায়গায়
+    s.path(f"M {xa+62} {y0-h} L {xa+238} {y0-h}", "#8D9AA8", 1.8, dash="6 5")
+    s.text(xa + 150, y0 - h + 30, "পিক মান", T_SMALL, GREEN, 700, "middle")
 
     # ── DC
     xd = 726
@@ -240,7 +243,8 @@ def d05_ohm():
     cx, top, half, hgt = 900, 176, 175, 260
     s.poly([(cx, top), (cx + half, top + hgt), (cx - half, top + hgt)],
            "#EAF2FA", NAVY, 3.4)
-    s.line(cx - 88, top + 118, cx + 88, top + 118, NAVY, 3)
+    hw = half * 118 / hgt                     # ওই উচ্চতায় ত্রিভুজের অর্ধ-প্রস্থ
+    s.line(cx - hw, top + 118, cx + hw, top + 118, NAVY, 3)
     s.line(cx, top + 118, cx, top + hgt, NAVY, 3)
     s.text(cx, top + 96, "V", 46, NAVY, 700, "middle")
     s.text(cx - 46, top + 200, "I", 40, STEEL, 700, "middle")
@@ -266,15 +270,15 @@ def d06_resistance_factors():
         ("দৈর্ঘ্য", "L", "দৈর্ঘ্য বাড়লে রোধ বাড়ে", "R ∝ L", STEEL, "#EAF2FA"),
         ("প্রস্থচ্ছেদ", "A", "মোটা তারে রোধ কমে", "R ∝ 1/A", GREEN, GREENBG),
         ("উপাদান", "ρ", "তামার রোধ কম, লোহার বেশি", "R ∝ ρ", AMBER, AMBERBG),
-        ("তাপমাত্রা", "t", "ধাতুতে তাপ বাড়লে রোধ বাড়ে", "", RED, REDBG),
+        ("তাপমাত্রা", "t", "ধাতুতে তাপমাত্রা বাড়লে রোধ বাড়ে", "", RED, REDBG),
     ]
     cw, gapx = 278, 22
     x0 = (1240 - (4 * cw + 3 * gapx)) / 2
     for i, (name, sym, desc, rel, col, bg) in enumerate(cards):
         x = x0 + i * (cw + gapx)
         s.rect(x, 96, cw, 300, bg, col, 2, 13)
-        s.rect(x, 96, cw, 58, col, col, 2, 13)
-        s.rect(x + 1, 144, cw - 2, 10, col, "none", 0, 0)
+        s.path(f"M {x} 154 L {x} 109 Q {x} 96 {x+13} 96 L {x+cw-13} 96 "
+               f"Q {x+cw} 96 {x+cw} 109 L {x+cw} 154 Z", col, 2, col)
         s.text(x + cw / 2, 136, name, T_NAME, "#FFFFFF", 700, "middle")
         s.circle(x + cw / 2, 214, 38, "#FFFFFF", col, 3)
         s.text(x + cw / 2, 228, sym, 40, col, 700, "middle")
@@ -307,8 +311,8 @@ def d07_capacitor_inductor():
     s.rect(PR - 11, PT, 22, PH, "#C57A2A", "#9A5A18", 2, 3)
     s.text(PL, PT - 16, "প্লেট", 22, "#7A5200", 700, "middle")
     s.text(PR, PT - 16, "প্লেট", 22, "#7A5200", 700, "middle")
-    s.path(f"M {PL} {PT+PH/2} L 168 {PT+PH/2}", NAVY, 3)
-    s.path(f"M {PR} {PT+PH/2} L 512 {PT+PH/2}", NAVY, 3)
+    s.path(f"M {PL-11} {PT+PH/2} L 168 {PT+PH/2}", NAVY, 3)
+    s.path(f"M {PR+11} {PT+PH/2} L 512 {PT+PH/2}", NAVY, 3)
     s.text(148, PT + PH / 2 + 9, "+", 30, RED, 700, "middle")
     s.text(532, PT + PH / 2 + 9, "−", 30, STEEL, 700, "middle")
     s.text(340, 424, "চার্জ সঞ্চয় করে · একক ফ্যারাড (F)", T_SMALL, NAVY, 600, "middle")
