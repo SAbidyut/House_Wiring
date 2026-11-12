@@ -231,7 +231,7 @@ def d02_types():
 
     y = note_strip(s, 486,
                    "প্রকার যা-ই হোক, ভেতরের সংযোগনীতি একই: "
-                   "মেইন সুইচ ও ফিউজ সিরিজে, সকেটগুলো প্যারালালে")
+                   "মেইন ফিউজ সিরিজে, সকেটগুলো প্যারালালে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d02_types.svg")
 
@@ -269,15 +269,18 @@ def d03_pins():
     plug3(s, cx, 300, 1.0)
     s.text(cx, 412, "প্লাগ", T_BODY, NAVY, 700, "middle")
     s.text(cx, 172, "E", T_NAME, EGREEN, 700, "middle")
-    s.text(cx - 28, 200, "L", T_NAME, BROWN, 700, "middle")
-    s.text(cx + 28, 200, "N", T_NAME, BLUE, 700, "middle")
+    s.text(cx - 28, 200, "N", T_NAME, BLUE, 700, "middle")
+    s.text(cx + 28, 200, "L", T_NAME, BROWN, 700, "middle")
 
     sx = 634 + PW - 130
     s.rect(sx - 56, 238, 112, 136, "#FFFFFF", "#9AA6B2", 2.4, 10)
     s.rect(sx - 7, 264, 14, 30, "#3B4550")
     s.rect(sx - 34, 314, 12, 28, "#3B4550")
     s.rect(sx + 22, 314, 12, 28, "#3B4550")
-    s.text(sx, 412, "সকেট", T_BODY, NAVY, 700, "middle")
+    s.text(sx, 226, "E", T_NAME, EGREEN, 700, "middle")
+    s.text(sx - 76, 337, "N", T_NAME, BLUE, 700, "middle")
+    s.text(sx + 76, 337, "L", T_NAME, BROWN, 700, "middle")
+    s.text(sx, 412, "সকেট (সামনে থেকে)", T_BODY, NAVY, 700, "middle")
 
     s.text(634 + PW / 2, 460,
            "আর্থ পিন লম্বা ও মোটা; আগে ঢোকে, পরে বের হয়",

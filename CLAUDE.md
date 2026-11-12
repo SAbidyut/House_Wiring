@@ -25,7 +25,7 @@ order *is* the book order — do not regroup chapters by theme.
 | 06 | বেল সার্কিট (৬–৯) | 15 | ✅ delivered |
 | 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 25 | ✅ delivered |
 | 08 | মেজারিং ইন্সট্রুমেন্টস | 23 | ✅ delivered |
-| 09 | মাল্টিপ্লাগ সার্কিট | 18 | ✅ delivered |
+| 09 | মাল্টিপ্লাগ সার্কিট | 20 | ✅ delivered |
 | 10 | সিরিজ বোর্ড | 18 | ✅ delivered |
 | 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 26 | ✅ delivered |
 | 12 | ফ্যান ও ফ্যান রেগুলেটর | 26 | ✅ delivered |
@@ -48,7 +48,7 @@ order *is* the book order — do not regroup chapters by theme.
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 13/12 · `ch02` 15/13 · `ch03` 11/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 8/4 ·
-`ch07` 10/9 · `ch08` 11/8 · `ch09` 7/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 12/10 ·
+`ch07` 10/9 · `ch08` 11/8 · `ch09` 7/9 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 12/10 ·
 (**ch03 is 15 pp since 2026-09-04** — one redundant ব্যবহারিক-কাজ row, already
 covered by essay questions গ.১/গ.৫, was dropped so সারণি ৩.৬ stops orphaning a
 row onto a near-empty last page.)
@@ -2800,6 +2800,68 @@ the wire, beside its `I`). What changed in the text; do not revert:
   the first example could not fit on; উদাহরণ ১'s `steps=` is one line.
 - The definition box says "মেজারিং ইনস্ট্রুমেন্ট" like the rest of the body;
   the chapter title and file name keep "ইন্সট্রুমেন্টস".
+
+
+
+**Chapter 9 — done 2026-11-12, 18 → 20 pp, 7 figures / 9 tables, no gap above
+4.0 cm.** What was wrong and is fixed; do not revert:
+- **"Indecator" in two institute slides** (চিত্র ৯.৫ and ৯.৭) is repainted as
+  "Indicator" by `Book/build/fix_ch09_10_typos.py` (same method as ch06; it
+  edits `assets/ch09/*.png`, run once; the source PPTX still has the typo).
+- **চিত্র ৯.৩'s 3-pin socket had no L / N / E marks**, and the plug's L and N
+  were on the opposite sides from the BS convention. The socket now carries
+  E (top), N (left), L (right) "সামনে থেকে", and the plug matches. চিত্র ৯.২'s
+  note said "মেইন সুইচ ও ফিউজ"; a multiplug has no main switch.
+- **The earth-up rule's reason was wrong** ("কর্ডের ভারে প্লাগ ঝুলে আংশিক
+  বেরিয়ে আসে"). Now: the cord drops straight down, and a metal object falling
+  on a half-out plug meets the earth pin first.
+- **Wire colours:** সারণি ৯.৪ has two columns now (flex cord, IEC brown/blue;
+  fixed wiring, BNBC red/black), and §৯.৫ says the figures are drawn red/black
+  while a market cord is brown/blue.
+- **A 2-pin plug is reversible**, which puts a correctly built board's fuse
+  and switch in the neutral. Said in the ⚠ box after চিত্র ৯.৫, with the
+  tester check and "turn the plug round"; short question added.
+- **New ৯.৮.২ "কর্ডের মাপ ও রেটিং"** with a table (0.5 / 0.75 / 1.0 / 1.25 /
+  1.5 mm² → 3 / 6 / 10 / 13 / 16 A, **BS 7671 Table 4F3A**, confirmed by
+  search) and the field point that a thin cord on a cheap board overheats
+  before the fuse blows. Materials lists name 0.75 and 1.25 mm².
+- Added: cord-grip step; surge-protector boards and three things to check when
+  buying (the glossary already listed Surge Protector, Rocker Switch, Neon
+  Lamp and Shutter with nothing in the body); motor loads draw more than
+  P / V and several times that at start. Troubleshooting: a shock from an
+  appliance body means the *appliance* leaks (stop using it), and a fuse that
+  blows on plugging in may be the appliance, not the board.
+- §৯.২ and §৯.৩ opened on a figure under the heading; each has a lead line.
+  কেবল → শুধু, সবসময় → সব সময়, "অধ্যায় ২২-এ … করা হয়েছে" → "হবে".
+- **Layout:** চিত্র ৯.৬ now follows §৯.৬'s opening paragraph; §৯.৮ runs
+  example ১ → appliance table → example ২ → fuse box → example ৩ → cord
+  section. Three examples back to back had stranded 6–10 cm on three pages.
+
+**Chapter 10 — done 2026-11-12, 18 pp unchanged, 7 figures / 7 tables, no gap
+above 4.0 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১০.৪'s slides said "Series Bord" (twice) and "Indecator"**; repainted
+  by the same script (the underlined title is redrawn with its underline).
+- **চিত্র ১০.৬ (`d05_steps`) never switched the board on**, and its step ২ was
+  titled "সরবরাহ বন্ধ রাখা" over a line about the circuit's switch. Steps are
+  now: board check → board switch off → plug the appliance in → plug the board
+  in (indicator lights) → switch on → read the lamp. Badges are Latin digits
+  (Bangla ৪ read as 8). চিত্র ১০.২ said "ফিউজ উড়ে যায়"; the prose says গলে.
+- §১০.১ claimed a good appliance takes "the larger part" of the voltage; that
+  holds only when the load is smaller than the lamp (§১০.৮ says so). Now: the
+  voltage divides, the lamp does not get full voltage.
+- **The reversible 2-pin plug** is in the ⚠ box of §১০.৫, the troubleshooting
+  row ("সুইচ অফ করেও সকেটে ফেজ") and the summary.
+- **Added to §১০.৭:** why the steps are in that order; what the lamp does with
+  electronic loads (one flash, then dark: the capacitor charges) and with
+  motors; **how fixed wiring is tested** — a test lead with a plug and two
+  crocodile clips, onto the circuit's phase *and* neutral after both are taken
+  off the DB (the glossary had Crocodile Clip and the body never used it; with
+  only the phase moved, a reversed plug would short the supply).
+- A 2-pin board gives the appliance under test no earth: a bullet in §১০.৯.
+- Material sizes are metric with the old size in brackets (0.75 mm², 1 mm²).
+  Troubleshooting causes made exact (socket terminals shorted; a short
+  *before* the lamp blows the fuse). §১০.৮'s eight-line paragraph is two.
+  §১০.২ has a lead line. কেবল → শুধু, সহজলভ্য → plain words.
 
 
 
