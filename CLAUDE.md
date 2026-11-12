@@ -43,7 +43,7 @@ order *is* the book order — do not regroup chapters by theme.
 | 24 | এমডিবি ওয়্যারিং | 41 | ✅ delivered |
 | 25 | এসডিবি ওয়্যারিং | 43 | ✅ delivered |
 | 26 | কন্ডুইট পাইপ ওয়্যারিং | 46 | ✅ delivered |
-| 27 | চ্যানেল ওয়্যারিং | 33 | ✅ delivered |
+| 27 | চ্যানেল ওয়্যারিং | 31 | ✅ delivered |
 | 28 | আর্থিং ও ওয়্যারিং টেস্ট | 49 | ✅ delivered |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
@@ -3187,9 +3187,6 @@ as before (worst 4.66 cm).** What was wrong and is fixed; do not revert:
   figures); চিত্র ২৩.৮'s last field no longer touches the canvas edge;
   চিত্র ২৩.১৫'s badges are Latin; titles of চিত্র ২৩.১৬ and ২৩.১৭ are nouns.
 
-**Chapter 24 was skipped by the user** (they asked for 21–23, then 25–26).
-It has **not** had this review; remind them before the series is called done.
-
 **Chapter 25 — done 2026-11-12, 43 pp unchanged, 22 figures / 14 tables, one
 3.35 cm gap.** What was wrong and is fixed; do not revert:
 - **The SPD lead-length rule was stated wrongly everywhere** ("L, N ও PE, এই
@@ -3248,6 +3245,68 @@ as before (worst 4.50 cm).** What was wrong and is fixed; do not revert:
 - **Layout:** the new paragraph stranded চিত্র ২৬.৮ (6.17 cm). The figure now
   comes before the 16 SWG note box, not after it.
 
+
+**Chapter 24 — done 2026-11-12, 41 pp unchanged, 22 figures / 14 tables, gaps
+as before (worst 3.71 cm).** The drawings were sound. What was wrong and is
+fixed; do not revert:
+- **Three broken sentences:** the shaft box ended "…ভরে দিতে হবে, এক তলা থেকে
+  অন্য তলায় না ছড়ায়" (now "যাতে আগুন … না ছড়ায়"); the diversity paragraph
+  carried a dangling "আর BNBC-র পরিশিষ্ট ক-তে।" (removed); the dead-front
+  paragraph began a sentence with "যাতে" (joined to the one before).
+- `IB ≤ In ≤ Iz` in body text → words (`≤` is not in Kalpurush). Enclosure
+  table's first column and "৪০০ A / ৩৬-এর সারি" are Latin (Bangla ৪).
+- All six maths problems are in Latin digits and have answers (117 kW,
+  198.7 A → 250 A; 156 mm² → 40 × 5; 27.5 A → 32 A; 16 mm², 0.85 %;
+  25 %, about 5 kW; 6 spare, 34 ways).
+- "একটি কথা গোড়াতেই বলে রাখি" → impersonal; "প্রথমত … দুই … তিন" →
+  দ্বিতীয়ত / তৃতীয়ত; "কী খাওয়ায়" → "কোন লোডে সরবরাহ যায়"; "ব্রেকার ফেলে
+  দেখা" → "নামিয়ে দেখা"; কেবল → শুধু (13), কনডুইট → কন্ডুইট, মরচে → মরিচা,
+  -টা forms, "—" table cells → empty or words, semicolons used as colons.
+- Diagrams: চিত্র ২৪.১৯'s title is a noun ("অগোছালো ওয়্যারিংয়ের নমুনা");
+  চিত্র ২৪.৫'s label says কন্ডুইট.
+- **The chapter sits one line from tipping.** Three sentences that grew by a
+  few words pushed it to 42 pp with 6.7 / 4.9 / 8.3 cm gaps; trimming them
+  back restored 41 pp. Check `layout.py` after any wording change before
+  ২৪.৪.৭.
+
+**Chapter 27 — done 2026-11-12, 33 → 31 pp, 22 figures / 11 tables, worst gap
+4.48 cm.** What was wrong and is fixed; do not revert:
+- Wrong cross-reference: the 35 % conduit figure is in ২৬.৬.১, not ২৬.৬.৫.
+- Duplicated sentences in ২৭.২.১ and ২৭.২.২ (leftovers of an earlier
+  rewrite); objective ৩ had lost its subject.
+- `°` and `≤` removed from text and artwork ("45 ডিগ্রি"); standard numbers
+  Latin (আইইসি 60227-3, 60364-5-52, 61084; বিএস 7671); রাওল → রাউল.
+- The junction-box sentence is limited to taking a branch off an old circuit.
+- All five maths problems have answers and Latin digits.
+- **Diagrams:** চিত্র ২৭.৮ (`d05_parts`): the external-corner fitting poked
+  out of its tile. Titles of চিত্র ২৭.৪, ২৭.১৫, ২৭.১৬, ২৭.১৩ and ২৭.২২ are
+  nouns. চিত্র ২৭.৩'s channel wires are drawn in L / N / E colours.
+- **Layout:** উদাহরণ ২৭.৩ is cut to one-line question, `given=` and `steps=`,
+  its note is a paragraph; চিত্র ২৭.১০ precedes সারণি ২৭.৭; in ২৭.৬.৪ the ⚠
+  drill box precedes চিত্র ২৭.১৪. That saved one page. The second page went
+  when three lines were trimmed from the last-but-one page, so the practical
+  table no longer leaves two rows alone on a page.
+
+**Chapter 28 — done 2026-11-12, 49 pp unchanged, 24 figures / 11 tables, worst
+gap 4.30 cm (the old 4.70 is gone).** What was wrong and is fixed; do not
+revert:
+- **Fact:** the plate-formula box said one face gives an answer "দেড় গুণ কম";
+  it comes out about **1.4 times larger**.
+- **Fact in artwork:** চিত্র ২৮.২৪ (`d16_wrong`) said "শীতে ভালো, বর্ষার পরে
+  খারাপ"; earth resistance is low in the wet season and high in the dry one.
+- **চিত্র ২৮.১৭ and ২৮.১৮ (`d11_pol`, `d12_holder`): the right panel ran to
+  the canvas edge** (panel pitch `PW + 56` → `PW + 28`).
+- **চিত্র ২৮.১৬ (`d18_ir_read`):** leaders crossed and "টেস্ট ভোল্টেজ বাছাই"
+  pointed at the PASS lamp; targets re-measured.
+- Intro "বিদ্যুৎ দেওয়ার পরেও পড়ে না" → "ধরা পড়ে না"; four stray `**`; the
+  62 % paragraph rewritten without dashes; a fuse does not "trip".
+- "ছাড়ে" → "ট্রিপ করে"; সুইচ বন্ধ → সুইচ অফ in text and artwork;
+  ব্যাক-বক্স → ব্যাক-বাক্স; ষড়ভুজ → ছয় কোণা; titles of six figures are
+  nouns; em-dashes out of objectives, captions and formula boxes.
+- উদাহরণ ২৮.২, ২৮.৪, ২৮.৫, ২৮.৮ `steps=` merged.
+
+**The chapter-by-chapter review now covers all 28 chapters.** The merged
+book has not been rebuilt since; run `mkbook.py --pdf` when the user asks.
 
 ## Open items
 
