@@ -32,7 +32,7 @@ T_TITLE = 34
 T_NODE = 28
 T_NAME = 24.5
 T_BODY = 21.5
-T_SMALL = 20
+T_SMALL = 22
 T_CALL = 24
 LH = 1.42
 
@@ -47,11 +47,11 @@ PLATE = "#F4F7FA"
 
 
 # ── shared helpers ──────────────────────────────────────────────────────
-def panel(s, x, y, w, h, title, col=STEEL):
+def panel(s, x, y, w, h, title, col=STEEL, tsize=T_BODY):
     """প্যানেলের শিরোনাম — কেবল নাম, কোনো মন্তব্য নয়।"""
     s.rect(x, y, w, h, "#FCFDFE", LINE, 1.8, 13)
-    s.box_auto(x + w / 2, y + 12, title, T_BODY, fill=col, stroke=col,
-               tcolor="#FFFFFF", pad_x=22, pad_y=9)
+    s.box_auto(x + w / 2, y + 12, title, tsize, fill=col, stroke=col,
+               tcolor="#FFFFFF", pad_x=22, pad_y=9 if tsize <= 22 else 5)
 
 
 def note_strip(s, y, text, x=46, w=1148, fill="#EAF2FA", stroke=STEEL,
@@ -77,12 +77,13 @@ def callout(s, x, y, text, tx, ty, anchor="end", size=T_CALL, col=NAVY):
     s.circle(tx, ty, 5, STEEL)
 
 
-def img_panel(s, x, y, w, h, title, img, col=STEEL):
-    panel(s, x, y, w, h, title, col)
+def img_panel(s, x, y, w, h, title, img, col=STEEL, tsize=T_BODY):
+    panel(s, x, y, w, h, title, col, tsize)
     s.image_fit(x + 16, y + 64, w - 32, h - 78, f"{IMG}/{img}", 6)
 
 
-def one_panel(fname, title, head, img, note, pw=1000, col=STEEL):
+def one_panel(fname, title, head, img, note, pw=1000, col=STEEL,
+              tsize=T_BODY, nsize=T_NAME):
     """এক ছবির শিট — সোর্স থেকে নেওয়া ছবি যেমন আছে তেমনই।"""
     from PIL import Image as _Im
     with _Im.open(f"{IMG}/{img}") as im:
@@ -90,14 +91,14 @@ def one_panel(fname, title, head, img, note, pw=1000, col=STEEL):
     ph = round((pw - 32) * ih / iw) + 78
     s = SVG(1240, 96 + ph + 110)
     s.title(title, T_TITLE)
-    img_panel(s, (1240 - pw) / 2, 96, pw, ph, head, img, col)
-    y = note_strip(s, 96 + ph + 24, note)
+    img_panel(s, (1240 - pw) / 2, 96, pw, ph, head, img, col, tsize)
+    y = note_strip(s, 96 + ph + 24, note, size=nsize)
     s.fit(y, 24)
     return s.save(f"{OUT}/{fname}.svg")
 
 
 def two_panel(fname, title, left, right, note, pw=560, gap=28,
-              lcol=STEEL, rcol=GREEN, rw=None):
+              lcol=STEEL, rcol=GREEN, rw=None, tsize=T_BODY):
     """দুই ছবির শিট — বাঁয়ে-ডানে দুটি প্যানেল, নিচে এক লাইনের নোট।"""
     from PIL import Image as _Im
     rw = rw or pw
@@ -111,8 +112,9 @@ def two_panel(fname, title, left, right, note, pw=560, gap=28,
     s.title(title, T_TITLE)
     total = pw + gap + rw
     x0 = (1240 - total) / 2
-    img_panel(s, x0, 96, pw, ph, left[0], left[1], lcol)
-    img_panel(s, x0 + pw + gap, 96, rw, ph, right[0], right[1], rcol)
+    img_panel(s, x0, 96, pw, ph, left[0], left[1], lcol, tsize)
+    img_panel(s, x0 + pw + gap, 96, rw, ph, right[0], right[1], rcol,
+              tsize)
     y = note_strip(s, 96 + ph + 24, note)
     s.fit(y, 24)
     return s.save(f"{OUT}/{fname}.svg")
@@ -157,10 +159,10 @@ def d01_parts():
         callout(s, IX - 34, ly, text, tx, ty, "end")
 
     # ডান পাশের লেবেল — লক্ষ্যের বাঁ-থেকে-ডান ক্রমেই সাজানো, নইলে
-    # শ্যাফট ও বিয়ারিংয়ের লিডার একে অন্যকে কেটে যায়
+    # শ্যাফট ও বেয়ারিংয়ের লিডার একে অন্যকে কেটে যায়
     for text, fx, fy, ly in (("নেমপ্লেট", 0.57, 0.26, 190),
                              ("শ্যাফট", 0.62, 0.53, 330),
-                             ("বিয়ারিং", 0.76, 0.55, 424),
+                             ("বেয়ারিং", 0.76, 0.55, 424),
                              ("কুলিং ফ্যান", 0.90, 0.62, 528)):
         tx, ty = at(fx, fy)
         callout(s, IX + IW + 34, ly, text, tx, ty, "start")
@@ -185,9 +187,9 @@ def d02_types():
     r = nodebox(620, 108, "ইলেকট্রিক মোটর", NAVY, T_NAME)
     ry = 108 + r[3]
 
-    # স্তর ২ — এসি, ডিসি, ইউনিভার্সেল
+    # স্তর ২ — এসি, ডিসি, ইউনিভার্সাল
     l2 = [(300, "এসি মোটর", STEEL), (620, "ডিসি মোটর", GREY),
-          (940, "ইউনিভার্সেল মোটর", GREY)]
+          (940, "ইউনিভার্সাল মোটর", GREY)]
     boxes2 = []
     for cx, name, col in l2:
         boxes2.append((cx, nodebox(cx, 216, name, col)))
@@ -302,7 +304,7 @@ def d05_run_cap():
         "d05_run_cap", "রান ক্যাপাসিটর সংযোগ", "কানেকশন ডায়াগ্রাম",
         "m05_run_cap.png",
         "ক্যাপাসিটর বসে স্টার্টিং কয়েলের সিরিজে, রানিং কয়েলে নয়",
-        pw=880)
+        pw=880, tsize=26, nsize=27)
 
 
 def d06_start_run():
@@ -311,7 +313,7 @@ def d06_start_run():
         "d06_start_run", "স্টার্ট ও রান ক্যাপাসিটরের সংযোগ",
         "কানেকশন ডায়াগ্রাম", "m07_start_run.png",
         "গতি উঠলে সেন্ট্রিফিউগাল সুইচ স্টার্ট ক্যাপাসিটরটি কেটে দেয়",
-        pw=1000, col=GREEN)
+        pw=1000, col=GREEN, tsize=26, nsize=27)
 
 
 def d07_dp_switch():
@@ -430,7 +432,7 @@ def d09_star_delta():
         ("স্টার (Y)", "m10_star_term.png"),
         ("ডেল্টা (Δ)", "m12_delta_term.png"),
         "উপরের তিন প্রান্ত এক করলে স্টার, উপর-নিচ জোড়া দিলে ডেল্টা",
-        pw=380, rw=380, gap=120)
+        pw=380, rw=380, gap=120, tsize=24)
 
 
 ALL = [d01_parts, d02_types, d03_stator_rotor, d04_coils, d05_run_cap,

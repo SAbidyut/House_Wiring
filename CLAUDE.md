@@ -3035,6 +3035,93 @@ above 3.2 cm.** What was wrong and is fixed; do not revert:
 - চিত্র ১৬.৫'s "লাইন = ফেজ" → "লাইন ভোল্টেজ = ফেজ ভোল্টেজ"; `T_SMALL` 22.
 
 
+**Chapter 17 — done 2026-11-12, 19 pp unchanged, 5 figures / 8 tables, worst
+gap 3.75 cm.** The tariff (June 2026 BERC order) and every worked example
+were re-checked and are correct. What changed; do not revert:
+- The leakage check said "চাকতি ঘুরছে কি না"; most meters are digital now.
+  It reads: a disc meter's disc turns, a digital meter's red pulse lamp
+  blinks (prose, summary, MCQ ৯, practical task).
+- The seven maths problems had no answers; all seven do now (computed).
+- চিত্র ১৭.২'s step badges are Latin (Bangla ৪ read as 8) and its cards lost
+  30 px of dead space; চিত্র ১৭.৪'s right header is "পাঠ / টাকা".
+  `dia_ch17` `T_SMALL` 20 → 22.
+- কেবল → শুধু, সবসময় → সব সময়, four em-dashes removed.
+
+**Chapter 18 — done 2026-11-12, 27 pp unchanged, 9 figures / 10 tables, worst
+gap 4.31 cm.** What was wrong and is fixed; do not revert:
+- **The glossary listed Overload Relay, MPCB, DOL Starter and Contactor, and
+  the body never mentioned any of them.** §১৮.৯.৫ has a paragraph now: the
+  MCB protects the cable and clears short circuits, it cannot see a motor's
+  own overload (a 5.5 A motor stalled at 8 A never trips a 10 A breaker);
+  that is the overload relay's or MPCB's job, set to the nameplate amps;
+  contactor + overload relay = DOL starter; small pumps often carry a
+  thermal protector inside.
+- **Star/delta by nameplate was only given for 400/690 V.** Added: a small
+  motor marked 230/400 V runs in **star** on our 400 V line; the rule is
+  "smaller voltage = delta, larger = star". The star-delta starter gives one
+  third of the delta starting current and works only on a 400/690 V motor.
+- Starting current was said to last "under a second"; now "one or two
+  seconds, until the motor is up to speed".
+- The run-capacitor formula is flagged as a field rule of thumb; a value
+  printed on the nameplate or on the old capacitor takes priority.
+- The pump troubleshooting row said "swap the starting coil's ends" (not
+  possible on a 3-lead motor); now "change the direction (১৮.৬.১ দ্রষ্টব্য)".
+- Nameplate RPM row says "১৪৪০ বা ২৮৫০-এর মতো" (the figure shows 2850).
+  `°C` in the glossary → ডিগ্রি সেলসিয়াস. Summary: "হরে আরও ১.৭৩ গুণ হয়"
+  (was "যোগ হয়").
+- Spelling unified with the rest of the book: **বেয়ারিং** (was বিয়ারিং, 7 +
+  artwork), **ইউনিভার্সাল** (was ইউনিভার্সেল), কন্টাক্টর, ইলেকট্রোলাইটিক,
+  ইন্ডিকেটর. কেবল → শুধু, সবসময় → সব সময়, "ঘূর্ণায়মান অংশ" → "ঘুরন্ত অংশ"
+  (ঘূর্ণায়মান চুম্বকক্ষেত্র kept as the technical term).
+- All seven maths problems have answers (computed).
+- **Diagrams:** `T_SMALL` 20 → 22. `one_panel()` / `two_panel()` /
+  `panel()` take `tsize=` (and `nsize=` for the note): চিত্র ১৮.৫ and ১৮.৬
+  are placed 12.8 cm wide, so their chip and note are 26 / 27 px; চিত্র ১৮.৯
+  (13.8 cm) uses a 24 px chip. চিত্র ১৮.২ and ১৮.৮ are placed 15.4 cm.
+
+**Chapter 19 — done 2026-11-12, 36 pp unchanged, 16 figures / 19 tables, worst
+gap 4.02 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১৯.১৩ (`d13_flow`) did not match the text's five steps.** It showed
+  step ৪ = charging current and step ৫ = "তার ও ব্রেকার", with "24 V · দুই
+  ব্যাটারি" as the example, though the worked example is one 12 V, 200 AH
+  battery. Steps are now 1 লোড → 2 VA → 3 AH → 4 ব্যাকআপ সময় → 5 চার্জিং,
+  with the examples' own numbers (350 W · 437 → 600 VA · 172 → 200 AH ·
+  3 ঘণ্টা on 130 AH · 20 A), and Latin badges.
+- **A safety box still said "চালিয়ো না"** (তুমি-imperative); the practical
+  work table was all তুমি-imperatives. Both impersonal now.
+- Battery cable: use the maker's own battery leads where supplied (they are
+  sized for the inverter's full rating, not today's load), and a DC fuse or
+  breaker in the positive lead near the battery.
+- Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার. "ফিউজ উড়ে" → "পুড়ে",
+  স্ফুলিঙ্গ → স্পার্ক, কেবল → শুধু, two em-dashes, VRLA row made exact.
+- চিত্র ১৯.৭'s title is "আইপিএসের নেমপ্লেট" like its caption; the two
+  power-factor notes print 0.6 / 0.8 in Latin beside Latin W and VA.
+- All six maths problems have answers (computed).
+- `dia_ch19` type: `T_BODY` 22.5, `T_SMALL` 22.5, `T_TINY` 21.5 (were
+  21.5 / 20 / 18.5); চিত্র ১৯.১৪ placed 15.0 cm. QC stayed clean.
+
+**Chapter 20 — done 2026-11-12, 25 pp unchanged, 13 figures / 10 tables, no
+gap above 3 cm.** What was wrong and is fixed; do not revert:
+- **The intro printed the same sentence twice** ("কিন্তু সরল জিনিস … সহজ।
+  তবে সরল যন্ত্রও … সহজ।").
+- **Both system figures drew the suction pipe stopping above the water**
+  (চিত্র ২০.১ at the reservoir's lid, চিত্র ২০.১১ leaving the side wall above
+  the water line). Both pipes go down into the water now. চিত্র ২০.১'s
+  "সাপ্লাই পাইপ" is "ডেলিভারি পাইপ".
+- চিত্র ২০.২'s "কেবলের মুখ" leader ran diagonally across the whole float
+  body; the label sits at the neck's own height now (list order in
+  `photo_callouts` decides the vertical order). চিত্র ২০.৮'s neutral ran on
+  past the motor to nowhere. চিত্র ২০.১১'s note had a stray semicolon and its
+  "N" touched the box edge. Titles of চিত্র ২০.৫ and ২০.১৩ are nouns.
+- The practical-work table was all তুমি-imperatives, and one cell held an
+  MCQ stem instead of a task. Rewritten impersonally.
+- Six em-dashes removed; forward references use the future tense; "2 x 746"
+  → "2 × 746". All six maths problems have answers (computed).
+- **Layout:** উদাহরণ ২০.৩ now follows the ফ্রি কেবল formula box directly (it
+  had stranded 7.15 cm after the wording changes); the glossary table is
+  9 pt so its last row no longer sits alone on the next page.
+- ch20 still writes "কেবল" for cable (its artwork does); no "only" use left.
+
 ## Open items
 
 - ch18 has three ~4.5–5 cm page-foot gaps (4.93 / 4.56 / 4.55 cm),

@@ -35,10 +35,10 @@ IMG = os.path.join(HERE, "assets", "ch19")
 T_TITLE = 34
 T_NODE = 28
 T_NAME = 24.5
-T_BODY = 21.5
-T_SMALL = 20
+T_BODY = 22.5
+T_SMALL = 22.5
 T_CALL = 24
-T_TINY = 18.5
+T_TINY = 21.5
 
 SYM = "#12324D"
 SW = 3.4
@@ -442,7 +442,7 @@ def d05_nameplate():
                ("ইনপুট সকেট", 0.90, 0.535),
                ("ফিউজ ড্রয়ার", 0.90, 0.635),
                ("মডেল নম্বর", 0.86, 0.82)],
-        note="300 W ও 500 VA দুটিই লেখা; ভাগ করলে পাওয়ার ফ্যাক্টর ০.৬",
+        note="300 W ও 500 VA দুটিই লেখা; ভাগ করলে পাওয়ার ফ্যাক্টর 0.6",
         iw=436)
 
 
@@ -724,11 +724,11 @@ def d13_flow():
     ar = s.arrow_defs(STEEL, "ar", 15)
 
     steps = [
-        ("১", "লোড গোনা", "মোট ওয়াট", STEEL),
-        ("২", "VA বের করা", "ওয়াট / PF", STEEL),
-        ("৩", "ব্যাটারি AH", "কত ঘণ্টা চাই", GREEN),
-        ("৪", "চার্জিং কারেন্ট", "AH-এর ১০%", AMBER),
-        ("৫", "তার ও ব্রেকার", "DC ও AC দুই দিকে", NAVY),
+        ("1", "লোড গোনা", "মোট ওয়াট", STEEL),
+        ("2", "VA বের করা", "ওয়াট / PF", STEEL),
+        ("3", "ব্যাটারি AH", "কত ঘণ্টা চাই", GREEN),
+        ("4", "ব্যাকআপ সময়", "হাতের ব্যাটারিতে", AMBER),
+        ("5", "চার্জিং", "AH-এর দশ ভাগ", NAVY),
     ]
     bw, gapx = 206, 26
     total = len(steps) * bw + (len(steps) - 1) * gapx
@@ -744,17 +744,17 @@ def d13_flow():
                   STEEL, 3.0)
 
     # নমুনা হিসাব
-    s.rect(46, 348, 1148, 210, "#F7FAFD", STEEL, 2.4, 14)
+    s.rect(46, 348, 1148, 184, "#F7FAFD", STEEL, 2.4, 14)
     s.text(620, 392, "উদাহরণের সংখ্যা", T_NAME, NAVY, 700, "middle")
     vals = [("350 W", "লোড"), ("437 VA", "→ 600 VA"),
-            ("172 AH", "→ 200 AH"), ("20 A", "চার্জিং"),
-            ("24 V", "দুই ব্যাটারি")]
+            ("172 AH", "→ 200 AH"), ("3 ঘণ্টা", "130 AH-এ"),
+            ("20 A", "200 AH-এ")]
     for i, (v, k) in enumerate(vals):
         cx = x0 + bw / 2 + i * (bw + gapx)
         s.text(cx, 458, v, T_NODE, NAVY, 700, "middle")
         s.text(cx, 500, k, T_TINY, GREY, 400, "middle")
 
-    y = note_strip(s, 582, "প্রথমে লোড, তারপর VA, তারপর AH; ক্রম উল্টালে "
+    y = note_strip(s, 556, "প্রথমে লোড, তারপর VA, তারপর AH; ক্রম উল্টালে "
                            "হিসাব মেলে না")
     s.fit(y, 24)
     return s.save(f"{OUT}/d13_flow.svg")
@@ -768,7 +768,7 @@ def d14_ips_plate():
     নামগুলোই সব যন্ত্রে এক।
     """
     s = SVG(1240, 790)
-    s.title("আইপিএসের রেটিং প্লেট", T_TITLE)
+    s.title("আইপিএসের নেমপ্লেট", T_TITLE)
 
     # সাতটি সারি ধরাতে PH ≥ ৪৬২ লাগে — কম দিলে শেষ সারিটা ভেতরের
     # সাদা আয়তক্ষেত্রের কিনারায় আটকে যায় (qc "box edge cuts" ধরে)
@@ -806,7 +806,7 @@ def d14_ips_plate():
         callout(s, PX + PW + 42, ty, text, PX + PW, ty, "start", T_CALL)
 
     y = note_strip(s, PY + PH + 32,
-                   "960 W / 1200 VA; ভাগ করলে পাওয়ার ফ্যাক্টর ০.৮")
+                   "960 W / 1200 VA; ভাগ করলে পাওয়ার ফ্যাক্টর 0.8")
     s.fit(y, 24)
     return s.save(f"{OUT}/d14_ips_plate.svg")
 
