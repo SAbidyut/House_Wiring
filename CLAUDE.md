@@ -3122,6 +3122,71 @@ gap above 3 cm.** What was wrong and is fixed; do not revert:
   9 pt so its last row no longer sits alone on the next page.
 - ch20 still writes "কেবল" for cable (its artwork does); no "only" use left.
 
+**Chapter 21 — done 2026-11-12, 30 pp unchanged, 14 figures / 6 tables, worst
+gap 4.05 cm.** What was wrong and is fixed; do not revert:
+- **TP&N was explained backwards.** The text said "TP&N … so ask for a four-pole
+  breaker". TP&N is three switched poles plus an unswitched neutral link; a
+  4-pole breaker is the case where the neutral must be cut too (pointer to
+  অধ্যায় ২৪).
+- **চিত্র ২১.৮ (`d08_earth`):** the "নীল নিউট্রাল" dot sat on the grey back
+  plate, not on a wire, and its leader crossed the PE leader. The target is on
+  the blue wires now, the two labels are in target order, and the label reads
+  "নিউট্রাল তার". The panel is European (blue neutral); one paragraph under the
+  figure says so and gives BNBC's black neutral / blue L3.
+- **চিত্র ২১.১৩ (`d12_calc`):** the arrow from "মোট লোড" ended in the gap
+  between the two formula boxes; it branches to both now. চিত্র ২১.২'s
+  "সাপ্লাই" sat on the panel border (`ytop` 176). চিত্র ২১.১০'s title carried
+  Φ (not in Kalpurush) → words. চিত্র ২১.১৪'s note is a sentence now.
+- Table cell "অক্সাইড পরিবাহী" (copper oxide is not a conductor) → "অক্সাইড
+  তেমন বাধা দেয় না". "সব সাদা তার" on the neutral bar → "সব নিউট্রাল তার".
+- Two leftover meta lines ("সিলেবাসের প্রথম / দ্বিতীয় বিষয়") removed; a
+  doubled semicolon in the comb-bar paragraph; the objective's two em-dashes.
+- Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার. কেবল → শুধু (7), -টা → -টি,
+  the practical table made impersonal, all eight maths problems answered.
+
+**Chapter 22 — done 2026-11-12, 52 pp unchanged, 24 figures / 21 tables, one
+pre-existing 4.57 cm gap.** What was wrong and is fixed; do not revert:
+- **Five passages printed the same sentence twice** (leftovers of an earlier
+  rewrite): ২২.১.১ overload, ২২.১.২ short circuit, the RCCB note in ২২.৭.১,
+  the opening of ২২.৯ and of ২২.১২; plus "BNBC-র … BNBC-র" and "সারণি সারণি".
+- The intro said death at "২০০ মিলিঅ্যাম্পিয়ার"; ch01 and this chapter's own
+  box say about 100 mA. Now "১০০ মিলিঅ্যাম্পিয়ারের মতো".
+- Motor starting current "ছয়-আট গুণ" → "পাঁচ-সাত গুণ" (ch18's figure), and a
+  B curve trips at 3–5 ×.
+- `≤` is not in Kalpurush: the two formula boxes say it in words. (The
+  condition `IB ≤ In ≤ IZ` stays symbolic in the MCQ and the question.)
+- A তুমি-imperative in the fake-breaker paragraph ("বোতাম চাপো") and the whole
+  practical table → impersonal. Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার.
+  কেবল → শুধু (35), সবসময় → সব সময়, one em-dash pair.
+- All ten maths problems have answers (computed).
+- **Diagrams:** চিত্র ২২.৫'s two sub-headings and চিত্র ২২.১৩'s "টরয়েড কোর"
+  touched their header chips (moved); badges in চিত্র ২২.৭ and ২২.২৩ are Latin
+  (Bangla ৪ read as 8); titles of চিত্র ২২.১৩ and ২২.১৭ are nouns
+  ("RCCB-র কার্যপ্রণালি", "SPD-র কার্যপ্রণালি"); the surge bolt in ২২.১৭ no
+  longer crosses the panel border; ২২.২০'s note "খায়" → "সংযোগ নেয়".
+
+**Chapter 23 — done 2026-11-12, 49 pp unchanged, 17 figures / 26 tables, gaps
+as before (worst 4.66 cm).** What was wrong and is fixed; do not revert:
+- **চিত্র ২৩.১০ (`d10_sizecode`) was factually wrong.** It showed `7 / 0.67 rm`
+  beside `7 / 0.029"` and said both are about 2.5 mm². 7/0.029 inch is
+  **3.0 mm²** (the chapter's own সারণি ২৩.১১ says so; its metric twin is
+  7/0.74). The left panel is `7 / 0.74 rm` and the box says 3.0 now.
+- **The 300/500 V passage contradicted itself.** The paragraph said 300/500
+  "also works if phases cannot touch", and the ⚠ box said never in a
+  three-phase DB because of switching surges, with a তুমি-imperative. Both
+  now say: 450/750 is the grade for fixed wiring; 300/500 is above 230/400 V
+  on paper but is the thin-insulation grade of cords and light sheathed cable.
+- FR was described as "does not burn"; it self-extinguishes when the flame
+  source is removed and does not spread flame.
+- `√3` in body text → "তিনের বর্গমূল". রঙ → রং (রঙের kept).
+- A doubled sentence in ২৩.৫.৪; "দুটি কারণ।" opening ২৩.৯.১ with nothing
+  before it; a first-person aside in ২৩.৩.৫; five তুমি-imperatives in boxes
+  and bullets; the practical table → impersonal. কেবল → শুধু, সবসময় → সব সময়.
+- All thirteen maths problems have answers (computed).
+- **Diagrams:** labels say পরিবাহী like the prose (was কন্ডাক্টর in three
+  figures); চিত্র ২৩.৮'s last field no longer touches the canvas edge;
+  চিত্র ২৩.১৫'s badges are Latin; titles of চিত্র ২৩.১৬ and ২৩.১৭ are nouns.
+
 ## Open items
 
 - ch18 has three ~4.5–5 cm page-foot gaps (4.93 / 4.56 / 4.55 cm),

@@ -529,7 +529,7 @@ def d03_layers():
         for k, ln in enumerate(why.split("\n")):
             s.text(bx + bw / 2, ytop + 104 + k * 34, ln, T_BODY, NAVY,
                    700, "middle")
-        s.badge(bx + 26, ytop + 168, "১২৩৪"[i], 19, col, "#FFFFFF", 20)
+        s.badge(bx + 26, ytop + 168, "1234"[i], 19, col, "#FFFFFF", 20)
         if i < 3:
             s.path(f"M {bx + bw + 4} {ytop + 98} L {bx + bw + gap - 4} "
                    f"{ytop + 98}", STEEL, 3.2, marker=ar)
@@ -594,7 +594,7 @@ def d06_trip():
     px = x0
     panel(s, px, 104, pw, PH, "থার্মাল ট্রিপ", AMBER)
     cx = px + pw / 2
-    s.text(cx - 60, 178, "বাইমেটাল স্ট্রিপ", T_NAME, NAVY, 700, "middle")
+    s.text(cx - 60, 190, "বাইমেটাল স্ট্রিপ", T_NAME, NAVY, 700, "middle")
 
     for dx, lab, hot in ((-140, "স্বাভাবিক", False),
                          (4, "ওভারলোডে", True)):
@@ -636,7 +636,7 @@ def d06_trip():
     px = x0 + pw + gap
     panel(s, px, 104, pw, PH, "ম্যাগনেটিক ট্রিপ", RED)
     cx = px + pw / 2
-    s.text(cx, 178, "সোলেনয়েড কয়েল ও প্লাঞ্জার", T_NAME, NAVY, 700,
+    s.text(cx, 190, "সোলেনয়েড কয়েল ও প্লাঞ্জার", T_NAME, NAVY, 700,
            "middle")
 
     # ফল্ট কারেন্টের লেবেল তারের উপরে, তারের গায়ে নয়
@@ -892,7 +892,7 @@ def d11_mccb_trip():
                ("শর্ট সার্কিট সেটিং", 0.500, 0.500, 0.283),
                ("থার্মাল-ম্যাগনেটিক", 0.858, 0.858, 0.270)],
         below=[("সেটিং ডায়াল", 0.265, 0.297, 0.500),
-               ("ট্রিপ কার্ভের ছবি", 0.775, 0.775, 0.550)],
+               ("ট্রিপ কার্ভের প্রতীক", 0.775, 0.775, 0.550)],
         note="ডায়াল ঘুরিয়ে ওভারলোড সেটিং লোডের FLC-তে নামিয়ে আনা যায়")
 
 
@@ -900,7 +900,7 @@ def d11_mccb_trip():
 def d12_rccb_work():
     """যাওয়া আর ফেরার হিসাব — RCCB-র গোটা নীতি এইটুকুই।"""
     s = SVG(1240, 690)
-    s.title("RCCB কীভাবে কাজ করে", T_TITLE)
+    s.title("RCCB-র কার্যপ্রণালি", T_TITLE)
 
     pw, gap = 548, 32
     x0 = (1240 - (pw * 2 + gap)) / 2
@@ -922,7 +922,7 @@ def d12_rccb_work():
         s.path(f"M {xout - 96} {yN} L {xin} {yN}", C_N, SW, marker=arb)
         s.ellipse(ring_x, ring_y, 46, 62, "none", "#7A4520", 13)
         s.ellipse(ring_x, ring_y, 46, 62, "none", "#C98A55", 4)
-        s.text(ring_x, 176, "টরয়েড কোর", T_SMALL, NAVY, 700, "middle")
+        s.text(ring_x + 6, 176, "টরয়েড কোর", T_SMALL, NAVY, 700, "end")
         s.text(xin + 6, yL - 14, "L", T_SMALL, C_L, 700, "start")
         s.text(xin + 6, yN + 26, "N", T_SMALL, NAVY, 700, "start")
 
@@ -1023,7 +1023,7 @@ def d15_rcbo():
 def d16_spd_work():
     """SPD স্বাভাবিক সময়ে খোলা, সার্জের সময়ে বন্ধ — এটুকুই নীতি।"""
     s = SVG(1240, 680)
-    s.title("সার্জ কোন পথে যায়", T_TITLE)
+    s.title("SPD-র কার্যপ্রণালি", T_TITLE)
 
     pw, gap = 548, 32
     x0 = (1240 - (pw * 2 + gap)) / 2
@@ -1069,7 +1069,7 @@ def d16_spd_work():
                    GREEN, 700, "middle")
         else:
             arS = s.arrow_defs(RED, "aS", 15)
-            bolt(s, xin + 78, yL - 30, 1.15, "#F2C744")
+            bolt(s, xin + 78, yL - 30, 0.8, "#F2C744")
             s.path(f"M {spdx + 58} {322} L {spdx + 58} {402}", RED, 3.0,
                    marker=arS)
             s.text(spdx + 116, 344, "সার্জ", T_SMALL, RED, 700, "middle")
@@ -1171,7 +1171,7 @@ def d18_db():
         s.text(bx0 + 14, yy + 7, lab, T_SMALL, col, 700, "start")
 
     y = note_strip(s, ytop + 296,
-                   "SPD-ও বাসবার থেকেই খায়; নিজের ব্যাকআপ MCB নিয়ে")
+                   "SPD-ও বাসবার থেকেই সংযোগ নেয়, নিজের ব্যাকআপ MCB দিয়ে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d18_db.svg")
 
@@ -1214,7 +1214,7 @@ def d21_select():
     y = 112
     for i, (name, sub) in enumerate(steps):
         s.rect(x0, y, bw, bh, "#FCFDFE", STEEL, 2.4, 11)
-        s.badge(x0 + 40, y + bh / 2, "১২৩৪৫৬৭"[i], 20, STEEL, "#FFFFFF", 21)
+        s.badge(x0 + 40, y + bh / 2, "1234567"[i], 20, STEEL, "#FFFFFF", 21)
         s.text(x0 + 80, y + bh / 2 + 8, name, T_NAME, NAVY, 700, "start")
         s.text(x0 + bw - 26, y + bh / 2 + 7, sub, T_BODY, GREY, 700, "end")
         if i < len(steps) - 1:
