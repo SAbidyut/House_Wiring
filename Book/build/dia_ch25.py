@@ -911,7 +911,7 @@ def d06_spd():
         vy = max(vy, verdict(s, px[i] + 16, 848, pw - 32, ok, txt))
 
     y = note_strip(s, vy + 34,
-                   "এসপিডির L, N ও PE তারের মোট দৈর্ঘ্য 0.5 মিটারের বেশি নয়")
+                   "বার থেকে এসপিডি আর এসপিডি থেকে আর্থিং বার: মোট তার 0.5 মিটারের বেশি নয়")
     s.fit(y, 24)
     return s.save(f"{OUT}/d06_spd.svg")
 
@@ -929,7 +929,7 @@ def d07_comb():
     for i, comb in enumerate((False, True)):
         x0 = px[i]
         hd = "কম্ব বাসবার" if comb else "আলাদা জাম্পার তার"
-        panel(s, x0, 100, pw, 470, hd)
+        panel(s, x0, 100, pw, 404, hd)
 
         ry = 330
         xs = [x0 + 108 + k * 96 for k in range(4)]
@@ -943,27 +943,27 @@ def d07_comb():
             s.line(xs[0] - 34, ry - 172, xs[0] - 34, ry - 154, C_L1, 3.4)
             s.text(xs[0] - 34, ry - 186, "L", T_TINY, C_L1, 700, "middle")
         else:
+            # প্রতিটি জাম্পার আলাদা তার: এক টার্মিনাল থেকে পরেরটিতে
             for k in range(3):
-                hy = ry - 100 - k * 26
-                s.path(f"M {xs[k]} {ry - 48} L {xs[k]} {hy} "
-                       f"L {xs[k + 1]} {hy} L {xs[k + 1]} {ry - 48}",
-                       C_L1, 3.2)
+                s.path(f"M {xs[k] + 6} {ry - 48} L {xs[k] + 6} {ry - 104} "
+                       f"L {xs[k + 1] - 6} {ry - 104} "
+                       f"L {xs[k + 1] - 6} {ry - 48}", C_L1, 3.2)
             for x in xs:
-                s.circle(x, ry - 48, 5.4, "#8A5326", "none", 0)
-            s.line(xs[0], ry - 100, xs[0], ry - 176, C_L1, 3.4)
-            s.text(xs[0], ry - 190, "L", T_TINY, C_L1, 700, "middle")
+                s.circle(x, ry - 48, 8, "#8A5326", "none", 0)
+            s.line(xs[0] - 6, ry - 48, xs[0] - 6, ry - 176, C_L1, 3.4)
+            s.text(xs[0] - 6, ry - 190, "L", T_TINY, C_L1, 700, "middle")
 
         for k, x in enumerate(xs):
             module(s, x - 24, ry, 1, None, None, w1=48, h=96)
             s.line(x, ry + 48, x, ry + 92, C_L1, 2.6)
-            s.text(x, ry + 128, f"ওয়ে {bn(k + 1)}", T_TINY, NAVY, 700,
+            s.text(x, ry + 128, f"ওয়ে {k + 1}", T_TINY, NAVY, 700,
                    "middle")
 
     vy = 0
     for i, (ok, txt) in enumerate((
             (False, "প্রতিটি জোড়ায় একটি করে আলগা হওয়ার জায়গা"),
             (True, "একটি টুকরো, একবার আঁটা, সব ওয়েতে সমান ফেজ"))):
-        vy = max(vy, verdict(s, px[i] + 16, 596, pw - 32, ok, txt))
+        vy = max(vy, verdict(s, px[i] + 16, 530, pw - 32, ok, txt))
 
     y = note_strip(s, vy + 34,
                    "কম্বের দাঁত কাটার পর খোলা প্রান্তে ঢাকনি লাগে")
@@ -1061,7 +1061,7 @@ def d09_label():
     ar = s.arrow_defs(STEEL, "lb", 12)
 
     # ডেড-ফ্রন্ট
-    fx, fy, fw, fh = 252, 190, 520, 230
+    fx, fy, fw, fh = 252, 150, 520, 230
     s.rect(fx, fy, fw, fh, "#F2F5F8", "#8E99A6", 2.6, 8)
     n = 12
     ww = (fw - 60) / n
@@ -1084,7 +1084,7 @@ def d09_label():
                "middle")
 
     # দরজার ভেতরে চার্ট
-    cx, cy, cw = 830, 160, 376
+    cx, cy, cw = 830, 120, 376
     ch = 60 + len(CHART) * 44
     s.rect(cx - 14, cy - 14, cw + 28, ch + 28, "#F2F5F8", "#8E99A6",
            2.6, 8)
@@ -1107,7 +1107,7 @@ def d09_label():
     s.line(fx + fw + 12, fy + 100, cx - 26, fy + 100, STEEL, 3,
            marker=ar)
 
-    y = note_strip(s, max(fy + fh, cy + ch) + 90,
+    y = note_strip(s, max(fy + fh, cy + ch) + 56,
                    "ওয়ের নম্বর, লেবেলের নম্বর ও চার্টের নম্বর একই হতে হবে")
     s.fit(y, 24)
     return s.save(f"{OUT}/d09_label.svg")

@@ -672,7 +672,7 @@ def d04_parts():
     pipe_h(s, cx - 108, cx + 108, cy, 34)
 
     # ২ — বেন্ড
-    cx, cy = cell(1, "বেন্ড (90°)")
+    cx, cy = cell(1, "বেন্ড (90 ডিগ্রি)")
     pipe(s, f"M {cx - 96} {cy + 52} L {cx - 30} {cy + 52} "
             f"Q {cx + 44} {cy + 52} {cx + 44} {cy - 22} L {cx + 44} {cy - 56}",
          34)
@@ -805,7 +805,7 @@ def d06_bend():
     cx, cy = x0 + 250, top + 262
     Rb = 150
     pipe(s, f"M {cx - 210} {cy + Rb} L {cx - Rb} {cy + Rb} "
-            f"A {Rb} {Rb} 0 0 1 {cx} {cy} L {cx} {cy - 128}", 36)
+            f"A {Rb} {Rb} 0 0 0 {cx} {cy} L {cx} {cy - 128}", 36)
     s.path(f"M {cx - Rb} {cy + Rb} L {cx - Rb} {cy} L {cx} {cy}",
            STEEL, 2, dash="8 6")
     dim_h(s, cx - Rb, cx, cy - 26, "R = 3 × OD")
@@ -819,7 +819,7 @@ def d06_bend():
     cx, cy = x0 + 250, top + 262
     Rb = 46
     pipe(s, f"M {cx - 210} {cy + Rb} L {cx - Rb} {cy + Rb} "
-            f"A {Rb} {Rb} 0 0 1 {cx} {cy} L {cx} {cy - 128}", 36)
+            f"A {Rb} {Rb} 0 0 0 {cx} {cy} L {cx} {cy - 128}", 36)
     dim_h(s, cx - Rb, cx, cy + Rb + 84, "R ছোট", RED)
     # চ্যাপ্টা, ফাটা মুখ
     ex, ey = x0 + 462, top + 132
@@ -985,10 +985,10 @@ def d09_slab():
     pipe_v(s, gx + 300, gy + 96, gy + gh - 24, 26)
     rnd_box(s, gx + 300, gy + 96, 34, "#EDF1F5", "#6C7885", False)
     rnd_box(s, gx + 120, gy + 96, 34, "#EDF1F5", "#6C7885", False)
-    callout(s, gx + 26, gy + gh + 40, "কন্ডুইটের রান", gx + 90, gy + 96,
+    callout(s, gx + 26, gy + gh + 40, "কন্ডুইটের রান", gx + 52, gy + 96,
             "start", T_SMALL)
-    callout(s, gx + gw - 26, gy + gh + 40, "আউটলেট বাক্স", gx + 300,
-            gy + 96 + 34, "end", T_SMALL)
+    callout(s, gx + gw - 26, gy + gh + 40, "আউটলেট বাক্স", gx + 314,
+            gy + 96 + 16, "end", T_SMALL)
 
     y = note_strip(s, top + PH + 30,
                    "ঢালাইয়ের পর আর বদলানো যায় না; পুল-ওয়্যার তখনই "
@@ -1005,26 +1005,29 @@ def d10_pullbox():
     s = SVG(1240, 700)
     s.title("পুল বাক্স কোথায় দিতে হয়", T_TITLE)
 
-    PW, PH = 578, 428
+    PW, PH = 578, 452
     top = 104
     panel(s, 30, top, PW, PH, "চার বাঁক, এক টান", RED)
     panel(s, 632, top, PW, PH, "পুল বাক্সে ভাগ", GREEN)
 
     def run(x0, boxed):
         bx, by = x0 + 62, top + 92
-        d = (f"M {bx} {by} L {bx + 210} {by} "
-             f"Q {bx + 250} {by} {bx + 250} {by + 40} L {bx + 250} {by + 96} "
-             f"Q {bx + 250} {by + 136} {bx + 290} {by + 136} "
-             f"L {bx + 400} {by + 136} "
-             f"Q {bx + 440} {by + 136} {bx + 440} {by + 176} "
-             f"L {bx + 440} {by + 228}")
+        d = (f"M {bx} {by} L {bx + 130} {by} "
+             f"Q {bx + 170} {by} {bx + 170} {by + 40} L {bx + 170} {by + 96} "
+             f"Q {bx + 170} {by + 136} {bx + 210} {by + 136} "
+             f"L {bx + 330} {by + 136} "
+             f"Q {bx + 370} {by + 136} {bx + 370} {by + 176} "
+             f"L {bx + 370} {by + 232} "
+             f"Q {bx + 370} {by + 272} {bx + 410} {by + 272} "
+             f"L {bx + 480} {by + 272}")
         pipe(s, d, 28)
-        for i, (px, py) in enumerate(((bx + 240, by + 12),
-                                      (bx + 258, by + 128),
-                                      (bx + 430, by + 148))):
+        for i, (px, py) in enumerate(((bx + 160, by + 12),
+                                      (bx + 178, by + 128),
+                                      (bx + 360, by + 148),
+                                      (bx + 378, by + 264))):
             s.badge(px, py, str(i + 1), 15, AMBER, "#FFFFFF", 14)
         if boxed:
-            sq_box(s, bx + 250, by + 68, 74, 62)
+            sq_box(s, bx + 270, by + 136, 74, 62)
         return bx, by
 
     bx, by = run(30, False)
@@ -1216,7 +1219,7 @@ def d14_pull():
     s = SVG(1240, 620)
     s.title("পুল-ওয়্যার দিয়ে তার টানা", T_TITLE)
 
-    PW, PH = 386, 356
+    PW, PH = 386, 290
     top = 104
     gap = 20
     x0 = (1240 - 3 * PW - 2 * gap) / 2
@@ -1228,28 +1231,28 @@ def d14_pull():
 
     # ১
     px = x0
-    cy = top + 200
+    cy = top + 152
     pipe_h(s, px + 40, px + PW - 40, cy, 42)
     s.path(f"M {px + 52} {cy} L {px + PW - 66} {cy} "
            f"q 18 0 18 -16 q 0 -16 -18 -16", "#9AA3AC", 3.6)
-    s.text(px + PW / 2, cy + 96, "20 SWG GI তার", T_SMALL, GREY, 700,
+    s.text(px + PW / 2, cy + 88, "20 SWG GI তার", T_SMALL, GREY, 700,
            "middle")
 
     # ২
     px = x0 + PW + gap
-    cy = top + 200
+    cy = top + 152
     pipe_h(s, px + 40, px + 190, cy, 42)
     s.line(px + 190, cy, px + 300, cy, "#9AA3AC", 3.6)
     for k, col in enumerate((C_L1, C_N, C_PE)):
         s.path(f"M {px + 300} {cy} L {px + 330} {cy + (k - 1) * 13} "
                f"L {px + PW - 40} {cy + (k - 1) * 13}", col, 3.4)
     s.rect(px + 282, cy - 22, 34, 44, "#3D4650", "#22282F", 2, 5)
-    s.text(px + PW / 2, cy + 96, "টেপ মসৃণ, গিঁট নয়", T_SMALL, GREY,
+    s.text(px + PW / 2, cy + 88, "টেপ মসৃণ, গিঁট নয়", T_SMALL, GREY,
            700, "middle")
 
     # ৩
     px = x0 + 2 * (PW + gap)
-    cy = top + 200
+    cy = top + 152
     pipe_h(s, px + 96, px + PW - 96, cy, 42)
     for k, col in enumerate((C_L1, C_N, C_PE)):
         s.line(px + 30, cy + (k - 1) * 13, px + 108, cy + (k - 1) * 13,
@@ -1257,7 +1260,7 @@ def d14_pull():
         s.line(px + PW - 108, cy + (k - 1) * 13, px + PW - 30,
                cy + (k - 1) * 13, col, 3.4)
     arrowhead(s, px + 24, cy, 180, 15, STEEL)
-    s.text(px + PW / 2, cy + 96, "ঝাঁকি নয়, সমান টান", T_SMALL, GREY,
+    s.text(px + PW / 2, cy + 88, "ঝাঁকি নয়, সমান টান", T_SMALL, GREY,
            700, "middle")
 
     y = note_strip(s, top + PH + 30,
@@ -1315,7 +1318,7 @@ def d15_expansion():
 def d16_wrong():
     """ছয়টি ভুল, ছয়টি ছোট প্যানেলে।"""
     s = SVG(1240, 780)
-    s.title("যে ছয়টি ভুল সবচেয়ে বেশি হয়", T_TITLE)
+    s.title("কন্ডুইট ওয়্যারিংয়ের ছয়টি সাধারণ ভুল", T_TITLE)
 
     CW, CH = 386, 268
     gap = 20
@@ -1389,8 +1392,8 @@ def d16_wrong():
 def d17_pvc():
     return sheet(
         "d17_pvc", "PVC কন্ডুইট: দোকানে যেমন দেখায়",
-        "হেভি গেজ পাইপের আঁটি", "ph_pvc.jpg",
-        "প্রতিটি লাঠির গায়ে ৫০ মিলিমিটার দূরত্বে মাপ ও শ্রেণি ছাপা থাকে",
+        "PVC পাইপের আঁটি", "ph_pvc.jpg",
+        "প্রতিটি পাইপের এক প্রান্তের কাছে মাপ ও শ্রেণি ছাপা থাকে",
         iw=1000, w=1240)
 
 
@@ -1419,14 +1422,14 @@ def d20_spring():
     return sheet(
         "d20_spring", "বেন্ডিং স্প্রিং",
         "স্প্রিং ও PVC পাইপ", "ph_spring.jpg",
-        "স্প্রিংয়ের বাইরের ব্যাস পাইপের ভেতরের ব্যাসের চেয়ে ১ মিলিমিটার কম",
+        "স্প্রিংয়ের বাইরের ব্যাস পাইপের ভেতরের ব্যাসের চেয়ে প্রায় 1 মিলিমিটার কম",
         iw=980, w=1240)
 
 
 def d21_bend():
     return pair_panels(
         "d21_bend", "বাঁক: ফল ও হাতিয়ার",
-        [("তৈরি ৯০° বাঁক", "ph_bend.jpg", GREEN),
+        [("তৈরি 90 ডিগ্রি বাঁক", "ph_bend.jpg", GREEN),
          ("হাতে-ধরা বেন্ডার", "ph_bender.jpg", STEEL)],
         "ধাতব পাইপ বেন্ডারে, PVC স্প্রিং ঢুকিয়ে গরম করে",
         h=390)
@@ -1446,7 +1449,7 @@ def d23_surface():
         "d23_surface", "সারফেস কন্ডুইট",
         [("দেয়ালের গায়ে রান", "ph_surface.jpg", STEEL),
          ("স্যাডলে আঁটা", "ph_saddle.jpg", STEEL)],
-        "সোজা লাইন, সমান দূরত্বে স্যাডল; BNBC বলে ৬০০ মিলিমিটার",
+        "সোজা লাইন, সমান দূরত্বে স্যাডল; BNBC অনুযায়ী 600 মিলিমিটারের বেশি নয়",
         h=430)
 
 
@@ -1495,7 +1498,7 @@ def d27_pull():
 def d28_ceilbox():
     """২৬.১০.২ — জোড়া বাক্সের ভেতরে, পাইপের ভেতরে নয়।"""
     return pair_panels(
-        "d28_ceilbox", "জোড়া যেখানে হয়",
+        "d28_ceilbox", "জংশন বাক্সে জোড়া",
         [("ছাদের জাংশন বাক্স", "ph_ceilbox.jpg", STEEL),
          ("দেয়ালের জাংশন বাক্স", "ph_boxwired.jpg", STEEL)],
         "প্রতিটি জোড়া বাক্সের ভেতরে; ঢাকনা খুললেই হাতের নাগালে",

@@ -3187,6 +3187,68 @@ as before (worst 4.66 cm).** What was wrong and is fixed; do not revert:
   figures); চিত্র ২৩.৮'s last field no longer touches the canvas edge;
   চিত্র ২৩.১৫'s badges are Latin; titles of চিত্র ২৩.১৬ and ২৩.১৭ are nouns.
 
+**Chapter 24 was skipped by the user** (they asked for 21–23, then 25–26).
+It has **not** had this review; remind them before the series is called done.
+
+**Chapter 25 — done 2026-11-12, 43 pp unchanged, 22 figures / 14 tables, one
+3.35 cm gap.** What was wrong and is fixed; do not revert:
+- **The SPD lead-length rule was stated wrongly everywhere** ("L, N ও PE, এই
+  তিনটি তারের মোট দৈর্ঘ্য ০.৫ মিটার", and উদাহরণ ২৫.৪ added all three). The
+  rule is about the surge path: the lead from the phase (or neutral) bar to
+  the SPD **plus** the lead from the SPD to the earthing bar, ≤ 0.5 m, never
+  over 1.0 m (confirmed by search; ch22 already said "দুই তার"). Fixed in the
+  formula box, উদাহরণ ২৫.৪ (0.18 + 0.38 = 0.56 m and 0.16 + 0.38 = 0.54 m;
+  earth lead cut to 0.32 m), the summary, MCQ ৬, the fault table, maths
+  problem ৪, the practical table and চিত্র ২৫.৯'s note strip.
+- "আরসিসিবি পড়ে যায়" (nine places) → "ট্রিপ করে", the book's own word.
+- Both terminal bars were called "পিতলের"; now "পিতল বা তামার" (BNBC asks
+  for a copper earthing bar). `≥` in two table cells → "অন্তত". Polarity is
+  checked with a ভোল্টেজ ডিটেক্টর ও মাল্টিমিটার. কনডুইট → কন্ডুইট,
+  র‍্যাওল → রাউল (ch15's spelling), সবসময় → সব সময়, one em-dash,
+  "প্রথমত … দুই" → "দ্বিতীয়ত".
+- All six maths problems have answers; problem ২ now says eight circuits
+  (seven SP MCBs + one RCBO).
+- **Diagrams:** চিত্র ২৫.১৪ (`d07_comb`) drew the jumpers as a rising
+  staircase from one riser; each jumper is its own U from one terminal to the
+  next now, way numbers are Latin ("ওয়ে ৪" read as 8) and the panels lost
+  66 px of dead space. চিত্র ২৫.১৭ (`d09_label`) lost a 40 px dead band.
+- **The trailing empty paragraph tipped onto a header-only page 44** once the
+  answers were added. Closed by trimming three lines on the last page
+  (answers ৫ and ৬, one practical-table cell). **After adding answers to a
+  chapter whose last page is full, look at the page count.**
+
+**Chapter 26 — done 2026-11-12, 46 pp unchanged, 30 figures / 17 tables, gaps
+as before (worst 4.50 cm).** What was wrong and is fixed; do not revert:
+- **চিত্র ২৬.১৮ (`d10_pullbox`) said "চার বাঁক" and drew three**, with the
+  pull box after the first bend, while the text says the box splits the run
+  into two two-bend pulls. It has four bends now and the box sits between
+  bends 2 and 3.
+- **চিত্র ২৬.১৪ (`d06_bend`): both bends had the wrong sweep flag** (`0 0 1`),
+  so each "bend" was two kinks with the curve bulging away from its own
+  dashed radius lines. `0 0 0` now; the same bug the ch20–28 pass fixed in
+  d07.
+- চিত্র ২৬.২০ (`d09_slab`): the "কন্ডুইটের রান" leader ended on the outlet
+  box's rim; it ends on the pipe. চিত্র ২৬.২৫ (`d14_pull`) lost 66 px of dead
+  space. `°` in two figure labels → "90 ডিগ্রি". Titles of চিত্র ২৬.২৮ and
+  ২৬.৩০ are nouns. চিত্র ২৬.৬'s header claimed "হেভি গেজ" (the photo cannot
+  show that) and its note said "লাঠির গায়ে ৫০ মিলিমিটার দূরত্বে".
+- **The marking photograph (চিত্র ২৬.৭) reads THIN WALL**, and the text never
+  said so. One paragraph under the marking table: the marking is complete,
+  but that pipe does not meet BNBC's heavy-wall condition.
+- "−5 °C থেকে +60 °C" → words (neither `°` nor `−` is in Kalpurush).
+  Standard numbers are Latin like ch22–25 ("আইইসি 60364-5-52", "আইইসি
+  61386-1", "বিএস 7671": Bangla ৪ made 60364 read as 60368). MCQ ৬ and ১৮
+  options are Latin digits ("৪০" and "৮০" sat side by side).
+- Switch and socket heights agree with ch14 (১২২০ / ২৫৪ মিলিমিটার).
+  Summary: open sun needs ইউভি-প্রতিরোধী PVC বা জিআই, as the body says.
+  মরচে → মরিচা, রাওল → রাউল, সবসময় → সব সময়, forward reference to
+  অধ্যায় ২৮ in the future tense, three colons after bold spans.
+- All seven maths problems have answers (computed from the chapter's own
+  tables).
+- **Layout:** the new paragraph stranded চিত্র ২৬.৮ (6.17 cm). The figure now
+  comes before the 16 SWG note box, not after it.
+
+
 ## Open items
 
 - ch18 has three ~4.5–5 cm page-foot gaps (4.93 / 4.56 / 4.55 cm),
