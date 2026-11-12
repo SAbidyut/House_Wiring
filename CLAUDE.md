@@ -29,8 +29,8 @@ order *is* the book order — do not regroup chapters by theme.
 | 10 | সিরিজ বোর্ড | 18 | ✅ delivered |
 | 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 27 | ✅ delivered |
 | 12 | ফ্যান ও ফ্যান রেগুলেটর | 27 | ✅ delivered |
-| 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 21 | ✅ delivered |
-| 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 31 | ✅ delivered |
+| 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 22 | ✅ delivered |
+| 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 32 | ✅ delivered |
 | 15 | সুইচ বোর্ড | 24 | ✅ delivered |
 | 16 | পাওয়ার ফর্মুলা ও ক্যালকুলেশন | 20 | ✅ delivered |
 | 17 | বিদ্যুৎ বিল | 19 | ✅ delivered |
@@ -2947,6 +2947,92 @@ above 3 cm.** What was wrong and is fixed; do not revert:
 - **BNBC's PDF could not be fetched from this container** (the proxy returns
   403 for law.resource.org), so no new BNBC clause was cited in ch11 or ch12;
   1.3.9.3.1 is ch14's already-verified clause.
+
+
+**Chapter 13 — done 2026-11-12, 21 → 22 pp, 12 figures / 7 tables, worst
+gap 4.41 cm.** What was wrong and is fixed; do not revert:
+- **"Indecator" in the tunnel-wiring slide** (চিত্র ১৩.১০) is repainted by
+  `Book/build/fix_ch13_typos.py` (edits `assets/ch13/h18_tunnel_conn.png`,
+  run once; the PPTX still has the typo).
+- **The chapter told the reader to twist and tape joints** ("প্রতিটি সংযোগে
+  অধ্যায় ১১-এর জয়েন্ট ও টেপিংয়ের নিয়ম", and step ৮). Every connection here
+  is at a switch terminal and BNBC's loop wiring forbids joints in the run.
+  Intro and step now say so.
+- চিত্র ১৩.১০ shows a plain switch, a fuse and an indicator ahead of the three
+  two-way switches; the text never mentioned them. One sentence added.
+- The two-wire method was called "banned in many countries" with no source;
+  now: it breaks the rule that a switch cuts only the phase.
+- Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার. কেবল → শুধু (9), সবসময় →
+  সব সময়. Mixed digits: terminal counts 2 / 3 / 4 and "440 V … 63 A" Latin.
+- **Diagrams:** চিত্র ১৩.১'s "চলমান পাত (ব্লেড)" floated under the header
+  chip; it sits under the blade with a leader now. চিত্র ১৩.৪'s "সুইচ ১ / ২"
+  touched the chips (moved down 12 px). চিত্র ১৩.৯ lost 58 px of dead band.
+  চিত্র ১৩.১১ rows read "টু-ওয়ে 1 … 3" (was "২-ওয়ে ১"), lamp heads Latin.
+  চিত্র ১৩.২ says দুটি / তিনটি / চারটি প্রান্ত.
+- **Layout:** in §১৩.৭ the wire-count table precedes the stair figure and the
+  colour paragraph follows উদাহরণ ১৩.২ (its four `steps=` are two). সারণি
+  ১৩.৩ (three rows) is kept whole with `keep_with_next`.
+
+**Chapter 14 — done 2026-11-12, 31 → 32 pp, 15 figures / 8 tables, worst gap
+4.02 cm.** What was wrong and is fixed; do not revert:
+- **The estimate had no control switch for the geyser and the two ACs, and no
+  RCCB.** Rows ১৪ (২০A ডিপি সুইচ × ৩) and ২১ (৪০A, ৩০ mA আরসিসিবি) added;
+  the table is 23 rows. The note says BNBC does not require an RCCB and
+  points at অধ্যায় ২২. Glossary rows for both.
+- **চিত্র ১৪.৫'s note said ব্যাটেন is "BNBC-তে নিরুৎসাহিত"** while the prose
+  (verified clause 1.3.11.1.1) lists batten wiring as recognised. Now
+  "পুরোনো পদ্ধতি".
+- **চিত্র ১৪.৯ (`d05_loop_in`): the second lamp's neutral was a dangling
+  stub** in both panels. Both lamps return on one neutral with a node.
+- **`dia_ch14` type was 20 px = 7.04 pt.** `T_SMALL` and `T_TINY` are 21.5
+  (7.6 pt). `tag_sym()` grew to 46 × 30 and the কমন ওয়াশরুম label got 1.50 m
+  of width so d07 stays clean. d09's counts are Latin ("4 বাতি" read as 8
+  beside "144 W"); d10's badges are Latin and its cards 158 high.
+- Fan-blade height agrees with ch12: "২.৫ মি বা বেশি; ২.৩ মি-র নিচে নয়"
+  (table and চিত্র ১৪.১২). SDB height cites BNBC 1.3.34 (≤ 2 m, ch25's
+  verified clause). "চ্যানেল কেটে" → "চেজ কেটে" in চিত্র ১৪.৭.
+- "কেবল ট্রে" in the glossary was the only cable-as-কেবল; ক্যাবল ট্রে now.
+  কেবল → শুধু (12), সবসময় → সব সময়.
+- **Layout:** উদাহরণ ১৪.৪'s note became a paragraph *before* the example, its
+  steps are two lines, and one owed sentence (3–5 % for unforeseen work in
+  old walls) sits in §১৪.৮.৩.
+
+**Chapter 15 — done 2026-11-12, 24 pp unchanged, 12 figures / 8 tables, worst
+gap 3.19 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১৫.১০ (`d05_inside`) drew the indicator's phase and neutral drops
+  on one line**, i.e. an L–N short. They are 18 px apart now.
+- **Two slide typos**: "Indecator" and "Switch bord connection circuit"
+  (চিত্র ১৫.৯ and ১৫.১১), repainted by `Book/build/fix_ch15_typos.py`.
+- **The slide's first unit is a fuse; the text's is a main switch.** §১৫.৫
+  says so and why.
+- চিত্র ১৫.৬'s title and header said "গ্যাং বোর্ড" though the prose reserves
+  গ্যাং for the unit count; now "মডিউলার (গ্যাং) বোর্ড".
+- **Module sizes are Latin everywhere** (1M … 18M): "৪M" and "৮M" printed the
+  same in Kalpurush. The glossary's "প্রায় ১৭.৫ mm" was the DIN-rail module
+  of ch25, not a switch-plate module; it now says the two differ.
+- "ইনডিকেটর" → "ইন্ডিকেটর" (22 places + artwork), "রল প্লাগ" → "রাউল
+  প্লাগ", `″` → ইঞ্চি, an unclosed bracket in the §১৫.২ note, the intro's
+  doubled "আলোচনা করা হবে … হয়েছে". কেবল → শুধু (11).
+- `dia_ch15` `T_SMALL` 20 → 22; d05 labels and d08 badges Latin.
+
+**Chapter 16 — done 2026-11-12, 20 pp unchanged, 6 figures / 7 tables, no gap
+above 3.2 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১৬.৬ (`d06_steps`) listed "BNBC গুণক" and "পাওয়ার ফ্যাক্টর" as
+  two successive steps**, the very double counting the ⚠ box above it
+  forbids. Steps are now: লোডের তালিকা → প্রতিটির ওয়াট → গুণক 1.65 অথবা
+  cos φ → ভোল্টেজ দিয়ে ভাগ → কারেন্ট ও ব্রেকার, and a paragraph under the
+  figure says which load takes which.
+- **Motor rating was treated as input power** (উদাহরণ ১৬.৩, ঘ.৩). Both now
+  say the motor *takes* that power, and the note says nameplate kW is output
+  (divide by efficiency, অধ্যায় ১৮).
+- PF table: LED and electronic-ballast rows were "সামান্য ইন্ডাকটিভ" →
+  "ইলেকট্রনিক"; ceiling fan 0.8 → 0.9 (PSC, agrees with ch12), with a line
+  that 0.8 is still the cautious figure for a light-and-fan circuit.
+- `√`, `≤` and `²` are not in Kalpurush: "তিনের বর্গমূল", "রুট-থ্রি গুণক",
+  "1.414 গুণ", "১ kW পর্যন্ত", "ওয়াট/বর্গমিটার".
+- The seven maths problems had no answers; all seven do now (checked).
+  MCQ ৭'s options were reordered (key ক2 খ3 গ3 ঘ2).
+- চিত্র ১৬.৫'s "লাইন = ফেজ" → "লাইন ভোল্টেজ = ফেজ ভোল্টেজ"; `T_SMALL` 22.
 
 
 ## Open items
