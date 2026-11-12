@@ -17,7 +17,7 @@ order *is* the book order — do not regroup chapters by theme.
 
 | Chapter | Title | Pages | State |
 |---|---|---|---|
-| 01 | কর্মক্ষেত্রে নিরাপত্তা | 32 | ✅ delivered |
+| 01 | কর্মক্ষেত্রে নিরাপত্তা | 33 | ✅ delivered |
 | 02 | ইলেকট্রিক্যাল টুলস | 23 | ✅ delivered |
 | 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 17 | ✅ delivered |
 | 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 21 | ✅ delivered |
@@ -2498,6 +2498,65 @@ ch1–9 and ch10–19 passes. All 180 figures in `dia_ch20–28` were looked at,
   sampled pages, and the TOC numbers match the chapter openers. Every equation
   renders. This is the first merge with all three diagram passes (ch1–28) and
   the equation fix in it.
+
+## Chapter-by-chapter full review, started 2026-11-12
+
+User: "ey repo te akta book ase… pura review koro… vul gulo ber koro… diagram e
+text overlap thakle thik koro… vasa human er moto kore sohoj kore lekho…
+technical sob vul gulo ber kore thik koro… ekta ekta chapter kore koro… ami
+continue korle next chapter". One chapter per turn; **wait for "continue"
+before starting the next**. The full book is **not** re-merged per chapter.
+
+Fresh-container setup that was needed (do this first next time):
+`pip install pymupdf`, copy `Book/Kalpurush.ttf` to `/usr/local/share/fonts`
+and `fc-cache -f`, `apt-get update && apt-get install -y libreoffice-math`,
+`mkdir Book/build/out`. `CHROME_BIN` is already `/usr/bin/google-chrome`.
+Scripted edits need NFC-normalised needles (the nukta rule above).
+
+**Chapter 1 — done 2026-11-12, 32 → 33 pp, 13 figures / 12 tables, no gap
+above 3 cm.** What was wrong and is fixed; do not revert:
+- **LOTO table contradicted the five golden rules.** Step 5 applied the
+  temporary earth *before* step 6 verified the line dead. Earthing now comes
+  after verification, in step 6.
+- **RCCB note was physically wrong** ("trips before the current reaches the
+  fibrillation level"). An RCCB limits *time*, not current: it cuts the
+  supply in a fraction of a second once leakage passes 30 mA.
+- Current table's last row (>100 mA "heart stops, deep burns") → fibrillation
+  near-certain; standstill and deep burns are at amperes. Values are flagged
+  approximate, 50 Hz AC, **IEC 60479-1** (verified by search; left hand to
+  feet is its reference path, which the text and figure now say).
+- **IEC 60903** glove classes added (00 = 500 V, 0 = 1000 V AC; verified) and
+  **ISO 7010** named for the safety signs (verified). Rubber gloves protect
+  against shock, not "heat, sharp edges and abrasion".
+- §১.৭.৩ had an **unclosed bracket** and one 8-line paragraph; rewritten as two.
+- A neon line tester cannot prove a line dead: new note after চিত্র ১.৮, the
+  Test step names the three pairs (L–N, L–E, N–E), and practical ২ uses a
+  টু-পোল ভোল্টেজ ডিটেক্টর (ch02's term).
+- Rescue ⚠ box: dry wood/bamboo is not safe on 11 kV and above.
+- Fire ⚠ box: switch the main off first if possible.
+- Broken/odd sentences: the intro's doubled "তাই … তাই", the সারসংক্ষেপ PPE
+  bullet, "জন্যই … পদ্ধতি হলো", rescue list items ৪–৫ (verb form now matches
+  ১–৩). "কেবল" (only) → "শুধু" everywhere; -সমূহ → -গুলো; বর্তনী → সার্কিট;
+  দাবানল (not অগ্নিকাণ্ড) as a natural disaster; MCQ ১৪ says ২৩০ V like the text.
+- §১.১২ now runs intro → five steps → hierarchy paragraph (with an electrical
+  example per level) → figure → closing line. Before, "ধাপগুলো হলো:" was
+  followed by a figure of something else.
+- The user's own fuse box and ladder lines (with their em-dashes) are untouched.
+- **Diagrams:** d02 and d14 had the figure **floating 55–60 px above the
+  ground line**; both now stand on it (ground moved up, canvas shorter).
+  d02's **heart was drawn at the waist** (now in the chest), its current path
+  now follows arm → shoulder → heart → leg, and the right panel's **L arrow
+  pointed out of the hand** (now into it). d14's path follows arm, trunk and
+  leg; the earth symbol no longer sits on the ground hatching. d10's step ৫
+  said "শ্বাস ও নাড়ি পরীক্ষা" while the text says সাড়া ও শ্বাস; its connector
+  started 16 px below box ৫; the diamond repeated "১০ সেকেন্ড". d01/d05 wording.
+  `worker()` returns `shoulder_r`, `hip_l/r`, `foot_l/r`, `sole` now.
+  **d05_ppe's drawing itself was not touched** (standing rule).
+- Layout fixes, all reorderings: চিত্র ১.৪ before সারণি ১.৫; চিত্র ১.৭ before
+  the five-rule list; চিত্র ১.৯ at the end of §১.৮ (the first paragraph now
+  cites it); চিত্র ১.২ stays after §১.৩.২'s first paragraph.
+- **Not pushed.** Committed locally on `ccr-3582eca2-jho6kv`; the push waits
+  for the user's go-ahead (the standing "ask before pushing" rule).
 
 ## Open items
 
