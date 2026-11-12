@@ -22,7 +22,7 @@ order *is* the book order — do not regroup chapters by theme.
 | 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 18 | ✅ delivered |
 | 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 21 | ✅ delivered |
 | 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 15 | ✅ delivered |
-| 06 | বেল সার্কিট (৬–৯) | 14 | ✅ delivered |
+| 06 | বেল সার্কিট (৬–৯) | 15 | ✅ delivered |
 | 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 24 | ✅ delivered |
 | 08 | মেজারিং ইন্সট্রুমেন্টস | 21 | ✅ delivered |
 | 09 | মাল্টিপ্লাগ সার্কিট | 18 | ✅ delivered |
@@ -2677,6 +2677,67 @@ above 2.5 cm (the long-standing 4.78 and 4.60 cm are gone).** Do not revert:
   examples ৪.১/৪.২ `steps=` merged to one line each (the back-to-back trap);
   চিত্র ৪.৭ moved to the head of §৪.৮ behind a new opening paragraph;
   চিত্র ৪.৮ moved ahead of the ⚠ box.
+
+**Chapter 5 — done 2026-11-12, 15 pp unchanged, 7 figures / 6 tables, no gap
+above 2.6 cm.** What was wrong and is fixed; do not revert:
+- **Silicone rubber was "১৫০ °C"; IEC 60245-3 rates it 180 °C** (verified by
+  search). Table and glossary.
+- **চিত্র ৫.১ listed কার্বন as a semiconductor** (graphite conducts, diamond
+  insulates; the text never said carbon). Dropped. Conductors are in
+  conductivity order (রুপা, তামা, সোনা …) like the text; "কাঠ" → "শুকনো কাঠ",
+  which is what the figure's own footnote says.
+- **চিত্র ৫.২'s conductor panel showed two bands touching** while the text and
+  সারণি ৫.১ say they overlap. The bands now overlap by 18 px with a blended
+  strip; caption "দুই ব্যান্ড মিশে থাকে".
+- **চিত্র ৫.৭ was not "একই সার্কিট".** The connection panel mixed the two
+  colour codes (red phase, **blue** neutral: the blue-wire trap) and its
+  neutral drop crossed the phase bus; the layout panel showed a fan, a lamp
+  and a socket. Now: red L / black N with labels and no crossing, and the
+  layout shows the same switch-and-lamp circuit in a room (door, switch,
+  dashed run, lamp).
+- The chapter's board symbols (MDB/SDB/SB) are the institute's, not BNBC
+  Table 8.1.15's (ch24). One paragraph after the charts says symbols vary and
+  **the legend must be read first**; short question খ.১০ asks it.
+- Added: a rule that switches are drawn in the off state (rules ১ and ২
+  merged, so the line count before the charts did not grow); the body and
+  wet earth as conductors; the "৫–৮ valence electrons" rule flagged as a
+  simplification for compounds; eV named; aluminium at equal current weighs
+  about half of copper (why overhead lines use it); SLD named as the fourth
+  drawing type, pointing at অধ্যায় ২৪.
+- **The four symbol charts still pack two per page** — every addition before
+  them was paid for by a trim (ρ paragraph, rule merge). Check `layout.py`
+  after any wording change ahead of §৫.৪.২.
+
+**Chapter 6 — done 2026-11-12, 14 → 15 pp, 8 figures / 4 tables, no gap above
+4.1 cm.** What was wrong and is fixed; do not revert:
+- **Three spelling errors inside the institute's slides** were printed in the
+  figures: "Tow Switch Doorbell Circuit", "Serice Doorbell Circuit" and
+  "Indecator" (×4). `Book/build/fix_ch06_typos.py` repaints only those words
+  in `assets/ch06/*.png` (same font metrics: Liberation Serif Bold for the
+  schematics, Carlito Bold for the connection label; colour and size measured
+  from the old ink). The source PPTX is untouched and **still has the typos**.
+- **চিত্র ৬.৫'s connection panel has three switches**, the text said two. The
+  third is a plain 1-way switch in series ahead of the two pushes (bell off at
+  night). It is in the materials list and step ৫ now, with a note that the
+  schematic does not show it.
+- **চিত্র ৬.৮'s connection panel has a fuse and a supply indicator** the text
+  never mentioned; one paragraph explains both.
+- The working cycle was only in the artwork and a note box; a four-step
+  paragraph sits between the definition and চিত্র ৬.১ (objective ১ and
+  questions খ.২ / গ.১ ask for it).
+- Circuit ৮ (switch, lamp and bell in series) said both simply work. The
+  voltage divides: lamp dim, bell weak, and the text now says the circuit is
+  for learning series behaviour, not for real wiring.
+- The indicator circuit's lamp goes out when the push is released; the tip box
+  says a real nurse-call system latches through a relay.
+- চিত্র ৬.২'s note said the trembling and single-stroke bells "look alike"
+  under two photos that look nothing alike (the single-stroke one is a railway
+  block bell). Note is now "গং থাকে বেলে; বাজার ও ইলেকট্রনিক চাইমে গং নেই";
+  the prose says the pictured one is an old pattern.
+- Layout: circuits run intro → figure → materials → steps → ⚠ box now, and
+  the last practical-work table is kept whole (`keep_with_next` on its rows in
+  `ch06.py`, no engine change) instead of leaving five rows alone on p15.
+- ঘণ্টা → বেল, কেবল → শুধু, সর্বদা dropped; intro's doubled "কাজে লাগে" fixed.
 
 
 
