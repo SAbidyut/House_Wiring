@@ -30,7 +30,7 @@ T_TITLE = 34
 T_NODE = 28
 T_NAME = 24.5
 T_BODY = 21.5
-T_SMALL = 20
+T_SMALL = 22
 LH = 1.42
 
 BOXG = "#E7ECF1"
@@ -109,11 +109,11 @@ def d02_steps():
     s = SVG(1240, 480)
     s.title("বিল তৈরির ধাপ", T_TITLE)
 
-    steps = [("১", "মিটারের পাঠ"), ("২", "ব্যবহৃত ইউনিট"),
-             ("৩", "স্ল্যাব অনুযায়ী এনার্জি চার্জ"),
-             ("৪", "ডিমান্ড চার্জ ও মিটার ভাড়া"),
-             ("৫", "ভ্যাট যোগ করে মোট বিল")]
-    CW, CH, GAP = 210, 206, 18
+    steps = [("1", "মিটারের পাঠ"), ("2", "ব্যবহৃত ইউনিট"),
+             ("3", "স্ল্যাব অনুযায়ী এনার্জি চার্জ"),
+             ("4", "ডিমান্ড চার্জ ও মিটার ভাড়া"),
+             ("5", "ভ্যাট যোগ করে মোট বিল")]
+    CW, CH, GAP = 210, 176, 18
     ar = s.arrow_defs(STEEL, "ar", 14)
 
     for i, (num, name) in enumerate(steps):
@@ -207,7 +207,7 @@ def d04_bill():
     lx, rx = BX + 34, BX + BW - 34
     hy = BY + HDR + 24
     s.text(lx, hy, "বিবরণ", T_SMALL, GREY, 700)
-    s.text(rx, hy, "টাকা", T_SMALL, GREY, 700, "end")
+    s.text(rx, hy, "পাঠ / টাকা", T_SMALL, GREY, 700, "end")
     s.line(BX + 22, hy + 14, BX + BW - 22, hy + 14, LINE, 1.8)
 
     y = BY + HDR + 34

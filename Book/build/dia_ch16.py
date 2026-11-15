@@ -28,7 +28,7 @@ T_TITLE = 34
 T_NODE = 28
 T_NAME = 24.5
 T_BODY = 21.5
-T_SMALL = 20
+T_SMALL = 22
 LH = 1.42
 
 SW = 3.4
@@ -298,7 +298,7 @@ def d05_star_delta():
     s.text(verts["L3"][0] + 56, verts["L3"][1] + 52, "L3", T_NODE, L3COL, 700,
            "start")
 
-    s.box_auto(914, 486, "লাইন = ফেজ", T_SMALL, fill=LIGHT, stroke=STEEL)
+    s.box_auto(914, 486, "লাইন ভোল্টেজ = ফেজ ভোল্টেজ", T_SMALL, fill=LIGHT, stroke=STEEL)
 
     y = note_strip(s, py + ph + 24,
                    "স্টারে লাইন ভোল্টেজ ফেজ ভোল্টেজের 1.732 গুণ")
@@ -311,10 +311,11 @@ def d06_steps():
     s = SVG(1240, 460)
     s.title("লোড থেকে কারেন্ট বের করার ধাপ", T_TITLE)
 
-    steps = [("১", "লোডের তালিকা"), ("২", "মোট ওয়াট"),
-             ("৩", "BNBC গুণক"), ("৪", "পাওয়ার ফ্যাক্টর"),
-             ("৫", "কারেন্ট")]
-    CW, CH, GAP = 210, 186, 18
+    # গুণক ও cos φ আলাদা দুই ধাপ ছিল; লেখা বলে দুটি একসঙ্গে বসে না
+    steps = [("1", "লোডের তালিকা"), ("2", "প্রতিটির ওয়াট"),
+             ("3", "গুণক 1.65 অথবা cos φ"), ("4", "ভোল্টেজ দিয়ে ভাগ"),
+             ("5", "কারেন্ট ও ব্রেকার")]
+    CW, CH, GAP = 210, 176, 18
     ar = s.arrow_defs(STEEL, "ar", 14)
 
     for i, (num, name) in enumerate(steps):
@@ -330,7 +331,7 @@ def d06_steps():
                    STEEL, 2.4, marker=ar)
 
     y = note_strip(s, 112 + CH + 30,
-                   "গুণক বাদ দিলে হিসাবের কারেন্ট বাস্তবের চেয়ে কম আসে",
+                   "গুণক ও cos φ একসঙ্গে নয়, যেকোনো একটি; দুটিই বাদ দিলে কারেন্ট কম আসে",
                    fill=AMBERBG, stroke=AMBER, tcolor="#7A5200")
     s.fit(y, 24)
     return s.save(f"{OUT}/d06_steps.svg")

@@ -367,19 +367,19 @@ def d01_material_classes():
          ["বিদ্যুৎ চলাচলে প্রায় কোনো বাধা দেয় না",
           "বাইরের কক্ষপথে ১–৩টি ইলেকট্রন",
           "মুক্ত ইলেকট্রন প্রচুর",
-          "সোনা, রুপা, তামা, অ্যালুমিনিয়াম",
+          "রুপা, তামা, সোনা, অ্যালুমিনিয়াম",
           "তার ও বাসবার তৈরিতে ব্যবহৃত"]),
         ("অর্ধপরিবাহী", "Semiconductor", "#FFF6E5", AMBER,
          ["আংশিক বাধা দেয়, মাঝামাঝি অবস্থা",
           "বাইরের কক্ষপথে ৪টি ইলেকট্রন",
           "তাপ বাড়লে পরিবাহিতা বাড়ে",
-          "সিলিকন, জার্মেনিয়াম, কার্বন",
+          "সিলিকন, জার্মেনিয়াম",
           "ডায়োড, LED, ট্রানজিস্টরে ব্যবহৃত"]),
         ("অপরিবাহী", "Insulator", "#EAF6EF", GREEN,
          ["বিদ্যুৎ চলাচল করতে দেয় না",
           "বাইরের কক্ষপথে ৫–৮টি ইলেকট্রন",
           "মুক্ত ইলেকট্রন প্রায় নেই",
-          "রাবার, PVC, কাচ, চিনামাটি, কাঠ",
+          "রাবার, PVC, কাচ, শুকনো কাঠ",
           "ইনসুলেশন ও আবরণে ব্যবহৃত"]),
     ]
     cw, gapx = 396, 26
@@ -420,13 +420,16 @@ def d02_energy_band():
         s.box_auto(x + pw / 2, 110, name, T_NAME, fill=col, stroke=col,
                    tcolor="#FFFFFF", pad_x=24, pad_y=10)
         vb_top = BASE - 60
-        s.rect(x + 46, vb_top - 46, pw - 92, 46, col, col, 1.6, 4)
+        OV = 18 if i == 0 else 0            # পরিবাহীতে দুই ব্যান্ড একটির ওপর আরেকটি মিশে থাকে
+        s.rect(x + 46, vb_top - 46 - OV, pw - 92, 46 + OV, col, col, 1.6, 4)
         s.text(x + pw / 2, vb_top - 16, "ভ্যালেন্স ব্যান্ড", T_SMALL,
                "#FFFFFF", 700, "middle")
-        cb_bot = vb_top - 46 - gap
-        s.rect(x + 46, cb_bot - 46, pw - 92, 46, "#9FC4E6" if i == 0 else "#C9D6E2",
-               col, 1.6, 4)
-        s.text(x + pw / 2, cb_bot - 16, "কন্ডাকশন ব্যান্ড", T_SMALL,
+        cb_bot = vb_top - 46 - gap          # কন্ডাকশন ব্যান্ডের নিজস্ব (না-মেশা) অংশের তলা
+        s.rect(x + 46, cb_bot - 46 - OV, pw - 92, 46 + OV,
+               "#9FC4E6" if i == 0 else "#C9D6E2", col, 1.6, 4)
+        if OV:                              # মিশে থাকা অংশ: দুই রঙের মাঝামাঝি
+            s.rect(x + 46, cb_bot - OV, pw - 92, OV, "#5F93C4", col, 1.6, 0)
+        s.text(x + pw / 2, cb_bot - 16 - OV, "কন্ডাকশন ব্যান্ড", T_SMALL,
                NAVY, 700, "middle")
         if gap:
             s.rect(x + 46, cb_bot, pw - 92, gap, "#FFFFFF", "none", 0, 0)
@@ -434,7 +437,7 @@ def d02_energy_band():
             s.path(f"M {x+pw-56} {cb_bot} L {x+pw-56} {cb_bot+gap}", GREY, 2, dash="7 5")
             s.text(x + pw / 2, cb_bot + gap / 2 + 7,
                    "ফরবিডেন গ্যাপ", T_SMALL, GREY, 600, "middle")
-        note = ["দুই ব্যান্ড পরস্পরকে ছুঁয়ে থাকে, তাই ইলেকট্রন সহজেই চলে",
+        note = ["দুই ব্যান্ড মিশে থাকে, তাই ইলেকট্রন সহজেই চলে",
                 "গ্যাপ ছোট; তাপ বা আলো পেলে ইলেকট্রন লাফ দিতে পারে",
                 "গ্যাপ অনেক বড়, তাই ইলেকট্রন লাফ দিতে পারে না"][i]
         for j, ln in enumerate(wrap(note, pw - 56, T_SMALL, 400)):
@@ -489,6 +492,7 @@ def d07_diagram_types():
                 s.path(f"M {L-ww/2} {cy+dy} L {L+ww/2} {cy+dy}", SYM, 3.2)
             s.text(cx, B + 34, "প্রতীকভিত্তিক", T_SMALL, GREY, 400, "middle")
         elif i == 1:
+            PH, NEU = "#B32A22", "#1F2428"          # BNBC: ফেজ লাল, নিউট্রাল কালো
             s.rect(cx - 112, cy - 58, 78, 48, "none", SYM, 3, 4)
             s.text(cx - 73, cy - 26, "সুইচ", 22, SYM, 600, "middle")
             s.circle(cx + 86, cy - 34, 22, "none", SYM, 3)
@@ -496,24 +500,32 @@ def d07_diagram_types():
             s.path(f"M {cx+86-k} {cy-34-k} L {cx+86+k} {cy-34+k}", SYM, 2.4)
             s.path(f"M {cx+86-k} {cy-34+k} L {cx+86+k} {cy-34-k}", SYM, 2.4)
             s.text(cx + 86, cy - 68, "বাতি", 22, SYM, 600, "middle")
-            s.path(f"M {cx-108} {cy+40} L {cx+120} {cy+40}", "#B32A22", 3.2)
-            s.path(f"M {cx-108} {cy+58} L {cx+120} {cy+58}", "#1E63B5", 3.2)
-            s.path(f"M {cx-90} {cy+40} L {cx-90} {cy-10}", "#B32A22", 3.2)
-            s.path(f"M {cx-50} {cy-10} L {cx-50} {cy+4} L {cx+86} {cy+4} "
-                   f"L {cx+86} {cy-12}", "#B32A22", 3.2)
-            s.path(f"M {cx+108} {cy+58} L {cx+108} {cy-34} L {cx+108} {cy-34}",
-                   "#1E63B5", 3.2)
-            s.text(cx + 6, cy + 88, "তারের রং অনুযায়ী", T_SMALL, GREY, 400, "middle")
+            # ফেজ: সরবরাহ → সুইচ → বাতি;  নিউট্রাল: সরবরাহ → সরাসরি বাতি।
+            # ফেজের সরবরাহ-রেখা সুইচের নিচেই শেষ, তাই কোনো তার অন্যটিকে কাটে না
+            s.path(f"M {cx-122} {cy+34} L {cx-90} {cy+34} L {cx-90} {cy-10}", PH, 3.2)
+            s.path(f"M {cx-50} {cy-10} L {cx-50} {cy+6} L {cx+86} {cy+6} "
+                   f"L {cx+86} {cy-12}", PH, 3.2)
+            s.path(f"M {cx-122} {cy+62} L {cx+108} {cy+62} L {cx+108} {cy-34}", NEU, 3.2)
+            s.text(cx - 132, cy + 41, "L", 21, PH, 700, "end")
+            s.text(cx - 132, cy + 69, "N", 21, NEU, 700, "end")
+            s.text(cx + 6, cy + 100, "তারের রং অনুযায়ী", T_SMALL, GREY, 400, "middle")
         else:
+            # একই সার্কিট ঘরের নকশায়: দরজার পাশে সুইচ, ঘরের মাঝখানে বাতি
             s.rect(cx - 118, cy - 66, 236, 132, "none", "#8D9AA8", 3, 4)
-            s.path(f"M {cx-40} {cy-66} L {cx+10} {cy-66}", "#FFFFFF", 6)
-            s.path(f"M {cx-40} {cy-66} L {cx+10} {cy-66}", "#8D9AA8", 3, dash="6 6")
-            sym_ceiling_fan(s, cx - 44, cy - 4)
-            s.circle(cx + 54, cy - 24, 17, "none", SYM, 2.6)
+            s.path(f"M {cx-70} {cy-66} L {cx-20} {cy-66}", "#FFFFFF", 6)
+            s.path(f"M {cx-70} {cy-66} L {cx-20} {cy-66}", "#8D9AA8", 3, dash="6 6")
+            lx, ly = cx + 46, cy + 12                       # বাতি
+            s.circle(lx, ly, 17, "none", SYM, 2.6)
             k = 17 * .707
-            s.path(f"M {cx+54-k} {cy-24-k} L {cx+54+k} {cy-24+k}", SYM, 2.2)
-            s.path(f"M {cx+54-k} {cy-24+k} L {cx+54+k} {cy-24-k}", SYM, 2.2)
-            _socket(s, cx + 56, cy + 34, 3)
+            s.path(f"M {lx-k} {ly-k} L {lx+k} {ly+k}", SYM, 2.2)
+            s.path(f"M {lx-k} {ly+k} L {lx+k} {ly-k}", SYM, 2.2)
+            sx, sy = cx - 2, cy - 36                        # সুইচ, দরজার ডান পাশে
+            s.circle(sx, sy, 6, SYM, SYM, 2)
+            s.path(f"M {sx+4} {sy-5} L {sx+15} {sy-17} L {sx+22} {sy-11}", SYM, 2.4)
+            s.path(f"M {sx+3} {sy+6} Q {sx+8} {ly} {lx-19} {ly}", SYM, 2.2, dash="5 5")
+            s.text(sx - 14, sy + 8, "সুইচ", 20, SYM, 600, "end")
+            s.text(cx - 45, cy - 78, "দরজা", 20, GREY, 400, "middle")
+            s.text(lx, ly + 42, "বাতি", 20, SYM, 600, "middle")
             s.text(cx, cy + 100, "ঘরের নকশার উপর", T_SMALL, GREY, 400, "middle")
         for j, ln in enumerate(wrap(note, pw - 44, T_SMALL, 400)):
             s.text(x + pw / 2, 476 + j * T_SMALL * 1.34, ln, T_SMALL,

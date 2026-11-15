@@ -200,7 +200,11 @@ def worker(s, cx, top, scale=1.0, helmet=True, goggles=True, vest=True,
             "boot": (cx + 24 * S, foot_y + 6 * S),
             "harness": (cx - 40 * S, hip_y - 7 * S),
             "bottom": foot_y + 20 * S, "scale": S,
-            "shoulder_l": (cx - arm_x, sh_y + 12 * S), "hip": (cx, hip_y)}
+            "shoulder_l": (cx - arm_x, sh_y + 12 * S), "hip": (cx, hip_y),
+            "shoulder_r": (cx + arm_x, sh_y + 12 * S),
+            "hip_l": (cx - 19 * S, hip_y), "hip_r": (cx + 19 * S, hip_y),
+            "foot_l": (cx - 24 * S, foot_y), "foot_r": (cx + 24 * S, foot_y),
+            "sole": foot_y + 10.5 * S}
 
 
 def _stack(anchors, box_h, gap, first_top):
@@ -216,7 +220,7 @@ def _stack(anchors, box_h, gap, first_top):
 # ═══════════════════════════════════════════════════════════════════════
 def d01_causes():
     s = SVG(1240, 900)
-    s.title("বৈদ্যুতিক দুর্ঘটনার কারণসমূহের শ্রেণিবিন্যাস", T_TITLE)
+    s.title("বৈদ্যুতিক দুর্ঘটনার কারণের শ্রেণিবিন্যাস", T_TITLE)
     ar = s.arrow_defs(STEEL, "ar", 16)
     rx, ry, rw, rh = s.box_auto(620, 74, "বৈদ্যুতিক দুর্ঘটনার কারণ", T_NODE,
                                 fill=NAVY, stroke=NAVY, tcolor="#FFFFFF",
@@ -226,7 +230,7 @@ def d01_causes():
          ["শাট-ডাউন না করে বা ভুলভাবে শাট-ডাউন করে কাজ করা",
           "টেস্টার দিয়ে লাইন ডেড কি না নিশ্চিত না করা",
           "অস্থায়ী আর্থিং না দেওয়া",
-          "ফিডার বা যন্ত্রপাতি ওভারলোডেড চালানো",
+          "ফিডার বা যন্ত্রপাতি অতিরিক্ত লোডে চালানো",
           "লুজ কানেকশনে কন্ডাক্টর গরম হওয়া",
           "ব্রেকার বা ফিউজের রেটিং ভুল হওয়া"]),
         ("অকারিগরি কারণ", "#FFF6E5", AMBER,
@@ -267,48 +271,65 @@ def d02_shock_path():
     s = SVG(1120, 700)
     s.title("মানবদেহে বিদ্যুৎ প্রবাহের পথ", T_TITLE)
     ar = s.arrow_defs(RED, "arr", 15)
-    GY = 462
-    panels = [(282, "হাত থেকে হাত", "প্রবাহের বড় অংশ সরাসরি হৃৎপিণ্ডের ভেতর দিয়ে যায়"),
-              (838, "হাত থেকে পা", "সবচেয়ে বিপজ্জনক পথ, পুরো দেহ প্রবাহপথে পড়ে")]
+    # The figure stands ON the ground line (it used to float 60 px above it),
+    # the heart sits in the chest (it was drawn at the waist), and the dashed
+    # current path follows the body: hand → arm → shoulder → heart → …
+    TOP, S = 148, 0.86
+    GY = 411
+    panels = [(282, "হাত থেকে হাত", "কারেন্ট বুকের ভেতর দিয়ে যায়, হৃৎপিণ্ড পথে পড়ে"),
+              (838, "হাত থেকে পা", "বাঁ হাত থেকে পা: সবচেয়ে বিপজ্জনক পথ")]
     for cx, title, sub in panels:
-        s.rect(cx - 248, 66, 496, 512, "#FCFDFE", LINE, 1.8, 14)
+        s.rect(cx - 248, 66, 496, GY + 110 - 66, "#FCFDFE", LINE, 1.8, 14)
         s.box_auto(cx, 80, title, T_NAME, fill=RED, stroke=RED, tcolor="#FFFFFF",
                    pad_x=26, pad_y=12)
         for j, ln in enumerate(wrap(sub, 452, T_SMALL, 400)):
-            s.text(cx, 546 + j * T_SMALL * 1.35, ln, T_SMALL, GREY, 400, "middle")
+            s.text(cx, GY + 84 + j * T_SMALL * 1.35, ln, T_SMALL, GREY, 400, "middle")
         s.rect(cx - 210, GY, 420, 12, "#8D9AA8", "#6B7684", 1.2, 3)
         for i in range(14):
             s.line(cx - 204 + i * 31, GY + 12, cx - 212 + i * 31, GY + 24, "#8D9AA8", 2)
 
-    a = worker(s, 282, 148, 0.86, goggles=False, vest=False,
+    def chest(a):
+        return a["shoulder_l"][1] + 26
+
+    # ── hand to hand
+    a = worker(s, 282, TOP, S, goggles=False, vest=False,
                gloves=False, boots=False, cloth="#3E6E93")
     hx1, hy1 = a["hand_l"]; hx2, hy2 = a["hand"]
-    hyc = 302
-    s.path(f"M {hx1:.1f} {hy1-9:.1f} Q 282 236 282 {hyc-19:.1f}", RED, 3.6, dash="10 7")
-    s.path(f"M 282 {hyc+19:.1f} Q 282 240 {hx2:.1f} {hy2-9:.1f}", RED, 3.6, dash="10 7")
-    s.heart(282, hyc, 20)
+    (slx, sly), (srx, sry) = a["shoulder_l"], a["shoulder_r"]
+    hyc = chest(a)
+    s.path(f"M {hx1:.1f} {hy1-11:.1f} L {slx+2:.1f} {sly+2:.1f} L {282-17:.1f} {hyc:.1f}",
+           RED, 3.6, dash="10 7")
+    s.path(f"M {282+17:.1f} {hyc:.1f} L {srx-2:.1f} {sry+2:.1f} L {hx2:.1f} {hy2-11:.1f}",
+           RED, 3.6, dash="10 7")
+    s.heart(282, hyc, 18)
     s.path(f"M {hx1-64:.1f} {hy1:.1f} L {hx1-18:.1f} {hy1:.1f}", RED, 3.6, marker=ar)
     s.path(f"M {hx2+18:.1f} {hy2:.1f} L {hx2+64:.1f} {hy2:.1f}", RED, 3.6, marker=ar)
     s.text(hx1 - 72, hy1 + 7, "L", T_NAME, RED, 700, "end")
     s.text(hx2 + 72, hy2 + 7, "N", T_NAME, RED, 700, "start")
-    s.text(282, 518, "দুই হাতের মধ্য দিয়ে সার্কিট সম্পূর্ণ হয়", T_SMALL, "#7A1810", 600, "middle")
+    s.text(282, GY + 56, "দুই হাতের মধ্য দিয়ে সার্কিট সম্পূর্ণ হয়", T_SMALL, "#7A1810", 600, "middle")
 
-    b = worker(s, 838, 148, 0.86, goggles=False, vest=False,
+    # ── hand to foot: the current ENTERS at the hand, so the arrow points in
+    b = worker(s, 838, TOP, S, goggles=False, vest=False,
                gloves=False, boots=False, cloth="#3E6E93")
     hx, hy = b["hand"]
-    s.path(f"M {hx:.1f} {hy-9:.1f} Q 838 240 838 {hyc-19:.1f}", RED, 3.6, dash="10 7")
-    s.path(f"M 838 {hyc+19:.1f} L 838 {GY-12:.1f}", RED, 3.6, dash="10 7", marker=ar)
-    s.heart(838, hyc, 20)
-    s.path(f"M {hx+18:.1f} {hy:.1f} L {hx+64:.1f} {hy:.1f}", RED, 3.6, marker=ar)
+    srx, sry = b["shoulder_r"]
+    (px, py), (fx, fy) = b["hip_r"], b["foot_r"]
+    hyc = chest(b)
+    s.path(f"M {hx:.1f} {hy-11:.1f} L {srx-2:.1f} {sry+2:.1f} L {838+17:.1f} {hyc:.1f}",
+           RED, 3.6, dash="10 7")
+    s.path(f"M {838+6:.1f} {hyc+19:.1f} L {px:.1f} {py:.1f} L {fx:.1f} {GY-3:.1f}",
+           RED, 3.6, dash="10 7", marker=ar)
+    s.heart(838, hyc, 18)
+    s.path(f"M {hx+64:.1f} {hy:.1f} L {hx+18:.1f} {hy:.1f}", RED, 3.6, marker=ar)
     s.text(hx + 72, hy + 7, "L", T_NAME, RED, 700, "start")
-    s.text(838, 518, "পা হয়ে কারেন্ট মাটিতে নেমে যায়", T_SMALL, "#7A1810", 600, "middle")
+    s.text(838, GY + 56, "পা হয়ে কারেন্ট মাটিতে নেমে যায়", T_SMALL, "#7A1810", 600, "middle")
     s.text(676, GY - 12, "মাটি / আর্থ", T_SMALL, "#4A5561", 600, "middle")
 
-    s.rect(30, 600, 1060, 56, "#FFF6E5", AMBER, 1.8, 11)
-    s.text(560, 636,
+    s.rect(30, GY + 132, 1060, 56, "#FFF6E5", AMBER, 1.8, 11)
+    s.text(560, GY + 168,
            "কারেন্টের পথে হৃৎপিণ্ড পড়লেই ভেন্ট্রিকুলার ফিব্রিলেশনের ঝুঁকি সবচেয়ে বেশি",
            T_BODY, "#7A5200", 600, "middle")
-    s.fit(656, 24)
+    s.fit(GY + 188, 24)
     return s.save(f"{OUT}/d02_shock_path.svg")
 
 
@@ -371,7 +392,7 @@ def d05_ppe():
              lambda m: [(thigh[0] - 10, m), (thigh[0] - 10, thigh[1]), thigh])]
     right = [("ইয়ার প্লাগ", "উচ্চ শব্দ থেকে কান রক্ষা করে", a["ear"], None),
              ("রিফ্লেক্টিভ অ্যাপ্রন", "দূর থেকে কর্মীকে সহজে দেখা যায়", a["vest"], None),
-             ("ইনসুলেটেড গ্লাভস", "বিদ্যুৎ ও তাপ থেকে হাত বাঁচায়", a["hand"], None),
+             ("ইনসুলেটেড গ্লাভস", "বৈদ্যুতিক শক থেকে হাত বাঁচায়", a["hand"], None),
              ("সেফটি শু", "শক ও ভারী বস্তু থেকে পা বাঁচায়", a["boot"], None)]
     BW, GAP, LX, RX = 322, 18, 352, 848
     BH = 42 + lines_h(2, T_SMALL) + 24
@@ -521,7 +542,7 @@ def d10_rescue():
            ("সাপ্লাই বন্ধ করা", "মেইন সুইচ বা ব্রেকার সঙ্গে সঙ্গে অফ করা", "#FFF6E5", AMBER, "#7A5200"),
            ("অপরিবাহী বস্তু দিয়ে সরানো", "শুকনো কাঠ, বাঁশ বা রাবার দিয়ে ঠেলে সরানো", "#F5F9FC", STEEL, NAVY),
            ("সাহায্য ডাকা", "৯৯৯-এ কল করে অ্যাম্বুলেন্স ডাকা", "#F5F9FC", STEEL, NAVY),
-           ("শ্বাস ও নাড়ি পরীক্ষা", "১০ সেকেন্ড দেখে-শুনে-অনুভব করা", "#F5F9FC", STEEL, NAVY)]
+           ("সাড়া ও শ্বাস পরীক্ষা", "ডেকে সাড়া দেখা; ১০ সেকেন্ড বুকের ওঠানামা লক্ষ করা", "#F5F9FC", STEEL, NAVY)]
     x0, w, y, rowh, vgap = 60, 1020, 84, 92, 26
     for i, (t, d, bg, br, tc) in enumerate(seq):
         yy = y + i * (rowh + vgap)
@@ -534,13 +555,13 @@ def d10_rescue():
         if i < len(seq) - 1:
             s.path(f"M {x0+160:.1f} {yy+rowh+3:.1f} L {x0+160:.1f} {yy+rowh+vgap-5:.1f}",
                    STEEL, 2.8, marker=ar)
-    dy = y + 5 * (rowh + vgap) + 16
-    s.path(f"M {x0+160:.1f} {dy-26:.1f} L {x0+160:.1f} {dy+52:.1f} L 306 {dy+52:.1f}",
+    dy = y + 5 * (rowh + vgap) + 4
+    s.path(f"M {x0+160:.1f} {dy-27:.1f} L {x0+160:.1f} {dy+52:.1f} L 300 {dy+52:.1f}",
            STEEL, 2.8, marker=ar)
     s.poly([(570, dy), (834, dy + 52), (570, dy + 104), (306, dy + 52)],
            "#EAF2FA", STEEL, 2.2)
     s.text(570, dy + 46, "শ্বাস চলছে কি?", T_NAME, NAVY, 700, "middle")
-    s.text(570, dy + 78, "১০ সেকেন্ড ধরে পরীক্ষা", T_BODY, GREY, 400, "middle")
+    s.text(570, dy + 78, "স্বাভাবিক শ্বাস", T_BODY, GREY, 400, "middle")
     s.path(f"M 570 {dy+104:.1f} L 570 {dy+142:.1f} L 262 {dy+142:.1f} L 262 {dy+176:.1f}",
            GREEN, 2.8, marker=ar_g)
     s.path(f"M 834 {dy+52:.1f} L 906 {dy+52:.1f} L 906 {dy+176:.1f}",
@@ -550,10 +571,10 @@ def d10_rescue():
     s.box_auto(262, dy + 184, "রিকভারি পজিশনে শুইয়ে নজরে রাখা",
                T_BODY, fill=GREENBG, stroke=GREEN, tcolor="#12523A", max_w=440,
                pad_x=22, pad_y=16)
-    s.box_auto(906, dy + 184, "সঙ্গে সঙ্গে CPR শুরু করা",
-               T_BODY, fill=REDBG, stroke=RED, tcolor="#7A1810", max_w=290,
-               pad_x=22, pad_y=16)
-    s.fit(dy + 300, 22)
+    _, by_, _, bh_ = s.box_auto(906, dy + 184, "সঙ্গে সঙ্গে CPR শুরু করা",
+                                T_BODY, fill=REDBG, stroke=RED, tcolor="#7A1810", max_w=290,
+                                pad_x=22, pad_y=16)
+    s.fit(by_ + bh_, 22)
     return s.save(f"{OUT}/d10_rescue.svg")
 
 
@@ -646,14 +667,17 @@ def d14_earthing():
         for j, ln in enumerate(lines):
             s.text(x + 70, y + 150 + j * T_SMALL * 1.35, ln, T_SMALL, "#39434D", 600, "middle")
 
-    GY = 512
+    GY = 466
     for cx, title, br in ((308, "আর্থিং ছাড়া", RED), (892, "আর্থিংসহ", GREEN)):
-        s.rect(cx - 266, 72, 532, 542, "#FCFDFE", LINE, 1.8, 14)
+        s.rect(cx - 266, 72, 532, GY + 102 - 72, "#FCFDFE", LINE, 1.8, 14)
         s.box_auto(cx, 86, title, T_NAME, fill=br, stroke=br, tcolor="#FFFFFF",
                    pad_x=26, pad_y=12)
         s.rect(cx - 240, GY, 480, 13, "#8D9AA8", "#6B7684", 1.4, 3)
         for i in range(16):
-            s.line(cx - 234 + i * 31, GY + 13, cx - 242 + i * 31, GY + 26, "#8D9AA8", 2)
+            hx_ = cx - 234 + i * 31
+            if cx == 892 and 650 < hx_ < 728:
+                continue        # keep the hatch clear of the earth electrode symbol
+            s.line(hx_, GY + 13, hx_ - 8, GY + 26, "#8D9AA8", 2)
 
     # The person actually touches the appliance's body: the raised left hand
     # rests on its right-hand side.  (The old figure stood him a pace away and
@@ -671,8 +695,9 @@ def d14_earthing():
     w = worker(s, 372, 246, 0.72, helmet=False, goggles=False, vest=False,
                gloves=False, boots=False, cloth="#3E6E93", reach_l=(276, TOUCH_Y))
     shx, shy = w["shoulder_l"]
-    s.path(f"M 280 {TOUCH_Y:.1f} L {shx+8:.1f} {shy+6:.1f} L 372 {w['hip'][1]:.1f} "
-           f"L 372 {GY-14:.1f}", RED, 3.4, dash="9 6", marker=ar_r)
+    (plx, ply), (flx, _) = w["hip_l"], w["foot_l"]
+    s.path(f"M 280 {TOUCH_Y:.1f} L {shx+6:.1f} {shy+4:.1f} L {plx:.1f} {ply:.1f} "
+           f"L {flx:.1f} {GY-3:.1f}", RED, 3.4, dash="9 6", marker=ar_r)
     for j, ln in enumerate(wrap("দেহ দিয়ে কারেন্ট মাটিতে যায়, মারাত্মক শক লাগে",
                                 470, T_SMALL, 600)):
         s.text(308, GY + 70 + j * T_SMALL * 1.35, ln, T_SMALL, "#7A1810", 600, "middle")
@@ -686,24 +711,24 @@ def d14_earthing():
     s.circle(794, 228, 9, RED)
     s.rect(714, 258, 12, 20, GREEN, "#0E4430", 1.4, 3)
     s.path(f"M 714 268 L 686 268 L 686 {GY-16:.1f}", GREEN, 3.8, marker=ar_g)
-    s.text(704, 436, "ফল্ট কারেন্ট", T_BODY, GREEN, 700)
-    s.text(704, 464, "আর্থ তারে চলে যায়", T_BODY, GREEN, 400)
+    s.text(704, 418, "ফল্ট কারেন্ট", T_BODY, GREEN, 700)
+    s.text(704, 445, "আর্থ তারে চলে যায়", T_BODY, GREEN, 400)
     w2 = worker(s, 964, 246, 0.72, helmet=False, goggles=False, vest=False,
                 gloves=False, boots=False, cloth="#3E6E93", reach_l=(868, TOUCH_Y))
     s.check(1080, 196, 21)
     for j, ln in enumerate(["স্পর্শ করলেও", "শক লাগে না"]):
         s.text(1080, 250 + j * T_SMALL * 1.35, ln, T_SMALL, GREEN, 600, "middle")
-    s.line(686, GY, 686, GY + 14, GREEN, 3.6)
+    s.line(686, GY + 13, 686, GY + 20, GREEN, 3.6)
     for i, ww in enumerate((42, 28, 16)):
-        s.line(686 - ww / 2, GY + 18 + i * 8, 686 + ww / 2, GY + 18 + i * 8, GREEN, 3.6)
+        s.line(686 - ww / 2, GY + 22 + i * 8, 686 + ww / 2, GY + 22 + i * 8, GREEN, 3.6)
     for j, ln in enumerate(wrap("বড় ফল্ট কারেন্টে ব্রেকার বা RCCB সঙ্গে সঙ্গে ট্রিপ করে",
                                 470, T_SMALL, 600)):
         s.text(892, GY + 70 + j * T_SMALL * 1.35, ln, T_SMALL, "#12523A", 600, "middle")
 
-    s.rect(40, 636, 1120, 58, "#EAF2FA", STEEL, 2, 11)
-    s.text(600, 673, "ধাতব বডির প্রতিটি যন্ত্র আর্থ করা বাধ্যতামূলক",
+    s.rect(40, GY + 124, 1120, 58, "#EAF2FA", STEEL, 2, 11)
+    s.text(600, GY + 161, "ধাতব বডির প্রতিটি যন্ত্র আর্থ করা বাধ্যতামূলক",
            T_NAME, NAVY, 700, "middle")
-    s.fit(694, 24)
+    s.fit(GY + 182, 24)
     return s.save(f"{OUT}/d14_earthing.svg")
 
 

@@ -188,6 +188,15 @@ def d01_circuit_parts():
     return s.save(f"{OUT}/d01_circuit_parts.svg")
 
 
+def _source(s, x, top, bot):
+    """বাঁ পায়ে উৎস (চিত্র ৩.১-এর একই প্রতীক); তার প্রতীকের দুই পাশে থামে।"""
+    my = (top + bot) / 2
+    s.path(f"M {x} {bot} L {x} {my+20}", SYM, SW)
+    s.path(f"M {x} {my-20} L {x} {top}", SYM, SW)
+    for dy, ww in ((-20, 34), (-7, 18), (7, 34), (20, 18)):
+        s.path(f"M {x-ww/2} {my+dy} L {x+ww/2} {my+dy}", SYM, 3.4)
+
+
 def d02_circuit_states():
     s = SVG(1240, 600)
     s.title("সার্কিটের তিন অবস্থা", T_TITLE)
@@ -207,7 +216,7 @@ def d02_circuit_states():
             s.path(f"M {L} {T} L {R_} {T}", SYM, SW)
             s.path(f"M {R_} {T} L {R_} {B}", SYM, SW)
             s.path(f"M {R_} {B} L {L} {B}", SYM, SW)
-            s.path(f"M {L} {B} L {L} {T}", SYM, SW)
+            _source(s, L, T, B)
             s.path(f"M {cx-72} {T} L {cx-72} {B}", RED, 4.4)
             # লেবেলটা লাইনের ডানপাশে — শর্ট পথ আর বাতির মাঝের ফাঁকা
             # জায়গাটাই এখানে একমাত্র জায়গা যেখানে লেখা কোনো তারের
@@ -222,7 +231,7 @@ def d02_circuit_states():
             s.path(f"M {R_} {T} L {R_} {(T+B)/2-20}", SYM, SW)
             s.path(f"M {R_} {(T+B)/2+20} L {R_} {B}", SYM, SW)
             s.path(f"M {R_} {B} L {L} {B}", SYM, SW)
-            s.path(f"M {L} {B} L {L} {T}", SYM, SW)
+            _source(s, L, T, B)
             _dot(s, cx - 26, T); _dot(s, cx + 26, T)
             if kind == "close":
                 s.path(f"M {cx-26} {T} Q {cx} {T-16} {cx+26} {T}", NAVY, SW + 1.4)

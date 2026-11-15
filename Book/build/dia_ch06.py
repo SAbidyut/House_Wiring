@@ -417,8 +417,7 @@ def d02_bell_types():
                 raise ValueError(f"d02: টাইলে ধরে না — {txt!r}")
             s.text(x + tile / 2, top + IH + dy, txt, size, colr, 700, "middle")
     y = note_strip(s, 100 + 2 * (IH + 108) + 20,
-                   "বাইরে থেকে ট্রেম্বলিং আর সিঙ্গেল স্ট্রোক বেল "
-                   "প্রায় একই রকম দেখায়", pad=M)
+                   "গং থাকে বেলে; বাজার ও ইলেকট্রনিক চাইমে গং নেই", pad=M)
     s.fit(y, 24)
     return s.save(f"{OUT}/d02_bell_types.svg")
 

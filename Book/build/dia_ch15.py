@@ -26,7 +26,7 @@ T_TITLE = 34
 T_NODE = 28
 T_NAME = 24.5
 T_BODY = 21.5
-T_SMALL = 20
+T_SMALL = 22
 T_CALL = 24
 LH = 1.42
 
@@ -215,9 +215,9 @@ def d02_switch_types():
 
     PW, GAP, PH = 365, 26, 384
     cases = [
-        ("এক-মুখী সুইচ", RED, "SPST", "২ প্রান্ত", "বাতি, ফ্যান"),
-        ("দুই-মুখী সুইচ", STEEL, "SPDT", "৩ প্রান্ত", "সিঁড়ি, করিডোর"),
-        ("দুই-পোল সুইচ", GREEN, "DPST", "৪ প্রান্ত", "গিজার, এসি"),
+        ("এক-মুখী সুইচ", RED, "SPST", "দুটি প্রান্ত", "বাতি, ফ্যান"),
+        ("দুই-মুখী সুইচ", STEEL, "SPDT", "তিনটি প্রান্ত", "সিঁড়ি, করিডোর"),
+        ("দুই-পোল সুইচ", GREEN, "DPST", "চারটি প্রান্ত", "গিজার, এসি"),
     ]
     for i, (head, col, kind, term, use) in enumerate(cases):
         px = 46 + i * (PW + GAP)
@@ -252,9 +252,9 @@ def d02_switch_types():
 def d03_piano_gang():
     """পিয়ানো ও গ্যাং বোর্ড পাশাপাশি — RAPTI সোর্স।"""
     return two_panel(
-        "d03_piano_gang", "পিয়ানো বোর্ড ও গ্যাং বোর্ড",
+        "d03_piano_gang", "পিয়ানো বোর্ড ও মডিউলার বোর্ড",
         ("পিয়ানো বোর্ড", "h34_piano_board.png"),
-        ("গ্যাং বোর্ড", "h35_gang_board.png"),
+        ("মডিউলার (গ্যাং) বোর্ড", "h35_gang_board.png"),
         "দুটিতেই ব্যাক বক্স এক, বদলায় শুধু প্লেট ও ইউনিটের ধরন",
         h=470, pw=560)
 
@@ -276,8 +276,8 @@ def d05_inside():
 
     # ── লোড — বোর্ডের বাইরে, উপরে
     LY = 268                      # লোডের কেন্দ্র
-    loads = [(392, "বাতি ১", "lamp"), (600, "বাতি ২", "lamp"),
-             (808, "ফ্যান", "fan"), (1016, "বাতি ৩", "lamp")]
+    loads = [(392, "বাতি 1", "lamp"), (600, "বাতি 2", "lamp"),
+             (808, "ফ্যান", "fan"), (1016, "বাতি 3", "lamp")]
     for lx, name, kind in loads:
         if kind == "lamp":
             lamp_sym(s, lx, LY, 30, True)
@@ -310,11 +310,11 @@ def d05_inside():
     # ── ইউনিট — ইনডিকেটর + তিন সুইচ + সকেটের সুইচ
     # রেগুলেটর এখানে ইচ্ছে করেই নেই — সেটি সুইচের পরে সিরিজে বসে, তার
     # সংযোগ অধ্যায় ১২-এর বিষয়।  এই ছবির কাজ L, N ও ECC-র পথ দেখানো।
-    units = [(196, "indicator", "ইনডিকেটর", None),
-             (392, "switch", "সুইচ ১", 392),
-             (600, "switch", "সুইচ ২", 600),
-             (808, "switch", "সুইচ ৩", 808),
-             (1016, "switch", "সুইচ ৪", 1016)]
+    units = [(196, "indicator", "ইন্ডিকেটর", None),
+             (392, "switch", "সুইচ 1", 392),
+             (600, "switch", "সুইচ 2", 600),
+             (808, "switch", "সুইচ 3", 808),
+             (1016, "switch", "সুইচ 4", 1016)]
     for ux, kind, name, _t in units:
         piano_switch(s, ux - 43, UY, 86, UH, kind)
         # নাম বাঁ দিকে সরানো — ইউনিটের মাথা থেকে তার সোজা উপরে ওঠে
@@ -323,13 +323,16 @@ def d05_inside():
     # ── ফেজ বাস — প্রতিটি ইউনিটের নিচের প্রান্তে ট্যাপ
     s.path(f"M {BX + 36} {LBUS} L 1016 {LBUS}", LIVE, SW)
     for ux, _k, _n, _t in units:
-        s.path(f"M {ux} {LBUS} L {ux} {UY + UH}", LIVE, SW)
-        node(s, ux, LBUS, LIVE)
+        # ইন্ডিকেটরের দুই প্রান্ত আলাদা তারে: ফেজ বাঁয়ে, নিউট্রাল ডানে।
+        # আগে দুটিই একই রেখায় আঁকা ছিল, দেখতে L–N শর্টের মতো লাগত।
+        lx = ux - 18 if _k == "indicator" else ux
+        s.path(f"M {lx} {LBUS} L {lx} {UY + UH}", LIVE, SW)
+        node(s, lx, LBUS, LIVE)
 
     # ── নিউট্রাল বাস — ইনডিকেটর ছাড়া কোনো ইউনিট ছোঁয় না
     s.path(f"M {BX + 36} {NBUS} L 1128 {NBUS} L 1128 {NRAIL}", NEUT, SW)
-    s.path(f"M 196 {NBUS} L 196 {UY + UH}", NEUT, SW)
-    node(s, 196, NBUS, NEUT)
+    s.path(f"M 214 {NBUS} L 214 {UY + UH}", NEUT, SW)
+    node(s, 214, NBUS, NEUT)
 
     # ── সুইচ করা ফেজ — প্রতিটি ইউনিটের উপর থেকে নিজের লোডে
     for ux, _k, _n, tgt in units:
@@ -449,7 +452,7 @@ def d08_install_steps():
         x = 46 + col * (CW + GAP)
         y = 106 + row * (CH + 26)
         s.rect(x, y, CW, CH, "#FCFDFE", LINE, 1.8, 12)
-        s.badge(x + 44, y + CH / 2, ["১", "২", "৩", "৪", "৫", "৬"][i], 26,
+        s.badge(x + 44, y + CH / 2, str(i + 1), 26,
                 NAVY, "#FFFFFF", 24)
         s.text(x + 88, y + 68, head, T_NAME, NAVY, 700)
         for j, ln in enumerate(wrap(sub, CW - 118, T_SMALL, 400)):

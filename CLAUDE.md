@@ -17,20 +17,20 @@ order *is* the book order — do not regroup chapters by theme.
 
 | Chapter | Title | Pages | State |
 |---|---|---|---|
-| 01 | কর্মক্ষেত্রে নিরাপত্তা | 32 | ✅ delivered |
-| 02 | ইলেকট্রিক্যাল টুলস | 23 | ✅ delivered |
-| 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 17 | ✅ delivered |
+| 01 | কর্মক্ষেত্রে নিরাপত্তা | 33 | ✅ delivered |
+| 02 | ইলেকট্রিক্যাল টুলস | 24 | ✅ delivered |
+| 03 | বেসিক ইলেকট্রিক্যাল সার্কিট (১–৫) | 18 | ✅ delivered |
 | 04 | ইলেকট্রিসিটি বা বিদ্যুৎ | 21 | ✅ delivered |
 | 05 | পদার্থের প্রকারভেদ ও ইলেকট্রিক্যাল প্রতীক | 15 | ✅ delivered |
-| 06 | বেল সার্কিট (৬–৯) | 14 | ✅ delivered |
-| 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 24 | ✅ delivered |
-| 08 | মেজারিং ইন্সট্রুমেন্টস | 21 | ✅ delivered |
-| 09 | মাল্টিপ্লাগ সার্কিট | 18 | ✅ delivered |
+| 06 | বেল সার্কিট (৬–৯) | 15 | ✅ delivered |
+| 07 | ইলেকট্রিক্যাল সার্কিট (সিরিজ/প্যারালাল/মিশ্র) | 25 | ✅ delivered |
+| 08 | মেজারিং ইন্সট্রুমেন্টস | 23 | ✅ delivered |
+| 09 | মাল্টিপ্লাগ সার্কিট | 20 | ✅ delivered |
 | 10 | সিরিজ বোর্ড | 18 | ✅ delivered |
-| 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 26 | ✅ delivered |
-| 12 | ফ্যান ও ফ্যান রেগুলেটর | 26 | ✅ delivered |
-| 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 21 | ✅ delivered |
-| 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 31 | ✅ delivered |
+| 11 | জয়েন্ট, স্প্লাইস ও সোল্ডারিং | 27 | ✅ delivered |
+| 12 | ফ্যান ও ফ্যান রেগুলেটর | 27 | ✅ delivered |
+| 13 | টু-ওয়ে ও থ্রি-ওয়ে সুইচ | 22 | ✅ delivered |
+| 14 | হাউস ওয়্যারিং: পদ্ধতি, লে-আউট ও এস্টিমেট | 32 | ✅ delivered |
 | 15 | সুইচ বোর্ড | 24 | ✅ delivered |
 | 16 | পাওয়ার ফর্মুলা ও ক্যালকুলেশন | 20 | ✅ delivered |
 | 17 | বিদ্যুৎ বিল | 19 | ✅ delivered |
@@ -43,12 +43,12 @@ order *is* the book order — do not regroup chapters by theme.
 | 24 | এমডিবি ওয়্যারিং | 41 | ✅ delivered |
 | 25 | এসডিবি ওয়্যারিং | 43 | ✅ delivered |
 | 26 | কন্ডুইট পাইপ ওয়্যারিং | 46 | ✅ delivered |
-| 27 | চ্যানেল ওয়্যারিং | 33 | ✅ delivered |
+| 27 | চ্যানেল ওয়্যারিং | 31 | ✅ delivered |
 | 28 | আর্থিং ও ওয়্যারিং টেস্ট | 49 | ✅ delivered |
 
 Built chapters — figures / tables / worst page-foot gap (all QC-clean):
 `ch01` 13/12 · `ch02` 15/13 · `ch03` 11/6 · `ch04` 8/10 · `ch05` 7/6 · `ch06` 8/4 ·
-`ch07` 10/9 · `ch08` 11/8 · `ch09` 7/8 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 12/10 ·
+`ch07` 10/9 · `ch08` 11/8 · `ch09` 7/9 · `ch10` 7/7 · `ch11` 15/9 · `ch12` 12/10 ·
 (**ch03 is 15 pp since 2026-09-04** — one redundant ব্যবহারিক-কাজ row, already
 covered by essay questions গ.১/গ.৫, was dropped so সারণি ৩.৬ stops orphaning a
 row onto a near-empty last page.)
@@ -2498,6 +2498,823 @@ ch1–9 and ch10–19 passes. All 180 figures in `dia_ch20–28` were looked at,
   sampled pages, and the TOC numbers match the chapter openers. Every equation
   renders. This is the first merge with all three diagram passes (ch1–28) and
   the equation fix in it.
+
+## Chapter-by-chapter full review, started 2026-11-12
+
+User: "ey repo te akta book ase… pura review koro… vul gulo ber koro… diagram e
+text overlap thakle thik koro… vasa human er moto kore sohoj kore lekho…
+technical sob vul gulo ber kore thik koro… ekta ekta chapter kore koro… ami
+continue korle next chapter". One chapter per turn; **wait for "continue"
+before starting the next**. The full book is **not** re-merged per chapter.
+
+Fresh-container setup that was needed (do this first next time):
+`pip install pymupdf`, copy `Book/Kalpurush.ttf` to `/usr/local/share/fonts`
+and `fc-cache -f`, `apt-get update && apt-get install -y libreoffice-math`,
+`mkdir Book/build/out`. `CHROME_BIN` is already `/usr/bin/google-chrome`.
+Scripted edits need NFC-normalised needles (the nukta rule above).
+
+**Chapter 1 — done 2026-11-12, 32 → 33 pp, 13 figures / 12 tables, no gap
+above 3 cm.** What was wrong and is fixed; do not revert:
+- **LOTO table contradicted the five golden rules.** Step 5 applied the
+  temporary earth *before* step 6 verified the line dead. Earthing now comes
+  after verification, in step 6.
+- **RCCB note was physically wrong** ("trips before the current reaches the
+  fibrillation level"). An RCCB limits *time*, not current: it cuts the
+  supply in a fraction of a second once leakage passes 30 mA.
+- Current table's last row (>100 mA "heart stops, deep burns") → fibrillation
+  near-certain; standstill and deep burns are at amperes. Values are flagged
+  approximate, 50 Hz AC, **IEC 60479-1** (verified by search; left hand to
+  feet is its reference path, which the text and figure now say).
+- **IEC 60903** glove classes added (00 = 500 V, 0 = 1000 V AC; verified) and
+  **ISO 7010** named for the safety signs (verified). Rubber gloves protect
+  against shock, not "heat, sharp edges and abrasion".
+- §১.৭.৩ had an **unclosed bracket** and one 8-line paragraph; rewritten as two.
+- A neon line tester cannot prove a line dead: new note after চিত্র ১.৮, the
+  Test step names the three pairs (L–N, L–E, N–E), and practical ২ uses a
+  টু-পোল ভোল্টেজ ডিটেক্টর (ch02's term).
+- Rescue ⚠ box: dry wood/bamboo is not safe on 11 kV and above.
+- Fire ⚠ box: switch the main off first if possible.
+- Broken/odd sentences: the intro's doubled "তাই … তাই", the সারসংক্ষেপ PPE
+  bullet, "জন্যই … পদ্ধতি হলো", rescue list items ৪–৫ (verb form now matches
+  ১–৩). "কেবল" (only) → "শুধু" everywhere; -সমূহ → -গুলো; বর্তনী → সার্কিট;
+  দাবানল (not অগ্নিকাণ্ড) as a natural disaster; MCQ ১৪ says ২৩০ V like the text.
+- §১.১২ now runs intro → five steps → hierarchy paragraph (with an electrical
+  example per level) → figure → closing line. Before, "ধাপগুলো হলো:" was
+  followed by a figure of something else.
+- The user's own fuse box and ladder lines (with their em-dashes) are untouched.
+- **Diagrams:** d02 and d14 had the figure **floating 55–60 px above the
+  ground line**; both now stand on it (ground moved up, canvas shorter).
+  d02's **heart was drawn at the waist** (now in the chest), its current path
+  now follows arm → shoulder → heart → leg, and the right panel's **L arrow
+  pointed out of the hand** (now into it). d14's path follows arm, trunk and
+  leg; the earth symbol no longer sits on the ground hatching. d10's step ৫
+  said "শ্বাস ও নাড়ি পরীক্ষা" while the text says সাড়া ও শ্বাস; its connector
+  started 16 px below box ৫; the diamond repeated "১০ সেকেন্ড". d01/d05 wording.
+  `worker()` returns `shoulder_r`, `hip_l/r`, `foot_l/r`, `sole` now.
+  **d05_ppe's drawing itself was not touched** (standing rule).
+- Layout fixes, all reorderings: চিত্র ১.৪ before সারণি ১.৫; চিত্র ১.৭ before
+  the five-rule list; চিত্র ১.৯ at the end of §১.৮ (the first paragraph now
+  cites it); চিত্র ১.২ stays after §১.৩.২'s first paragraph.
+- **Not pushed.** Committed locally on `ccr-3582eca2-jho6kv`; `git push` was
+  denied twice by the permission classifier even after the stop hook asked
+  for it. Do not work around it; the user has to say "push" (or add a Bash
+  permission rule). Chapter 2's commit is in the same state.
+
+**Chapter 2 — done 2026-11-12, 23 → 24 pp, 15 figures / 13 tables, no gap
+above 3 cm, no orphan caption.** What was wrong and is fixed; do not revert:
+- **চিত্র ২.১৪ (`d05_drill_zones`) contradicted the text.** The prose (and
+  BS 7671 522.6.202) say zone ৩ runs **both** vertically and horizontally from
+  every switch and socket; the figure coloured only the switch's vertical and
+  the socket's horizontal band, and labelled a permitted strip "এখানে ক্যাবল
+  নয়". All four bands are green now. Also fixed there: the right-hand cable
+  **dead-ended in mid-wall** (it now comes from the ceiling); "সকেট" sat on
+  its own cable (label moved to the other side); both ১৫০ মিমি dimensions sit
+  where no cable runs; the in-wall labels became two legend entries (legend is
+  2 × 2); the three side cards lost ~30 px of dead foot each. The zone fills
+  are raw `s.add()` rects — as `s.rect()` their invisible inner edges were
+  scored against the dimension labels.
+- **চিত্র ২.২ (`d01_screwdriver`)**: the handle was a stubby half-dome shorter
+  than the ferrule is wide; it is a full barrel handle now (the shape চিত্র
+  ২.১২ already used). Labels say **হাতল**, like the prose, not হ্যান্ডেল.
+- `d04`: header drawn as one path (two pale notches at its lower corners are
+  gone); class III reads "৫০ V AC পর্যন্ত". `d02`: "উৎস শনাক্তকরণ" /
+  "মেয়াদ ও ট্রেসেবিলিটি" → plain Bangla.
+- **`assets/ch02/measuring_tape.png` was mirrored** (KOMELON / 8m/26' printed
+  backwards). Flipped back in place.
+- **Class examples in সারণি ২.১০ were wrong**: "ড্রিল মেশিন" under class I
+  (most drills are class II, as the figure itself says) and "কর্ডলেস ড্রাইভার"
+  under class II (battery tool → class III). Now ধাতব বডির ড্রিল / প্লাস্টিক
+  বডির ড্রিল ও গ্রাইন্ডার / কর্ডলেস ড্রাইভার.
+- **The ভোল্টেজ ডিটেক্টর photo is a non-contact pen**, listed among পাওয়ার
+  টুলস. The row now says it is a battery test instrument, must be proved on a
+  live line first, and cannot prove a line dead either.
+- **Promised, never delivered:** the সারসংক্ষেপ and প্রশ্ন খ.৬ rely on *why* a
+  nicked conductor is bad, and the body had only the figure — paragraph added
+  in §২.৩.২. The screwdriver-size rule was only in the artwork — now in §২.৩.১.
+  §২.২ names four classes of tool; it now says where the other two are
+  treated (অধ্যায় ১ and ৮).
+- **The starter kit had nothing that can prove a line dead** — row ৩ is a
+  টু-পোল ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার (17 rows now).
+- §২.৩.৪–২.৩.৭ and §২.৭ each opened on a picture under the heading; each has
+  one opening sentence now. Cold-chisel row: a mushroomed head is ground, not
+  "replaced when cracked". ৯০° → ৯০ ডিগ্রি and ≤ → words (neither glyph is in
+  Kalpurush). BNBC ১.৩.১১.২ cited for vertical/horizontal-only runs.
+  One bullet on fully unwinding an extension reel. কেবল → শুধু, ঘূর্ণায়মান →
+  ঘুরন্ত, দ্বৈত ত্রিভুজ → দুই ত্রিভুজ, সর্বদা → সব সময়.
+- **Layout:** চিত্র ২.১৪ now follows §২.৬.২'s first paragraph (it could not fit
+  after the tip box: 9.87 cm gap). **চিত্র ২.১১'s caption had orphaned onto the
+  next page** — `figure_row()` has no keep-with-caption rule. Closed here by
+  trimming one line from the ওয়ার্ক লাইট cell; `bookkit` was deliberately
+  not changed (it would re-paginate chapters not yet re-checked).
+- **New check, run it on every chapter from now on:** a page that *opens* on
+  "চিত্র N.M:" has lost its picture to the page before. `layout.py` cannot
+  see it. The scratch script walks each page's text blocks and image rects.
+
+**Chapter 3 — done 2026-11-12, 17 → 18 pp, 11 figures / 6 tables, no gap
+above 3 cm.** What was wrong and is fixed; do not revert:
+- **The prose named IEC colours while every circuit picture shows BNBC's.**
+  The steps said "ফেজ (বাদামি)" / "নিউট্রাল (নীল)"; all five institute slides
+  (চিত্র ৩.৭–৩.১১) are red phase, black neutral, green earth. The steps now say
+  "(চিত্রে লাল)" / "(চিত্রে কালো)", the intro says which colours the figures
+  use, and §৩.১০'s table row no longer asserts IEC colours two lines above the
+  ⚠ box that says there are two systems. MCQ ৮ asks the BNBC neutral colour.
+- **চিত্র ৩.২ had no source.** All three state panels drew a closed loop with a
+  switch and a lamp and nothing to drive it. `_source()` in `dia_ch03.py` puts
+  the same four-plate symbol as চিত্র ৩.১ on the left leg.
+- **চিত্র ৩.৬'s photos and their labels were on different pages** (a
+  `figure_row` split; `orphans.py` cannot see it because the page opens on the
+  tile labels, not on "চিত্র"). Order is now figure → photo row → table, and two
+  table cells were trimmed so the table ends on the same page. **Look at the
+  contact sheet for a `figure_row` whose labels start a page.**
+- Socket rating "১৩ – ১৬ A" → "১৩ বা ১৫ A" (matches the photo captions);
+  **BS 546** (round pin) and **BS 1363** (flat pin, fused plug) named — verified
+  by search, as is the shutter being opened by the earth pin; lamp caps
+  **B22 / E27** (E14 mentioned), per IEC 60061.
+- The holder-polarity ⚠ box sat inside §৩.৩.১ under the ceiling-rose photo; it
+  is in §৩.৩ now, says "প্যাঁচ টাইপ", and notes the pin type's contacts are both
+  at the bottom.
+- The 2-pin socket caution claimed "ডান পাশের ছিদ্রে ফেজ" although the pictured
+  socket's holes are stacked vertically and a 2-pin plug is reversible. It now
+  says: no fixed rule for 2-pin, keep one side throughout the house, and on a
+  3-pin socket the phase is on the right seen from the front.
+- Circuits ৩/৪ list the 2-pin plug the figures show, circuit ৫ the 3-pin plug;
+  circuit ৫'s step ৪ no longer sends a bench exercise's earth wire to an
+  electrode. §৩.২ has an opening paragraph, and the ⚠ box says an open circuit
+  still has full voltage at the phase-side end.
+- Broken intro sentence rewritten; সর্বদা → সব সময়, কেবল → শুধু, জীবন্ত → লাইভ.
+
+**Chapter 4 — done 2026-11-12, 21 pp unchanged, 8 figures / 10 tables, no gap
+above 2.5 cm (the long-standing 4.78 and 4.60 cm are gone).** Do not revert:
+- **Added, because later chapters rely on it:** `P = I^{2} × R` and
+  `P = V^{2}/R` with the one sentence a wireman needs (double the current,
+  four times the heat; a loose joint is where the heat is made) and the pointer
+  that motors need the power factor (অধ্যায় ১৬). One maths question uses it —
+  **written in words: Kalpurush has no `²`, so `I² R` cannot go in a question.**
+- Temperature was named as the fourth factor of resistance and never explained;
+  one paragraph now ties it to ch08's cold-filament point. Example ৪.১ says
+  "জ্বলন্ত অবস্থায়" for the same reason.
+- Free electrons were described as if every substance had them; the sentence is
+  about metals now. Static electricity: lightning is the *discharge* of charge
+  stored in clouds; a comb-and-paper example added.
+- AC/DC table: two rows said the same thing about DC; they now say a
+  transformer does not work on DC, and that DC transmission needs converter
+  stations. Example ৪.৩'s "হিটার" drawing 0.43 A (99 W) is a বাতি.
+- A sense of scale for current (LED lamp < 0.05 A, fan ≈ 0.3 A, iron 4–6 A,
+  30 mA is dangerous). Capacitors: stored charge after switch-off; polarised
+  ones are DC-only. Inductors: fan/motor coils, chokes, transformers, and why
+  the switch sparks when such a load is turned off.
+- The frequency box (a "safety" box that was not about safety, stranded after
+  the RMS subsection) is a note box inside §৪.৭ now.
+- Glossary: Voltage was "চালনাকারী বল" (it is a pressure, not a force); the
+  Insulator row was a sentence fragment. কেবল → শুধু, জীবন্ত → লাইভ.
+- **Diagrams:** d03 — the conductor reached the load through **two** wires (one
+  from each edge of the bar); one wire on the axis now, and the 56 px dead band
+  under the title is gone (function rewritten around `Y`). d01 — same dead band
+  removed. d04 — "পিক মান" marked on the crests (§৪.৭.১ points at it). d05 —
+  the triangle's bar overshot both sides. d06 — header drawn as one path (two
+  pale notches). d07 — capacitor leads ran through the plates.
+- Layout, all from the playbook: Ohm's-law equations before চিত্র ৪.৬;
+  examples ৪.১/৪.২ `steps=` merged to one line each (the back-to-back trap);
+  চিত্র ৪.৭ moved to the head of §৪.৮ behind a new opening paragraph;
+  চিত্র ৪.৮ moved ahead of the ⚠ box.
+
+**Chapter 5 — done 2026-11-12, 15 pp unchanged, 7 figures / 6 tables, no gap
+above 2.6 cm.** What was wrong and is fixed; do not revert:
+- **Silicone rubber was "১৫০ °C"; IEC 60245-3 rates it 180 °C** (verified by
+  search). Table and glossary.
+- **চিত্র ৫.১ listed কার্বন as a semiconductor** (graphite conducts, diamond
+  insulates; the text never said carbon). Dropped. Conductors are in
+  conductivity order (রুপা, তামা, সোনা …) like the text; "কাঠ" → "শুকনো কাঠ",
+  which is what the figure's own footnote says.
+- **চিত্র ৫.২'s conductor panel showed two bands touching** while the text and
+  সারণি ৫.১ say they overlap. The bands now overlap by 18 px with a blended
+  strip; caption "দুই ব্যান্ড মিশে থাকে".
+- **চিত্র ৫.৭ was not "একই সার্কিট".** The connection panel mixed the two
+  colour codes (red phase, **blue** neutral: the blue-wire trap) and its
+  neutral drop crossed the phase bus; the layout panel showed a fan, a lamp
+  and a socket. Now: red L / black N with labels and no crossing, and the
+  layout shows the same switch-and-lamp circuit in a room (door, switch,
+  dashed run, lamp).
+- The chapter's board symbols (MDB/SDB/SB) are the institute's, not BNBC
+  Table 8.1.15's (ch24). One paragraph after the charts says symbols vary and
+  **the legend must be read first**; short question খ.১০ asks it.
+- Added: a rule that switches are drawn in the off state (rules ১ and ২
+  merged, so the line count before the charts did not grow); the body and
+  wet earth as conductors; the "৫–৮ valence electrons" rule flagged as a
+  simplification for compounds; eV named; aluminium at equal current weighs
+  about half of copper (why overhead lines use it); SLD named as the fourth
+  drawing type, pointing at অধ্যায় ২৪.
+- **The four symbol charts still pack two per page** — every addition before
+  them was paid for by a trim (ρ paragraph, rule merge). Check `layout.py`
+  after any wording change ahead of §৫.৪.২.
+
+**Chapter 6 — done 2026-11-12, 14 → 15 pp, 8 figures / 4 tables, no gap above
+4.1 cm.** What was wrong and is fixed; do not revert:
+- **Three spelling errors inside the institute's slides** were printed in the
+  figures: "Tow Switch Doorbell Circuit", "Serice Doorbell Circuit" and
+  "Indecator" (×4). `Book/build/fix_ch06_typos.py` repaints only those words
+  in `assets/ch06/*.png` (same font metrics: Liberation Serif Bold for the
+  schematics, Carlito Bold for the connection label; colour and size measured
+  from the old ink). The source PPTX is untouched and **still has the typos**.
+- **চিত্র ৬.৫'s connection panel has three switches**, the text said two. The
+  third is a plain 1-way switch in series ahead of the two pushes (bell off at
+  night). It is in the materials list and step ৫ now, with a note that the
+  schematic does not show it.
+- **চিত্র ৬.৮'s connection panel has a fuse and a supply indicator** the text
+  never mentioned; one paragraph explains both.
+- The working cycle was only in the artwork and a note box; a four-step
+  paragraph sits between the definition and চিত্র ৬.১ (objective ১ and
+  questions খ.২ / গ.১ ask for it).
+- Circuit ৮ (switch, lamp and bell in series) said both simply work. The
+  voltage divides: lamp dim, bell weak, and the text now says the circuit is
+  for learning series behaviour, not for real wiring.
+- The indicator circuit's lamp goes out when the push is released; the tip box
+  says a real nurse-call system latches through a relay.
+- চিত্র ৬.২'s note said the trembling and single-stroke bells "look alike"
+  under two photos that look nothing alike (the single-stroke one is a railway
+  block bell). Note is now "গং থাকে বেলে; বাজার ও ইলেকট্রনিক চাইমে গং নেই";
+  the prose says the pictured one is an old pattern.
+- Layout: circuits run intro → figure → materials → steps → ⚠ box now, and
+  the last practical-work table is kept whole (`keep_with_next` on its rows in
+  `ch06.py`, no engine change) instead of leaving five rows alone on p15.
+- ঘণ্টা → বেল, কেবল → শুধু, সর্বদা dropped; intro's doubled "কাজে লাগে" fixed.
+
+
+
+**Chapter 7 — done 2026-11-12, 24 → 25 pp, 10 figures / 9 tables, no gap above
+4.1 cm.** The diagrams were sound (only চিত্র ৭.২'s current arrow moved above
+the wire, beside its `I`). What changed in the text; do not revert:
+- **§৭.৬ reordered.** The worked example said "চিত্র অনুযায়ী" a page and a
+  half after its figure. Order is now bullets → real-wiring table → ৭.৬.১
+  steps → চিত্র ৭.৯ → উদাহরণ ৪. This needed উদাহরণ ৪'s `steps=` merged
+  (8 lines → 5, with `\quad`) and উদাহরণ ১'s first two lines merged, or the
+  unsplittable examples strand 13–17 cm.
+- §৭.৪.২ and §৭.৫.২ opened on a figure straight under the heading; each has a
+  one-line lead now. **Keep the §৭.৪.২ lead to one line** — at two lines
+  উদাহরণ ১ no longer fits under its figure.
+- Added: unequal lamps in series (60 W + 100 W → about 144 V and 86 V, the
+  60 W lamp is the brighter one; pointer to ch10's test lamp) with short
+  question খ.১৩; the fan regulator as a series device; equal resistors in
+  parallel = R / n; the AC convention for current arrows; **practical tasks
+  need three equal filament lamps** (LED lamps have drivers and do not follow
+  the series arithmetic); clamp meter mentioned where the ammeter needs the
+  circuit cut.
+- Parallel "অসুবিধা" row 3 was vague ("পুরো কারেন্ট সেই শাখা দিয়ে যেতে
+  পারে") → a short circuit in one branch shorts the whole supply. Load row of
+  সারণি ৭.১ matches ch03 (আলো, তাপ বা গতি). সুইচ বন্ধ → সুইচ অফ (ch03's
+  wording), সবসময় → সব সময়, কেবল → শুধু.
+- Arithmetic of all four examples, the three "প্রত্যাশিত ফল" boxes and the
+  MCQ key (ক4 খ4 গ4 ঘ4) were re-checked and are correct.
+
+**Chapter 8 — done 2026-11-12, 22 → 23 pp, 11 figures / 8 tables, no gap above
+4.0 cm.** What was wrong and is fixed; do not revert:
+- **The photo captioned "ডিজিটাল ইনসুলেশন ও আর্থ টেস্টার" is an insulation
+  tester only** (Victor, 250/500/1000 V buttons; its "EARTH" socket is the
+  megger's earth terminal, not an earth-resistance function). Caption is
+  "ডিজিটাল ইনসুলেশন টেস্টার".
+- **সারণি ৮.৬'s fan row had lost its condition** ("সরবরাহ পৌঁছায়নি বা কয়েল
+  কাটা; …") → "পাঠ শূন্য → …". The "গরম হচ্ছে" row gained the loose-joint
+  case (current within rating, still hot).
+- **`°` is not in Kalpurush** and the tungsten note printed "২৫০০ °C" →
+  "২৫০০ ডিগ্রি সেলসিয়াস".
+- The parts table said "A পোর্ট (10A ও mA)" while চিত্র ৮.৪'s meter has one A
+  port; the row now says the figure has one and most market meters have two.
+- চিত্র ৮.৬'s title said ভোল্টমিটার (caption and prose say মাল্টিমিটার);
+  চিত্র ৮.৫ mixed "জ" and "চোয়াল" and its jaw leader stopped short of the jaw.
+- **`p04_apm_amp.png`'s dial reads `1.5` and `C.T 200/5A`** (zoomed and read).
+  §৮.৩.১ uses it to explain the CT ratio and the accuracy class.
+- Added, each a field fact: L–N / L–E / N–E expected readings at a socket and
+  what a wrong one means; **ghost voltage** (10 MΩ input, 30–90 V on a dead
+  wire, test lamp or LoZ to confirm) with two short questions; mains load
+  current is a clamp-meter job, the series method is for battery / low-voltage
+  circuits (চিত্র ৮.৭ is a DC circuit, and the text says so); 10A range time
+  limit; probe-short zero check before an ohm reading; megger discharge;
+  "Megger" is a maker's name; CAT III 600 V as the wireman's minimum; a
+  source-to-load order for fault finding and the open-neutral test.
+- §৮.৫'s nine-line opening paragraph is two paragraphs; the jaw is named as a
+  current transformer, which is why an ordinary clamp is AC-only.
+- **Layout:** সারণি ৮.৪ now precedes চিত্র ৮.৪; in §৮.৭.১ the ⚠ box precedes
+  the figure; §৮.৭.২ runs steps → figure → table; **the লাইভ–ডেড–লাইভ box
+  moved to the end of §৮.১১** (it is a meter-use rule, and where it sat it
+  stranded 6 cm); the fault-finding paragraph after সারণি ৮.৬ fills the page
+  the first example could not fit on; উদাহরণ ১'s `steps=` is one line.
+- The definition box says "মেজারিং ইনস্ট্রুমেন্ট" like the rest of the body;
+  the chapter title and file name keep "ইন্সট্রুমেন্টস".
+
+
+
+**Chapter 9 — done 2026-11-12, 18 → 20 pp, 7 figures / 9 tables, no gap above
+4.0 cm.** What was wrong and is fixed; do not revert:
+- **"Indecator" in two institute slides** (চিত্র ৯.৫ and ৯.৭) is repainted as
+  "Indicator" by `Book/build/fix_ch09_10_typos.py` (same method as ch06; it
+  edits `assets/ch09/*.png`, run once; the source PPTX still has the typo).
+- **চিত্র ৯.৩'s 3-pin socket had no L / N / E marks**, and the plug's L and N
+  were on the opposite sides from the BS convention. The socket now carries
+  E (top), N (left), L (right) "সামনে থেকে", and the plug matches. চিত্র ৯.২'s
+  note said "মেইন সুইচ ও ফিউজ"; a multiplug has no main switch.
+- **The earth-up rule's reason was wrong** ("কর্ডের ভারে প্লাগ ঝুলে আংশিক
+  বেরিয়ে আসে"). Now: the cord drops straight down, and a metal object falling
+  on a half-out plug meets the earth pin first.
+- **Wire colours:** সারণি ৯.৪ has two columns now (flex cord, IEC brown/blue;
+  fixed wiring, BNBC red/black), and §৯.৫ says the figures are drawn red/black
+  while a market cord is brown/blue.
+- **A 2-pin plug is reversible**, which puts a correctly built board's fuse
+  and switch in the neutral. Said in the ⚠ box after চিত্র ৯.৫, with the
+  tester check and "turn the plug round"; short question added.
+- **New ৯.৮.২ "কর্ডের মাপ ও রেটিং"** with a table (0.5 / 0.75 / 1.0 / 1.25 /
+  1.5 mm² → 3 / 6 / 10 / 13 / 16 A, **BS 7671 Table 4F3A**, confirmed by
+  search) and the field point that a thin cord on a cheap board overheats
+  before the fuse blows. Materials lists name 0.75 and 1.25 mm².
+- Added: cord-grip step; surge-protector boards and three things to check when
+  buying (the glossary already listed Surge Protector, Rocker Switch, Neon
+  Lamp and Shutter with nothing in the body); motor loads draw more than
+  P / V and several times that at start. Troubleshooting: a shock from an
+  appliance body means the *appliance* leaks (stop using it), and a fuse that
+  blows on plugging in may be the appliance, not the board.
+- §৯.২ and §৯.৩ opened on a figure under the heading; each has a lead line.
+  কেবল → শুধু, সবসময় → সব সময়, "অধ্যায় ২২-এ … করা হয়েছে" → "হবে".
+- **Layout:** চিত্র ৯.৬ now follows §৯.৬'s opening paragraph; §৯.৮ runs
+  example ১ → appliance table → example ২ → fuse box → example ৩ → cord
+  section. Three examples back to back had stranded 6–10 cm on three pages.
+
+**Chapter 10 — done 2026-11-12, 18 pp unchanged, 7 figures / 7 tables, no gap
+above 4.0 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১০.৪'s slides said "Series Bord" (twice) and "Indecator"**; repainted
+  by the same script (the underlined title is redrawn with its underline).
+- **চিত্র ১০.৬ (`d05_steps`) never switched the board on**, and its step ২ was
+  titled "সরবরাহ বন্ধ রাখা" over a line about the circuit's switch. Steps are
+  now: board check → board switch off → plug the appliance in → plug the board
+  in (indicator lights) → switch on → read the lamp. Badges are Latin digits
+  (Bangla ৪ read as 8). চিত্র ১০.২ said "ফিউজ উড়ে যায়"; the prose says গলে.
+- §১০.১ claimed a good appliance takes "the larger part" of the voltage; that
+  holds only when the load is smaller than the lamp (§১০.৮ says so). Now: the
+  voltage divides, the lamp does not get full voltage.
+- **The reversible 2-pin plug** is in the ⚠ box of §১০.৫, the troubleshooting
+  row ("সুইচ অফ করেও সকেটে ফেজ") and the summary.
+- **Added to §১০.৭:** why the steps are in that order; what the lamp does with
+  electronic loads (one flash, then dark: the capacitor charges) and with
+  motors; **how fixed wiring is tested** — a test lead with a plug and two
+  crocodile clips, onto the circuit's phase *and* neutral after both are taken
+  off the DB (the glossary had Crocodile Clip and the body never used it; with
+  only the phase moved, a reversed plug would short the supply).
+- A 2-pin board gives the appliance under test no earth: a bullet in §১০.৯.
+- Material sizes are metric with the old size in brackets (0.75 mm², 1 mm²).
+  Troubleshooting causes made exact (socket terminals shorted; a short
+  *before* the lamp blows the fuse). §১০.৮'s eight-line paragraph is two.
+  §১০.২ has a lead line. কেবল → শুধু, সহজলভ্য → plain words.
+
+
+
+**Chapter 11 — done 2026-11-12, 26 → 27 pp, 15 figures / 9 tables, no gap
+above 3 cm.** The joint drawings were sound. What was wrong and is fixed; do
+not revert:
+- **The chapter never said BNBC bans joint boxes in final circuits.** It
+  taught junction-box joints for forty pages while ch14 (verified clause
+  **1.3.9.3.1**) says all final circuits are loop wiring with no joint box.
+  The §১১.২ note now gives both rules: IEC 60364-5-52 **526.3** (accessible
+  connections; verified by search) and BNBC's loop wiring, and says where
+  hand-made joints still belong (repair and extension of old wiring, fitting
+  leads, temporary connections). Summary bullet and one short question added.
+- **চিত্র ১১.৫'s note said the short tie suits "কন্ডুইটের ভেতরে"** — a joint
+  inside conduit is exactly what the same chapter forbids. Now "জংশন বক্সে".
+- **Solder fume was called a lead hazard.** At soldering temperature the fume
+  is burnt rosin; lead gets in through the hands and mouth. The safety box
+  says both, correctly.
+- **`°` and `²` are not in Kalpurush**: every "°C" is "ডিগ্রি সেলসিয়াস" (the
+  solder table carries the unit in its header; MCQ ৯ options are Latin
+  digits), and the glossary's "I²Rt" is words.
+- Proving dead is done with a ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার, not a "টেস্টার"
+  (ch01's rule), in the tip box and the safety box.
+- Added: copper must not be twisted onto aluminium (bi-metal lug or connector;
+  ties back to ch05's galvanic corrosion) with a summary bullet and a short
+  question; a wire stripper's sized notch is the safer way to skin; what
+  happens to a twisted-and-taped joint that was never soldered.
+- §১১.৮.২ opened on a figure under its heading; it has a lead line. উদাহরণ ১'s
+  four `steps=` lines are two. The intro's sourceless "অগ্নিকাণ্ডের তদন্তে
+  বহুবার দেখা গেছে" is reworded. সবসময় → সব সময়.
+- **Diagrams:** `step_cards()` badges are Latin digits (Bangla ৪ read as 8),
+  and the cards start at y = 100 with BH 174 (d01 and d13 each lost ~80 px of
+  dead space). d12's callouts and photo moved up 42 px.
+- IEC 60454-3-1 (PVC tape) was confirmed by search.
+- **Not added:** the institute's বেল হ্যাঙ্গার জয়েন্ট (flagged to the user
+  earlier, still not in the chapter).
+
+**Chapter 12 — done 2026-11-12, 26 → 27 pp, 12 figures / 10 tables, no gap
+above 3 cm.** What was wrong and is fixed; do not revert:
+- **The down rod was said to carry no load** (prose, summary and চিত্র ১২.১'s
+  note: "ডাউন রড ও ক্যানোপি শুধু ঢেকে রাখে"). The fan hangs from the hook *on
+  the down rod*; only the canopy is a cover. All three now say hook + down
+  rod carry the load, and the bolt, nut and **split pin** at each end of the
+  rod are in the prose, the safety box, the maintenance list, the glossary
+  and a short question.
+- **The chapter contradicted itself and ch18 on electrolytic capacitors.**
+  সারণি ১২.৪ called the start capacitor "ইলেকট্রোলাইটিক" and the ⚠ box two
+  pages later said no AC motor may ever have one. A motor-start capacitor
+  *is* electrolytic, but a non-polarised AC type. Table, ⚠ box, glossary and
+  চিত্র ১২.৪'s note now say: never a **polarised (DC)** electrolytic on AC.
+  The diagrams' spelling "ইলেক্ট্রোলাইটিক" was unified to the prose's.
+- **Table fans were said to have a centrifugal switch.** They are PSC motors
+  like the ceiling fan; the note now names pump motors, and says so.
+- **চিত্র ১২.১২'s photo has three regulators**, the panel header said two;
+  its other header carried "(RAPTI সোর্স)" (headers are nouns).
+- **Coil-type regulator:** prose said "little saving", the artwork and the
+  glossary said "none". All say "সামান্যই কমে" now (d06 table cell and note).
+- Regulator test step said start at the lowest speed and step up. A PSC
+  motor's starting torque is poor at reduced voltage: start at full speed and
+  step down, with the reason.
+- **`°` again**: ৯০ ডিগ্রি (বৈদ্যুতিক), Class B / F 130 / 155 ডিগ্রি সেলসিয়াস,
+  40/70/21 explained in words, MCQ ৪ options in Latin digits; `″` → ইঞ্চি.
+- The capacitor-test note opened on a sentence fragment; it now starts with
+  "take it out of circuit and discharge it". The maintenance bullet about
+  "blades heavier than the nameplate power" was meaningless → replace blades
+  as a matched set.
+- Added: **BLDC fans** (no capacitor, about half the power, remote speed
+  control, no ordinary regulator on their line) with glossary row and short
+  question; regulator rating (usually 100 W, one fan per regulator, matches
+  ch15); earth wire to the fan's earth terminal; a "body gives a shock" row
+  in the fault table; blade height **at least 2.3 m above the floor**
+  (IEC 60335-2-80 installation guidance, confirmed by search); the reason a
+  fan runs backwards after repair is a mis-identified lead.
+- The reactance material sat under "নেমপ্লেটের তথ্য"; it is its own
+  **১২.৮.২ ক্যাপাসিটরের মান ও রিঅ্যাকট্যান্স** now.
+- **Layout:** চিত্র ১২.৩ follows the run/start table; চিত্র ১২.৫ follows চিত্র
+  ১২.৪ directly, then the comparison table, then the ⚠ box (trimmed by a
+  line so it fits the page foot); the regulator photo is 4.8 cm wide (no
+  lettering on it). চিত্র ১২.৭ stays right after §১২.৫'s paragraph — moving it
+  after the steps was tried and reverted.
+- `orphans.py` flags p10 ("চিত্র ১২.৬-এ বাজারে…"): a paragraph that begins
+  with a figure reference, not a stranded caption.
+- **BNBC's PDF could not be fetched from this container** (the proxy returns
+  403 for law.resource.org), so no new BNBC clause was cited in ch11 or ch12;
+  1.3.9.3.1 is ch14's already-verified clause.
+
+
+**Chapter 13 — done 2026-11-12, 21 → 22 pp, 12 figures / 7 tables, worst
+gap 4.41 cm.** What was wrong and is fixed; do not revert:
+- **"Indecator" in the tunnel-wiring slide** (চিত্র ১৩.১০) is repainted by
+  `Book/build/fix_ch13_typos.py` (edits `assets/ch13/h18_tunnel_conn.png`,
+  run once; the PPTX still has the typo).
+- **The chapter told the reader to twist and tape joints** ("প্রতিটি সংযোগে
+  অধ্যায় ১১-এর জয়েন্ট ও টেপিংয়ের নিয়ম", and step ৮). Every connection here
+  is at a switch terminal and BNBC's loop wiring forbids joints in the run.
+  Intro and step now say so.
+- চিত্র ১৩.১০ shows a plain switch, a fuse and an indicator ahead of the three
+  two-way switches; the text never mentioned them. One sentence added.
+- The two-wire method was called "banned in many countries" with no source;
+  now: it breaks the rule that a switch cuts only the phase.
+- Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার. কেবল → শুধু (9), সবসময় →
+  সব সময়. Mixed digits: terminal counts 2 / 3 / 4 and "440 V … 63 A" Latin.
+- **Diagrams:** চিত্র ১৩.১'s "চলমান পাত (ব্লেড)" floated under the header
+  chip; it sits under the blade with a leader now. চিত্র ১৩.৪'s "সুইচ ১ / ২"
+  touched the chips (moved down 12 px). চিত্র ১৩.৯ lost 58 px of dead band.
+  চিত্র ১৩.১১ rows read "টু-ওয়ে 1 … 3" (was "২-ওয়ে ১"), lamp heads Latin.
+  চিত্র ১৩.২ says দুটি / তিনটি / চারটি প্রান্ত.
+- **Layout:** in §১৩.৭ the wire-count table precedes the stair figure and the
+  colour paragraph follows উদাহরণ ১৩.২ (its four `steps=` are two). সারণি
+  ১৩.৩ (three rows) is kept whole with `keep_with_next`.
+
+**Chapter 14 — done 2026-11-12, 31 → 32 pp, 15 figures / 8 tables, worst gap
+4.02 cm.** What was wrong and is fixed; do not revert:
+- **The estimate had no control switch for the geyser and the two ACs, and no
+  RCCB.** Rows ১৪ (২০A ডিপি সুইচ × ৩) and ২১ (৪০A, ৩০ mA আরসিসিবি) added;
+  the table is 23 rows. The note says BNBC does not require an RCCB and
+  points at অধ্যায় ২২. Glossary rows for both.
+- **চিত্র ১৪.৫'s note said ব্যাটেন is "BNBC-তে নিরুৎসাহিত"** while the prose
+  (verified clause 1.3.11.1.1) lists batten wiring as recognised. Now
+  "পুরোনো পদ্ধতি".
+- **চিত্র ১৪.৯ (`d05_loop_in`): the second lamp's neutral was a dangling
+  stub** in both panels. Both lamps return on one neutral with a node.
+- **`dia_ch14` type was 20 px = 7.04 pt.** `T_SMALL` and `T_TINY` are 21.5
+  (7.6 pt). `tag_sym()` grew to 46 × 30 and the কমন ওয়াশরুম label got 1.50 m
+  of width so d07 stays clean. d09's counts are Latin ("4 বাতি" read as 8
+  beside "144 W"); d10's badges are Latin and its cards 158 high.
+- Fan-blade height agrees with ch12: "২.৫ মি বা বেশি; ২.৩ মি-র নিচে নয়"
+  (table and চিত্র ১৪.১২). SDB height cites BNBC 1.3.34 (≤ 2 m, ch25's
+  verified clause). "চ্যানেল কেটে" → "চেজ কেটে" in চিত্র ১৪.৭.
+- "কেবল ট্রে" in the glossary was the only cable-as-কেবল; ক্যাবল ট্রে now.
+  কেবল → শুধু (12), সবসময় → সব সময়.
+- **Layout:** উদাহরণ ১৪.৪'s note became a paragraph *before* the example, its
+  steps are two lines, and one owed sentence (3–5 % for unforeseen work in
+  old walls) sits in §১৪.৮.৩.
+
+**Chapter 15 — done 2026-11-12, 24 pp unchanged, 12 figures / 8 tables, worst
+gap 3.19 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১৫.১০ (`d05_inside`) drew the indicator's phase and neutral drops
+  on one line**, i.e. an L–N short. They are 18 px apart now.
+- **Two slide typos**: "Indecator" and "Switch bord connection circuit"
+  (চিত্র ১৫.৯ and ১৫.১১), repainted by `Book/build/fix_ch15_typos.py`.
+- **The slide's first unit is a fuse; the text's is a main switch.** §১৫.৫
+  says so and why.
+- চিত্র ১৫.৬'s title and header said "গ্যাং বোর্ড" though the prose reserves
+  গ্যাং for the unit count; now "মডিউলার (গ্যাং) বোর্ড".
+- **Module sizes are Latin everywhere** (1M … 18M): "৪M" and "৮M" printed the
+  same in Kalpurush. The glossary's "প্রায় ১৭.৫ mm" was the DIN-rail module
+  of ch25, not a switch-plate module; it now says the two differ.
+- "ইনডিকেটর" → "ইন্ডিকেটর" (22 places + artwork), "রল প্লাগ" → "রাউল
+  প্লাগ", `″` → ইঞ্চি, an unclosed bracket in the §১৫.২ note, the intro's
+  doubled "আলোচনা করা হবে … হয়েছে". কেবল → শুধু (11).
+- `dia_ch15` `T_SMALL` 20 → 22; d05 labels and d08 badges Latin.
+
+**Chapter 16 — done 2026-11-12, 20 pp unchanged, 6 figures / 7 tables, no gap
+above 3.2 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১৬.৬ (`d06_steps`) listed "BNBC গুণক" and "পাওয়ার ফ্যাক্টর" as
+  two successive steps**, the very double counting the ⚠ box above it
+  forbids. Steps are now: লোডের তালিকা → প্রতিটির ওয়াট → গুণক 1.65 অথবা
+  cos φ → ভোল্টেজ দিয়ে ভাগ → কারেন্ট ও ব্রেকার, and a paragraph under the
+  figure says which load takes which.
+- **Motor rating was treated as input power** (উদাহরণ ১৬.৩, ঘ.৩). Both now
+  say the motor *takes* that power, and the note says nameplate kW is output
+  (divide by efficiency, অধ্যায় ১৮).
+- PF table: LED and electronic-ballast rows were "সামান্য ইন্ডাকটিভ" →
+  "ইলেকট্রনিক"; ceiling fan 0.8 → 0.9 (PSC, agrees with ch12), with a line
+  that 0.8 is still the cautious figure for a light-and-fan circuit.
+- `√`, `≤` and `²` are not in Kalpurush: "তিনের বর্গমূল", "রুট-থ্রি গুণক",
+  "1.414 গুণ", "১ kW পর্যন্ত", "ওয়াট/বর্গমিটার".
+- The seven maths problems had no answers; all seven do now (checked).
+  MCQ ৭'s options were reordered (key ক2 খ3 গ3 ঘ2).
+- চিত্র ১৬.৫'s "লাইন = ফেজ" → "লাইন ভোল্টেজ = ফেজ ভোল্টেজ"; `T_SMALL` 22.
+
+
+**Chapter 17 — done 2026-11-12, 19 pp unchanged, 5 figures / 8 tables, worst
+gap 3.75 cm.** The tariff (June 2026 BERC order) and every worked example
+were re-checked and are correct. What changed; do not revert:
+- The leakage check said "চাকতি ঘুরছে কি না"; most meters are digital now.
+  It reads: a disc meter's disc turns, a digital meter's red pulse lamp
+  blinks (prose, summary, MCQ ৯, practical task).
+- The seven maths problems had no answers; all seven do now (computed).
+- চিত্র ১৭.২'s step badges are Latin (Bangla ৪ read as 8) and its cards lost
+  30 px of dead space; চিত্র ১৭.৪'s right header is "পাঠ / টাকা".
+  `dia_ch17` `T_SMALL` 20 → 22.
+- কেবল → শুধু, সবসময় → সব সময়, four em-dashes removed.
+
+**Chapter 18 — done 2026-11-12, 27 pp unchanged, 9 figures / 10 tables, worst
+gap 4.31 cm.** What was wrong and is fixed; do not revert:
+- **The glossary listed Overload Relay, MPCB, DOL Starter and Contactor, and
+  the body never mentioned any of them.** §১৮.৯.৫ has a paragraph now: the
+  MCB protects the cable and clears short circuits, it cannot see a motor's
+  own overload (a 5.5 A motor stalled at 8 A never trips a 10 A breaker);
+  that is the overload relay's or MPCB's job, set to the nameplate amps;
+  contactor + overload relay = DOL starter; small pumps often carry a
+  thermal protector inside.
+- **Star/delta by nameplate was only given for 400/690 V.** Added: a small
+  motor marked 230/400 V runs in **star** on our 400 V line; the rule is
+  "smaller voltage = delta, larger = star". The star-delta starter gives one
+  third of the delta starting current and works only on a 400/690 V motor.
+- Starting current was said to last "under a second"; now "one or two
+  seconds, until the motor is up to speed".
+- The run-capacitor formula is flagged as a field rule of thumb; a value
+  printed on the nameplate or on the old capacitor takes priority.
+- The pump troubleshooting row said "swap the starting coil's ends" (not
+  possible on a 3-lead motor); now "change the direction (১৮.৬.১ দ্রষ্টব্য)".
+- Nameplate RPM row says "১৪৪০ বা ২৮৫০-এর মতো" (the figure shows 2850).
+  `°C` in the glossary → ডিগ্রি সেলসিয়াস. Summary: "হরে আরও ১.৭৩ গুণ হয়"
+  (was "যোগ হয়").
+- Spelling unified with the rest of the book: **বেয়ারিং** (was বিয়ারিং, 7 +
+  artwork), **ইউনিভার্সাল** (was ইউনিভার্সেল), কন্টাক্টর, ইলেকট্রোলাইটিক,
+  ইন্ডিকেটর. কেবল → শুধু, সবসময় → সব সময়, "ঘূর্ণায়মান অংশ" → "ঘুরন্ত অংশ"
+  (ঘূর্ণায়মান চুম্বকক্ষেত্র kept as the technical term).
+- All seven maths problems have answers (computed).
+- **Diagrams:** `T_SMALL` 20 → 22. `one_panel()` / `two_panel()` /
+  `panel()` take `tsize=` (and `nsize=` for the note): চিত্র ১৮.৫ and ১৮.৬
+  are placed 12.8 cm wide, so their chip and note are 26 / 27 px; চিত্র ১৮.৯
+  (13.8 cm) uses a 24 px chip. চিত্র ১৮.২ and ১৮.৮ are placed 15.4 cm.
+
+**Chapter 19 — done 2026-11-12, 36 pp unchanged, 16 figures / 19 tables, worst
+gap 4.02 cm.** What was wrong and is fixed; do not revert:
+- **চিত্র ১৯.১৩ (`d13_flow`) did not match the text's five steps.** It showed
+  step ৪ = charging current and step ৫ = "তার ও ব্রেকার", with "24 V · দুই
+  ব্যাটারি" as the example, though the worked example is one 12 V, 200 AH
+  battery. Steps are now 1 লোড → 2 VA → 3 AH → 4 ব্যাকআপ সময় → 5 চার্জিং,
+  with the examples' own numbers (350 W · 437 → 600 VA · 172 → 200 AH ·
+  3 ঘণ্টা on 130 AH · 20 A), and Latin badges.
+- **A safety box still said "চালিয়ো না"** (তুমি-imperative); the practical
+  work table was all তুমি-imperatives. Both impersonal now.
+- Battery cable: use the maker's own battery leads where supplied (they are
+  sized for the inverter's full rating, not today's load), and a DC fuse or
+  breaker in the positive lead near the battery.
+- Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার. "ফিউজ উড়ে" → "পুড়ে",
+  স্ফুলিঙ্গ → স্পার্ক, কেবল → শুধু, two em-dashes, VRLA row made exact.
+- চিত্র ১৯.৭'s title is "আইপিএসের নেমপ্লেট" like its caption; the two
+  power-factor notes print 0.6 / 0.8 in Latin beside Latin W and VA.
+- All six maths problems have answers (computed).
+- `dia_ch19` type: `T_BODY` 22.5, `T_SMALL` 22.5, `T_TINY` 21.5 (were
+  21.5 / 20 / 18.5); চিত্র ১৯.১৪ placed 15.0 cm. QC stayed clean.
+
+**Chapter 20 — done 2026-11-12, 25 pp unchanged, 13 figures / 10 tables, no
+gap above 3 cm.** What was wrong and is fixed; do not revert:
+- **The intro printed the same sentence twice** ("কিন্তু সরল জিনিস … সহজ।
+  তবে সরল যন্ত্রও … সহজ।").
+- **Both system figures drew the suction pipe stopping above the water**
+  (চিত্র ২০.১ at the reservoir's lid, চিত্র ২০.১১ leaving the side wall above
+  the water line). Both pipes go down into the water now. চিত্র ২০.১'s
+  "সাপ্লাই পাইপ" is "ডেলিভারি পাইপ".
+- চিত্র ২০.২'s "কেবলের মুখ" leader ran diagonally across the whole float
+  body; the label sits at the neck's own height now (list order in
+  `photo_callouts` decides the vertical order). চিত্র ২০.৮'s neutral ran on
+  past the motor to nowhere. চিত্র ২০.১১'s note had a stray semicolon and its
+  "N" touched the box edge. Titles of চিত্র ২০.৫ and ২০.১৩ are nouns.
+- The practical-work table was all তুমি-imperatives, and one cell held an
+  MCQ stem instead of a task. Rewritten impersonally.
+- Six em-dashes removed; forward references use the future tense; "2 x 746"
+  → "2 × 746". All six maths problems have answers (computed).
+- **Layout:** উদাহরণ ২০.৩ now follows the ফ্রি কেবল formula box directly (it
+  had stranded 7.15 cm after the wording changes); the glossary table is
+  9 pt so its last row no longer sits alone on the next page.
+- ch20 still writes "কেবল" for cable (its artwork does); no "only" use left.
+
+**Chapter 21 — done 2026-11-12, 30 pp unchanged, 14 figures / 6 tables, worst
+gap 4.05 cm.** What was wrong and is fixed; do not revert:
+- **TP&N was explained backwards.** The text said "TP&N … so ask for a four-pole
+  breaker". TP&N is three switched poles plus an unswitched neutral link; a
+  4-pole breaker is the case where the neutral must be cut too (pointer to
+  অধ্যায় ২৪).
+- **চিত্র ২১.৮ (`d08_earth`):** the "নীল নিউট্রাল" dot sat on the grey back
+  plate, not on a wire, and its leader crossed the PE leader. The target is on
+  the blue wires now, the two labels are in target order, and the label reads
+  "নিউট্রাল তার". The panel is European (blue neutral); one paragraph under the
+  figure says so and gives BNBC's black neutral / blue L3.
+- **চিত্র ২১.১৩ (`d12_calc`):** the arrow from "মোট লোড" ended in the gap
+  between the two formula boxes; it branches to both now. চিত্র ২১.২'s
+  "সাপ্লাই" sat on the panel border (`ytop` 176). চিত্র ২১.১০'s title carried
+  Φ (not in Kalpurush) → words. চিত্র ২১.১৪'s note is a sentence now.
+- Table cell "অক্সাইড পরিবাহী" (copper oxide is not a conductor) → "অক্সাইড
+  তেমন বাধা দেয় না". "সব সাদা তার" on the neutral bar → "সব নিউট্রাল তার".
+- Two leftover meta lines ("সিলেবাসের প্রথম / দ্বিতীয় বিষয়") removed; a
+  doubled semicolon in the comb-bar paragraph; the objective's two em-dashes.
+- Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার. কেবল → শুধু (7), -টা → -টি,
+  the practical table made impersonal, all eight maths problems answered.
+
+**Chapter 22 — done 2026-11-12, 52 pp unchanged, 24 figures / 21 tables, one
+pre-existing 4.57 cm gap.** What was wrong and is fixed; do not revert:
+- **Five passages printed the same sentence twice** (leftovers of an earlier
+  rewrite): ২২.১.১ overload, ২২.১.২ short circuit, the RCCB note in ২২.৭.১,
+  the opening of ২২.৯ and of ২২.১২; plus "BNBC-র … BNBC-র" and "সারণি সারণি".
+- The intro said death at "২০০ মিলিঅ্যাম্পিয়ার"; ch01 and this chapter's own
+  box say about 100 mA. Now "১০০ মিলিঅ্যাম্পিয়ারের মতো".
+- Motor starting current "ছয়-আট গুণ" → "পাঁচ-সাত গুণ" (ch18's figure), and a
+  B curve trips at 3–5 ×.
+- `≤` is not in Kalpurush: the two formula boxes say it in words. (The
+  condition `IB ≤ In ≤ IZ` stays symbolic in the MCQ and the question.)
+- A তুমি-imperative in the fake-breaker paragraph ("বোতাম চাপো") and the whole
+  practical table → impersonal. Proving dead: ভোল্টেজ ডিটেক্টর বা মাল্টিমিটার.
+  কেবল → শুধু (35), সবসময় → সব সময়, one em-dash pair.
+- All ten maths problems have answers (computed).
+- **Diagrams:** চিত্র ২২.৫'s two sub-headings and চিত্র ২২.১৩'s "টরয়েড কোর"
+  touched their header chips (moved); badges in চিত্র ২২.৭ and ২২.২৩ are Latin
+  (Bangla ৪ read as 8); titles of চিত্র ২২.১৩ and ২২.১৭ are nouns
+  ("RCCB-র কার্যপ্রণালি", "SPD-র কার্যপ্রণালি"); the surge bolt in ২২.১৭ no
+  longer crosses the panel border; ২২.২০'s note "খায়" → "সংযোগ নেয়".
+
+**Chapter 23 — done 2026-11-12, 49 pp unchanged, 17 figures / 26 tables, gaps
+as before (worst 4.66 cm).** What was wrong and is fixed; do not revert:
+- **চিত্র ২৩.১০ (`d10_sizecode`) was factually wrong.** It showed `7 / 0.67 rm`
+  beside `7 / 0.029"` and said both are about 2.5 mm². 7/0.029 inch is
+  **3.0 mm²** (the chapter's own সারণি ২৩.১১ says so; its metric twin is
+  7/0.74). The left panel is `7 / 0.74 rm` and the box says 3.0 now.
+- **The 300/500 V passage contradicted itself.** The paragraph said 300/500
+  "also works if phases cannot touch", and the ⚠ box said never in a
+  three-phase DB because of switching surges, with a তুমি-imperative. Both
+  now say: 450/750 is the grade for fixed wiring; 300/500 is above 230/400 V
+  on paper but is the thin-insulation grade of cords and light sheathed cable.
+- FR was described as "does not burn"; it self-extinguishes when the flame
+  source is removed and does not spread flame.
+- `√3` in body text → "তিনের বর্গমূল". রঙ → রং (রঙের kept).
+- A doubled sentence in ২৩.৫.৪; "দুটি কারণ।" opening ২৩.৯.১ with nothing
+  before it; a first-person aside in ২৩.৩.৫; five তুমি-imperatives in boxes
+  and bullets; the practical table → impersonal. কেবল → শুধু, সবসময় → সব সময়.
+- All thirteen maths problems have answers (computed).
+- **Diagrams:** labels say পরিবাহী like the prose (was কন্ডাক্টর in three
+  figures); চিত্র ২৩.৮'s last field no longer touches the canvas edge;
+  চিত্র ২৩.১৫'s badges are Latin; titles of চিত্র ২৩.১৬ and ২৩.১৭ are nouns.
+
+**Chapter 25 — done 2026-11-12, 43 pp unchanged, 22 figures / 14 tables, one
+3.35 cm gap.** What was wrong and is fixed; do not revert:
+- **The SPD lead-length rule was stated wrongly everywhere** ("L, N ও PE, এই
+  তিনটি তারের মোট দৈর্ঘ্য ০.৫ মিটার", and উদাহরণ ২৫.৪ added all three). The
+  rule is about the surge path: the lead from the phase (or neutral) bar to
+  the SPD **plus** the lead from the SPD to the earthing bar, ≤ 0.5 m, never
+  over 1.0 m (confirmed by search; ch22 already said "দুই তার"). Fixed in the
+  formula box, উদাহরণ ২৫.৪ (0.18 + 0.38 = 0.56 m and 0.16 + 0.38 = 0.54 m;
+  earth lead cut to 0.32 m), the summary, MCQ ৬, the fault table, maths
+  problem ৪, the practical table and চিত্র ২৫.৯'s note strip.
+- "আরসিসিবি পড়ে যায়" (nine places) → "ট্রিপ করে", the book's own word.
+- Both terminal bars were called "পিতলের"; now "পিতল বা তামার" (BNBC asks
+  for a copper earthing bar). `≥` in two table cells → "অন্তত". Polarity is
+  checked with a ভোল্টেজ ডিটেক্টর ও মাল্টিমিটার. কনডুইট → কন্ডুইট,
+  র‍্যাওল → রাউল (ch15's spelling), সবসময় → সব সময়, one em-dash,
+  "প্রথমত … দুই" → "দ্বিতীয়ত".
+- All six maths problems have answers; problem ২ now says eight circuits
+  (seven SP MCBs + one RCBO).
+- **Diagrams:** চিত্র ২৫.১৪ (`d07_comb`) drew the jumpers as a rising
+  staircase from one riser; each jumper is its own U from one terminal to the
+  next now, way numbers are Latin ("ওয়ে ৪" read as 8) and the panels lost
+  66 px of dead space. চিত্র ২৫.১৭ (`d09_label`) lost a 40 px dead band.
+- **The trailing empty paragraph tipped onto a header-only page 44** once the
+  answers were added. Closed by trimming three lines on the last page
+  (answers ৫ and ৬, one practical-table cell). **After adding answers to a
+  chapter whose last page is full, look at the page count.**
+
+**Chapter 26 — done 2026-11-12, 46 pp unchanged, 30 figures / 17 tables, gaps
+as before (worst 4.50 cm).** What was wrong and is fixed; do not revert:
+- **চিত্র ২৬.১৮ (`d10_pullbox`) said "চার বাঁক" and drew three**, with the
+  pull box after the first bend, while the text says the box splits the run
+  into two two-bend pulls. It has four bends now and the box sits between
+  bends 2 and 3.
+- **চিত্র ২৬.১৪ (`d06_bend`): both bends had the wrong sweep flag** (`0 0 1`),
+  so each "bend" was two kinks with the curve bulging away from its own
+  dashed radius lines. `0 0 0` now; the same bug the ch20–28 pass fixed in
+  d07.
+- চিত্র ২৬.২০ (`d09_slab`): the "কন্ডুইটের রান" leader ended on the outlet
+  box's rim; it ends on the pipe. চিত্র ২৬.২৫ (`d14_pull`) lost 66 px of dead
+  space. `°` in two figure labels → "90 ডিগ্রি". Titles of চিত্র ২৬.২৮ and
+  ২৬.৩০ are nouns. চিত্র ২৬.৬'s header claimed "হেভি গেজ" (the photo cannot
+  show that) and its note said "লাঠির গায়ে ৫০ মিলিমিটার দূরত্বে".
+- **The marking photograph (চিত্র ২৬.৭) reads THIN WALL**, and the text never
+  said so. One paragraph under the marking table: the marking is complete,
+  but that pipe does not meet BNBC's heavy-wall condition.
+- "−5 °C থেকে +60 °C" → words (neither `°` nor `−` is in Kalpurush).
+  Standard numbers are Latin like ch22–25 ("আইইসি 60364-5-52", "আইইসি
+  61386-1", "বিএস 7671": Bangla ৪ made 60364 read as 60368). MCQ ৬ and ১৮
+  options are Latin digits ("৪০" and "৮০" sat side by side).
+- Switch and socket heights agree with ch14 (১২২০ / ২৫৪ মিলিমিটার).
+  Summary: open sun needs ইউভি-প্রতিরোধী PVC বা জিআই, as the body says.
+  মরচে → মরিচা, রাওল → রাউল, সবসময় → সব সময়, forward reference to
+  অধ্যায় ২৮ in the future tense, three colons after bold spans.
+- All seven maths problems have answers (computed from the chapter's own
+  tables).
+- **Layout:** the new paragraph stranded চিত্র ২৬.৮ (6.17 cm). The figure now
+  comes before the 16 SWG note box, not after it.
+
+
+**Chapter 24 — done 2026-11-12, 41 pp unchanged, 22 figures / 14 tables, gaps
+as before (worst 3.71 cm).** The drawings were sound. What was wrong and is
+fixed; do not revert:
+- **Three broken sentences:** the shaft box ended "…ভরে দিতে হবে, এক তলা থেকে
+  অন্য তলায় না ছড়ায়" (now "যাতে আগুন … না ছড়ায়"); the diversity paragraph
+  carried a dangling "আর BNBC-র পরিশিষ্ট ক-তে।" (removed); the dead-front
+  paragraph began a sentence with "যাতে" (joined to the one before).
+- `IB ≤ In ≤ Iz` in body text → words (`≤` is not in Kalpurush). Enclosure
+  table's first column and "৪০০ A / ৩৬-এর সারি" are Latin (Bangla ৪).
+- All six maths problems are in Latin digits and have answers (117 kW,
+  198.7 A → 250 A; 156 mm² → 40 × 5; 27.5 A → 32 A; 16 mm², 0.85 %;
+  25 %, about 5 kW; 6 spare, 34 ways).
+- "একটি কথা গোড়াতেই বলে রাখি" → impersonal; "প্রথমত … দুই … তিন" →
+  দ্বিতীয়ত / তৃতীয়ত; "কী খাওয়ায়" → "কোন লোডে সরবরাহ যায়"; "ব্রেকার ফেলে
+  দেখা" → "নামিয়ে দেখা"; কেবল → শুধু (13), কনডুইট → কন্ডুইট, মরচে → মরিচা,
+  -টা forms, "—" table cells → empty or words, semicolons used as colons.
+- Diagrams: চিত্র ২৪.১৯'s title is a noun ("অগোছালো ওয়্যারিংয়ের নমুনা");
+  চিত্র ২৪.৫'s label says কন্ডুইট.
+- **The chapter sits one line from tipping.** Three sentences that grew by a
+  few words pushed it to 42 pp with 6.7 / 4.9 / 8.3 cm gaps; trimming them
+  back restored 41 pp. Check `layout.py` after any wording change before
+  ২৪.৪.৭.
+
+**Chapter 27 — done 2026-11-12, 33 → 31 pp, 22 figures / 11 tables, worst gap
+4.48 cm.** What was wrong and is fixed; do not revert:
+- Wrong cross-reference: the 35 % conduit figure is in ২৬.৬.১, not ২৬.৬.৫.
+- Duplicated sentences in ২৭.২.১ and ২৭.২.২ (leftovers of an earlier
+  rewrite); objective ৩ had lost its subject.
+- `°` and `≤` removed from text and artwork ("45 ডিগ্রি"); standard numbers
+  Latin (আইইসি 60227-3, 60364-5-52, 61084; বিএস 7671); রাওল → রাউল.
+- The junction-box sentence is limited to taking a branch off an old circuit.
+- All five maths problems have answers and Latin digits.
+- **Diagrams:** চিত্র ২৭.৮ (`d05_parts`): the external-corner fitting poked
+  out of its tile. Titles of চিত্র ২৭.৪, ২৭.১৫, ২৭.১৬, ২৭.১৩ and ২৭.২২ are
+  nouns. চিত্র ২৭.৩'s channel wires are drawn in L / N / E colours.
+- **Layout:** উদাহরণ ২৭.৩ is cut to one-line question, `given=` and `steps=`,
+  its note is a paragraph; চিত্র ২৭.১০ precedes সারণি ২৭.৭; in ২৭.৬.৪ the ⚠
+  drill box precedes চিত্র ২৭.১৪. That saved one page. The second page went
+  when three lines were trimmed from the last-but-one page, so the practical
+  table no longer leaves two rows alone on a page.
+
+**Chapter 28 — done 2026-11-12, 49 pp unchanged, 24 figures / 11 tables, worst
+gap 4.30 cm (the old 4.70 is gone).** What was wrong and is fixed; do not
+revert:
+- **Fact:** the plate-formula box said one face gives an answer "দেড় গুণ কম";
+  it comes out about **1.4 times larger**.
+- **Fact in artwork:** চিত্র ২৮.২৪ (`d16_wrong`) said "শীতে ভালো, বর্ষার পরে
+  খারাপ"; earth resistance is low in the wet season and high in the dry one.
+- **চিত্র ২৮.১৭ and ২৮.১৮ (`d11_pol`, `d12_holder`): the right panel ran to
+  the canvas edge** (panel pitch `PW + 56` → `PW + 28`).
+- **চিত্র ২৮.১৬ (`d18_ir_read`):** leaders crossed and "টেস্ট ভোল্টেজ বাছাই"
+  pointed at the PASS lamp; targets re-measured.
+- Intro "বিদ্যুৎ দেওয়ার পরেও পড়ে না" → "ধরা পড়ে না"; four stray `**`; the
+  62 % paragraph rewritten without dashes; a fuse does not "trip".
+- "ছাড়ে" → "ট্রিপ করে"; সুইচ বন্ধ → সুইচ অফ in text and artwork;
+  ব্যাক-বক্স → ব্যাক-বাক্স; ষড়ভুজ → ছয় কোণা; titles of six figures are
+  nouns; em-dashes out of objectives, captions and formula boxes.
+- উদাহরণ ২৮.২, ২৮.৪, ২৮.৫, ২৮.৮ `steps=` merged.
+
+**The chapter-by-chapter review now covers all 28 chapters, and the full
+book was re-merged on 2026-11-12** (user: "full book merge kore daw"):
+`python mkbook.py --pdf` → **827 pages** (was 815), 497.9 MB `.docx`,
+47.1 MB PDF. `bake:` reported 342 anchors resolved; the shipped
+`document.xml` has 0 PAGEREF and 0 fldChar; every checked সূচিপত্র line's
+printed number equals its link target; the running header names the right
+chapter (and "পরিভাষা" / the question type in the back-of-book parts);
+equations render. A fresh container also needs `pip install docxcompose`
+and `python render.py 'diagrams/cover/cover.svg'` before the merge.
+Page 2 (the cover's blank back) is by design.
 
 ## Open items
 
